@@ -1,0 +1,31 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DepartmentService {
+
+  http = inject(HttpClient);
+
+  addDepartment(model: any | FormData): Observable<void>{
+    return this.http.post<void>('http://localhost:3000/department', model)
+  }
+
+  getAllDepartments(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:3000/department');
+  }
+
+  getDepartment(id: any): Observable<any> {
+    return this.http.get<any>(`http://localhost:3000/department/${id}`);
+  }
+
+  updateDepartment(id: any, updateDepartmentRequest: any | FormData): Observable<any>{
+    return this.http.put<any>(`http://localhost:3000/department/${id}`, updateDepartmentRequest);
+  }
+
+  deleteDepartment(id: any): Observable<any>{
+    return this.http.delete<any>(`http://localhost:3000/department/${id}`);
+  }
+}

@@ -1,0 +1,224 @@
+<section class="flex flex-col lg:flex-row gap-5 max-w-7xl mx-auto">
+  <div class="w-full border mb-10">
+    <h1
+      class="text-2xl md:text-5xl font-bold text-teal-500 underline text-center mb-5"
+    >
+      Doctor Form
+    </h1>
+    <form
+      [formGroup]="form"
+      (ngSubmit)="onSubmit($event)"
+      class="max-w-md mx-auto"
+    >
+      <!-- Name -->
+      <app-input
+        cType="text"
+        label="Doctor Name"
+        [formControl]="getControl('Name')"
+        [isSubmitted]="isSubmitted"
+        (keydown.enter)="handleEnterKey($event, 0)"
+      ></app-input>
+      <!-- Address -->
+      <app-input
+        cType="text"
+        label="Address"
+        [formControl]="getControl('Address')"
+        (keydown.enter)="handleEnterKey($event, 1)"
+      ></app-input>
+      <div class="grid grid-cols-3 gap-2">
+        <!-- ContactNo -->
+        <app-input
+          cType="text"
+          label="Contact No"
+          [formControl]="getControl('ContactNo')"
+          (keydown.enter)="handleEnterKey($event, 2)"
+        ></app-input>
+        <!-- TakeCom -->
+        <app-input
+          cType="select"
+          [options]="optionsD"
+          label="Take Commission"
+          [formControl]="getControl('TakeCom')"
+          (keydown.enter)="handleEnterKey($event, 3)"
+        ></app-input>
+        <!-- IsChamberDoctor -->
+        <app-input
+          cType="select"
+          [options]="optionsD"
+          label="Chamber Doctor"
+          [formControl]="getControl('IsChamberDoctor')"
+          (keydown.enter)="handleEnterKey($event, 4)"
+        ></app-input>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <!-- DrFee -->
+        <app-input
+          label="Doctor Fee"
+          [formControl]="getControl('DrFee')"
+          (keydown.enter)="handleEnterKey($event, 5)"
+        ></app-input>
+        <!-- Valid -->
+        <app-input
+          cType="select"
+          [options]="optionsD"
+          label="Valid"
+          [formControl]="getControl('Valid')"
+          (keydown.enter)="handleEnterKey($event, 6)"
+        ></app-input>
+      </div>
+
+      <div class="flex flex-row gap-2 relative">
+        <!-- mpoId -->
+        <app-input
+          class="w-full"
+          label="Mpo Id"
+          [formControl]="getControl('MpoId')"
+          (focus)="isDropdownOpen = false"
+          (keydown.enter)="handleEnterKey($event, 7)"
+          (keydown)="handleMpoKeyDown($event)"
+        >
+          <button
+            (click)="toggleDropdown($event)"
+            class="absolute top-3 right-1"
+          >
+            <app-down-arrow></app-down-arrow>
+          </button>
+        </app-input>
+
+        <!-- Add Button to add new sticker name -->
+        <div>
+          <button
+            (click)="addMpo($event)"
+            class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-cyan-700 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-1 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800"
+          >
+            <span
+              class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0"
+            >
+              Add
+            </span>
+          </button>
+        </div>
+
+        <!-- Dropdown for sticker names -->
+        <div
+          *ngIf="isDropdownOpen && mpoOptions.length > 0"
+          class="absolute bg-white border border-gray-300 mt-12 w-full z-10 rounded shadow-lg"
+        >
+          <ul>
+            <li
+              *ngFor="let option of mpoOptions; let i = index"
+              (click)="selectMpo(option)"
+              [class.highlighted]="i === highlightedIndex"
+              class="py-2 px-3 hover:text-white hover:bg-teal-600 cursor-pointer"
+            >
+              {{ option }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <!-- Save -->
+        <app-input
+          label="Save"
+          cType="submit"
+          (keydown.enter)="handleEnterKey($event, 8)"
+          class="w-full"
+        ></app-input>
+
+        <button
+          (click)="formReset($event)"
+          class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-1 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
+        >
+          Clear
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="w-full border mb-10 px-3 max-h-[85vh] overflow-scroll">
+    <h1
+      class="text-2xl md:text-5xl font-bold text-teal-500 underline text-center"
+    >
+      Doctor List
+    </h1>
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
+      <div class="pb-4 bg-white dark:bg-gray-900 ml-2">
+        <label for="table-search" class="sr-only">Search</label>
+        <div class="relative mt-1">
+          <div
+            class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
+          >
+            <app-search></app-search>
+          </div>
+          <input
+            #searchInput
+            type="text"
+            id="table-search"
+            autocomplete="off"
+            class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
+            placeholder="Search for doctors"
+            (input)="onSearchDoctor($event)"
+            (keydown)="handleSearchKeyDown($event)"
+          />
+        </div>
+      </div>
+      @if (isLoading$ | async) {
+      <p>Loading ...</p>
+      } @else if (hasError$ | async) {
+      <p>There was an error loading data.</p>
+      } @else {
+      <table
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead
+          class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+        >
+          <tr>
+            <th scope="col" class="px-6 py-3">name</th>
+            <th scope="col" class="px-6 py-3">Address</th>
+            <th scope="col" class="px-6 py-3">ContactNo no</th>
+            <th scope="col" class="px-6 py-3">mpo id</th>
+            <th scope="col" class="px-6 py-3">is chamber doctor</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of filteredDoctorList(); track item?.id || $index) {
+          <tr
+            (click)="onUpdate(item)"
+            id="row-{{ $index }}"
+            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
+            [ngClass]="{ '!bg-teal-600 text-white': $index === highlightedTr }"
+          >
+            <th
+              scope="row"
+              class="px-6 py-4 font-medium whitespace-nowrap dark:text-white"
+            >
+              {{ item?.Name }}
+            </th>
+            <td class="px-6 py-4">
+              {{ item?.Address }}
+            </td>
+            <td class="px-6 py-4">
+              {{ item?.ContactNo }}
+            </td>
+            <td class="px-6 py-4">
+              {{ item?.MpoId }}
+            </td>
+            <td class="px-6 py-4">
+              {{ item?.IsChamberDoctor }}
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+      }
+    </div>
+  </div>
+</section>
+
+@if (success()) {
+<app-toast-success [title]="success()"></app-toast-success>
+}

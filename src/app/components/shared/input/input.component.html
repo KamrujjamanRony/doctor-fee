@@ -1,0 +1,131 @@
+@if (cType === 'select-search') {
+<div class="relative w-full mb-3 group">
+    <!-- Input that triggers the dropdown and displays the selected value -->
+    <input
+    type="text"
+    #inputRef
+    [value]="selectedOption ? selectedOption.Name : ''"
+    (focus)="toggleDropdown(!dropdownOpen)"
+    (input)="onSearchChange($event)"
+    (change)="onInputChange($event)"
+    (keydown)="handleKeydown($event)"
+    placeholder="Search options..."
+    class="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600"
+  />
+  
+  <!-- Dropdown list of options -->
+  <ul
+    *ngIf="dropdownOpen"
+    class="absolute bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-600 w-full mt-1 max-h-60 overflow-auto !z-[200]"
+  >
+    <li
+      *ngFor="let item of filteredOptions; let i = index"
+      (click)="selectOption(item)"
+      [class.bg-teal-500]="i === highlightedIndex"
+      [class.text-white]="i === highlightedIndex"
+      class="px-2 py-2 cursor-pointer hover:bg-teal-500 hover:text-white z-50"
+    >
+      {{ item.Name }}
+    </li>
+    <li *ngIf="filteredOptions.length === 0" class="px-2 py-2 text-gray-500">
+      No options found
+    </li>
+  </ul>
+
+  
+  
+  <label
+  [for]="label"
+  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-30 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-teal-600 peer-focus:dark:text-teal-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+>
+  {{ label }}
+</label>
+</div>
+} @else {
+  <div class="relative z-0 w-full mb-3 group">
+    @switch (cType){ @case ('text') {
+    <input
+      #inputRef
+      type="text"
+      [value]="value"
+      (input)="onInputChange($event)"
+      [disabled]="isDisabled"
+      class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+      [class.invalid]="isInvalid"
+      placeholder=" "
+      required
+    />
+    } @case ('date') {
+    <input
+      #inputRef
+      type="date"
+      [value]="value"
+      (input)="onInputChange($event)"
+      datepicker-format="dd-mm-yyyy"
+      class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+      [class.invalid]="isInvalid"
+    />
+    } @case ('password') {
+    <input
+      #inputRef
+      type="password"
+      [value]="value"
+      (input)="onInputChange($event)"
+      [disabled]="isDisabled"
+      class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+      [class.invalid]="isInvalid"
+      placeholder=" "
+      required
+    />
+    } @case ('select') {
+    <select
+      #inputRef
+      [value]="value"
+      (change)="onInputChange($event)"
+      [disabled]="isDisabled"
+      class="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+    >
+      @for(option of options; track $index){
+      <option [value]="option.id" class="capitalize">{{ option.name }}</option>
+      }
+    </select>
+    }  @case ('submit') {
+  
+    <input
+      #inputRef
+      [value]="label"
+      type="submit"
+      class="text-white bg-gradient-to-r from-cyan-500 to-teal-500 hover:bg-gradient-to-bl focus:ring-1 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 w-full"
+      required
+    />
+    } @default {
+    <input
+      #inputRef
+      type="number"
+      [value]="value"
+      (input)="onInputChange($event)"
+      [disabled]="isDisabled"
+      class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+      [class.invalid]="isInvalid"
+      placeholder=" "
+      required
+    />
+    } } @if (cType !== 'submit') {
+    <ng-content />
+  
+    <label
+      [for]="label"
+      class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-teal-600 peer-focus:dark:text-teal-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+    >
+      {{ label }}
+    </label>
+    @if (isInvalid) {
+    <div>
+      <small class="text-red-500">This field is required</small>
+    </div>
+    } }
+  </div>
+}
+
+
+

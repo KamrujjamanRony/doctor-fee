@@ -1,0 +1,789 @@
+{
+  "test": [
+    {
+      "tName": "CBC",
+      "tCharge": 600,
+      "tLessItem": "Yes",
+      "tDefaultHnr": 5,
+      "tDefaultHnrAmtUnit": "%",
+      "tDefaultHnrAmt": 30,
+      "isDoctor": "",
+      "department": "",
+      "chrChange": "No",
+      "reportFileName": "file1",
+      "reportFee": "5",
+      "stickerName": "22222222",
+      "id": "b87e"
+    },
+    {
+      "tName": "RBS dffsd",
+      "tCharge": 60,
+      "tLessItem": "Yes",
+      "tDefaultHnr": 10,
+      "tDefaultHnrAmtUnit": "%",
+      "tDefaultHnrAmt": 6,
+      "isDoctor": "",
+      "department": "",
+      "chrChange": "No",
+      "reportFileName": "",
+      "reportFee": 0,
+      "stickerName": "",
+      "id": "4dbe"
+    },
+    {
+      "id": "468f",
+      "tName": "TSH",
+      "tCharge": 800,
+      "tLessItem": "Yes",
+      "tDefaultHnr": 0,
+      "tDefaultHnrAmtUnit": "%",
+      "tDefaultHnrAmt": 0,
+      "isVaqItem": "No",
+      "isDoctor": "",
+      "department": "",
+      "chrChange": "No",
+      "reportFileName": "",
+      "reportFee": 0,
+      "stickerName": ""
+    },
+    {
+      "tName": "Urine",
+      "tCharge": 300,
+      "tLessItem": "Yes",
+      "tDefaultHnr": 0,
+      "tDefaultHnrAmtUnit": "%",
+      "tDefaultHnrAmt": 0,
+      "isDoctor": "",
+      "department": "",
+      "chrChange": "No",
+      "reportFileName": "",
+      "reportFee": 0,
+      "stickerName": "ggggggggg",
+      "id": "f628"
+    },
+    {
+      "tName": "AAAb",
+      "tCharge": 500,
+      "tLessItem": "Yes",
+      "tDefaultHnr": 10,
+      "tDefaultHnrAmtUnit": "%",
+      "tDefaultHnrAmt": 50,
+      "isDoctor": "",
+      "department": "",
+      "chrChange": "No",
+      "reportFileName": "",
+      "reportFee": 0,
+      "stickerName": "",
+      "id": "9bf9"
+    },
+    {
+      "id": "519a",
+      "tName": "1111111",
+      "tCharge": 1111111,
+      "tLessItem": "Yes",
+      "tDefaultHnr": 0,
+      "tDefaultHnrAmtUnit": "%",
+      "tDefaultHnrAmt": 0,
+      "isVaqItem": "No",
+      "isDoctor": "No",
+      "department": "",
+      "chrChange": "No",
+      "reportFileName": "",
+      "reportFee": 0,
+      "stickerName": ""
+    },
+    {
+      "id": "79c6",
+      "tName": "2222222",
+      "tCharge": 111111,
+      "tLessItem": "Yes",
+      "tDefaultHnr": 0,
+      "tDefaultHnrAmtUnit": "%",
+      "tDefaultHnrAmt": 0,
+      "isVaqItem": "No",
+      "isDoctor": "No",
+      "department": "",
+      "chrChange": "No",
+      "reportFileName": "",
+      "reportFee": 0,
+      "stickerName": ""
+    },
+    {
+      "id": "cb7d",
+      "tName": "33333333333",
+      "tCharge": 222,
+      "tLessItem": "Yes",
+      "tDefaultHnr": 0,
+      "tDefaultHnrAmtUnit": "%",
+      "tDefaultHnrAmt": 0,
+      "isVaqItem": "No",
+      "isDoctor": "No",
+      "department": "",
+      "chrChange": "No",
+      "reportFileName": "",
+      "reportFee": 0,
+      "stickerName": ""
+    },
+    {
+      "id": "9668",
+      "tName": "44444444",
+      "tCharge": 32321,
+      "tLessItem": "Yes",
+      "tDefaultHnr": 0,
+      "tDefaultHnrAmtUnit": "%",
+      "tDefaultHnrAmt": 0,
+      "isVaqItem": "No",
+      "isDoctor": "No",
+      "department": "",
+      "chrChange": "No",
+      "reportFileName": "",
+      "reportFee": 0,
+      "stickerName": ""
+    },
+    {
+      "id": "d4c4",
+      "tName": "55555555555",
+      "tCharge": 555,
+      "tLessItem": "Yes",
+      "tDefaultHnr": 0,
+      "tDefaultHnrAmtUnit": "%",
+      "tDefaultHnrAmt": 0,
+      "isVaqItem": "No",
+      "isDoctor": "No",
+      "department": "",
+      "chrChange": "No",
+      "reportFileName": "",
+      "reportFee": 0,
+      "stickerName": ""
+    },
+    {
+      "id": "f757",
+      "tName": "6666666666",
+      "tCharge": 66,
+      "tLessItem": "Yes",
+      "tDefaultHnr": 0,
+      "tDefaultHnrAmtUnit": "%",
+      "tDefaultHnrAmt": 0,
+      "isVaqItem": "No",
+      "isDoctor": "No",
+      "department": "",
+      "chrChange": "No",
+      "reportFileName": "",
+      "reportFee": 0,
+      "stickerName": ""
+    },
+    {
+      "id": "9b19",
+      "tName": "777777777",
+      "tCharge": 77,
+      "tLessItem": "Yes",
+      "tDefaultHnr": 0,
+      "tDefaultHnrAmtUnit": "%",
+      "tDefaultHnrAmt": 0,
+      "isVaqItem": "No",
+      "isDoctor": "No",
+      "department": "",
+      "chrChange": "No",
+      "reportFileName": "",
+      "reportFee": 0,
+      "stickerName": ""
+    },
+    {
+      "id": "26cd",
+      "tName": "888888888888",
+      "tCharge": 88,
+      "tLessItem": "Yes",
+      "tDefaultHnr": 0,
+      "tDefaultHnrAmtUnit": "%",
+      "tDefaultHnrAmt": 0,
+      "isVaqItem": "No",
+      "isDoctor": "No",
+      "department": "",
+      "chrChange": "No",
+      "reportFileName": "",
+      "reportFee": 0,
+      "stickerName": ""
+    },
+    {
+      "id": "e0f4",
+      "tName": "999999999999",
+      "tCharge": 99,
+      "tLessItem": "Yes",
+      "tDefaultHnr": 0,
+      "tDefaultHnrAmtUnit": "%",
+      "tDefaultHnrAmt": 0,
+      "isVaqItem": "No",
+      "isDoctor": "No",
+      "department": "",
+      "chrChange": "No",
+      "reportFileName": "",
+      "reportFee": 0,
+      "stickerName": ""
+    }
+  ],
+  "doctor": [
+    {
+      "dName": "Doctor 12",
+      "address": "",
+      "contact": 0,
+      "takeCommission": "No",
+      "chamberDoctor": "No",
+      "mpo": "",
+      "id": "9177"
+    },
+    {
+      "dName": "Doctor 22",
+      "address": "qqqqqq",
+      "contact": 232131,
+      "takeCommission": "No",
+      "chamberDoctor": "No",
+      "mpo": "2321312",
+      "id": "dabe"
+    },
+    {
+      "dName": "eeeeee",
+      "address": "ww",
+      "contact": 0,
+      "takeCommission": "No",
+      "chamberDoctor": "No",
+      "mpo": "",
+      "id": "9856"
+    },
+    {
+      "id": "f415",
+      "dName": "uuuuuuuuu",
+      "address": "",
+      "contact": 0,
+      "takeCommission": "No",
+      "chamberDoctor": "No",
+      "mpo": ""
+    },
+    {
+      "id": "a8cd",
+      "dName": "ffffffffffffffff",
+      "address": "",
+      "contact": 0,
+      "takeCommission": "No",
+      "chamberDoctor": "No",
+      "mpo": ""
+    },
+    {
+      "id": "5a6e",
+      "dName": "gggggggggggggg",
+      "address": "",
+      "contact": 0,
+      "takeCommission": "No",
+      "chamberDoctor": "No",
+      "mpo": ""
+    }
+  ],
+  "department": [
+    {
+      "id": "1",
+      "name": "Hematology"
+    },
+    {
+      "id": "2",
+      "name": "Biochemistry"
+    },
+    {
+      "id": "3",
+      "name": "Immunology"
+    },
+    {
+      "id": "4",
+      "name": "Serology"
+    },
+    {
+      "id": "5",
+      "name": "Microbiology"
+    },
+    {
+      "id": "6",
+      "name": "Histopathology"
+    },
+    {
+      "id": "7",
+      "name": "Stool"
+    },
+    {
+      "id": "8",
+      "name": "Urine"
+    },
+    {
+      "id": "9",
+      "name": "Eliza"
+    },
+    {
+      "id": "10",
+      "name": "Clinical Pathology"
+    },
+    {
+      "id": "11",
+      "name": "ICT"
+    },
+    {
+      "id": "12",
+      "name": "X-Ray"
+    },
+    {
+      "id": "13",
+      "name": "Usg"
+    },
+    {
+      "id": "14",
+      "name": "ECHO"
+    },
+    {
+      "id": "15",
+      "name": "CT"
+    },
+    {
+      "id": "16",
+      "name": "MRI"
+    },
+    {
+      "id": "17",
+      "name": "BMD"
+    },
+    {
+      "id": "18",
+      "name": "Endoscopy"
+    },
+    {
+      "id": "19",
+      "name": "EEG"
+    },
+    {
+      "id": "20",
+      "name": "ETT"
+    },
+    {
+      "id": "21",
+      "name": "Others"
+    },
+    {
+      "id": "22",
+      "name": "ECG"
+    },
+    {
+      "id": "23",
+      "name": "FNAC"
+    },
+    {
+      "id": "24",
+      "name": "CTG"
+    },
+    {
+      "id": "25",
+      "name": "Hospital"
+    }
+  ],
+  "patientReg": [
+    {
+      "Id": 1,
+      "RegNo": "P001",
+      "Name": "John Doe",
+      "ContactNo": "555-1234",
+      "FatherName": "Michael Doe",
+      "MotherName": "Jane Doe",
+      "Sex": "Male",
+      "Dob": "1985-04-15T00:00:00",
+      "NID": "1234567890",
+      "Address": "123 Elm Street, Springfield",
+      "Remarks": "First-time patient",
+      "PostedBy": "Admin",
+      "EntryDate": "2024-11-09T14:00:00",
+      "id": "4035"
+    },
+    {
+      "Id": 2,
+      "RegNo": "P002",
+      "Name": "Alice Johnson",
+      "ContactNo": "555-5678",
+      "FatherName": "David Johnson",
+      "MotherName": "Emily Johnson",
+      "Sex": "Female",
+      "Dob": "1990-08-22T00:00:00",
+      "NID": "9876543210",
+      "Address": "456 Oak Avenue, Metroville",
+      "Remarks": "Returning patient",
+      "PostedBy": "Admin",
+      "EntryDate": "2024-11-08T09:30:00",
+      "id": "a8a2"
+    },
+    {
+      "RegNo": "P003",
+      "Name": "James Smith",
+      "ContactNo": "555-8765",
+      "FatherName": "Robert Smith",
+      "MotherName": "Linda Smith",
+      "Sex": "Male",
+      "Dob": "1978-12-30T00:00:00",
+      "NID": "1122334455",
+      "Address": "789 Pine Road, Greenfield",
+      "Remarks": "New registration",
+      "PostedBy": "Nurse Anna",
+      "EntryDate": "2024-11-07T11:15:00",
+      "id": "dc74"
+    },
+    {
+      "Id": 4,
+      "RegNo": "P004",
+      "Name": "Samantha Lee",
+      "ContactNo": "555-4321",
+      "FatherName": "Paul Lee",
+      "MotherName": "Nancy Lee",
+      "Sex": "Female",
+      "Dob": "2000-02-10T00:00:00",
+      "NID": "2233445566",
+      "Address": "101 Maple Street, Rivertown",
+      "Remarks": "Needs follow-up",
+      "PostedBy": "Admin",
+      "EntryDate": "2024-11-06T08:00:00",
+      "id": "c5de"
+    },
+    {
+      "Id": 5,
+      "RegNo": "P005",
+      "Name": "Robert Williams",
+      "ContactNo": "555-6789",
+      "FatherName": "Thomas Williams",
+      "MotherName": "Rachel Williams",
+      "Sex": "Male",
+      "Dob": "1995-05-20T00:00:00",
+      "NID": "5566778899",
+      "Address": "202 Birch Boulevard, Laketown",
+      "Remarks": "Routine check-up",
+      "PostedBy": "Admin",
+      "EntryDate": "2024-11-05T10:00:00",
+      "id": "a2b8"
+    },
+    {
+      "Id": 6,
+      "RegNo": "P006",
+      "Name": "Sophia Taylor",
+      "ContactNo": "555-2345",
+      "FatherName": "George Taylor",
+      "MotherName": "Maria Taylor",
+      "Sex": "Female",
+      "Dob": "1992-11-01T00:00:00",
+      "NID": "6677889900",
+      "Address": "303 Cedar Lane, Hillview",
+      "Remarks": "Initial consultation",
+      "PostedBy": "Dr. Anderson",
+      "EntryDate": "2024-11-04T13:45:00",
+      "id": "481c"
+    },
+    {
+      "Id": 7,
+      "RegNo": "P007",
+      "Name": "William Brown",
+      "ContactNo": "555-3456",
+      "FatherName": "Henry Brown",
+      "MotherName": "Grace Brown",
+      "Sex": "Male",
+      "Dob": "1982-07-14T00:00:00",
+      "NID": "7788990011",
+      "Address": "404 Willow Drive, Greendale",
+      "Remarks": "Check-up scheduled",
+      "PostedBy": "Admin",
+      "EntryDate": "2024-11-03T15:30:00",
+      "id": "2de9"
+    },
+    {
+      "Id": 8,
+      "RegNo": "P008",
+      "Name": "Emily Davis",
+      "ContactNo": "555-4321",
+      "FatherName": "Joseph Davis",
+      "MotherName": "Charlotte Davis",
+      "Sex": "Female",
+      "Dob": "1988-03-25T00:00:00",
+      "NID": "3344556677",
+      "Address": "505 Pine Hill, Westwood",
+      "Remarks": "Urgent care required",
+      "PostedBy": "Nurse John",
+      "EntryDate": "2024-11-02T12:20:00",
+      "id": "1f64"
+    },
+    {
+      "Id": 9,
+      "RegNo": "P009",
+      "Name": "David Miller",
+      "ContactNo": "555-5679",
+      "FatherName": "Edward Miller",
+      "MotherName": "Sarah Miller",
+      "Sex": "Male",
+      "Dob": "1998-09-05T00:00:00",
+      "NID": "8899001122",
+      "Address": "606 Redwood Way, Sunnydale",
+      "Remarks": "Follow-up visit",
+      "PostedBy": "Admin",
+      "EntryDate": "2024-11-01T14:50:00",
+      "id": "73ad"
+    },
+    {
+      "Id": 10,
+      "RegNo": "P010",
+      "Name": "Olivia Martinez",
+      "ContactNo": "555-8901",
+      "FatherName": "Juan Martinez",
+      "MotherName": "Isabella Martinez",
+      "Sex": "Female",
+      "Dob": "1993-12-18T00:00:00",
+      "NID": "1122334456",
+      "Address": "707 Cherry Lane, Mapleton",
+      "Remarks": "Emergency consultation",
+      "PostedBy": "Dr. Thomas",
+      "EntryDate": "2024-10-31T11:10:00",
+      "id": "81e0"
+    },
+    {
+      "id": "4fd5",
+      "RegNo": "33 4",
+      "Name": "sdsdf",
+      "ContactNo": "22",
+      "FatherName": "ffffff",
+      "MotherName": "mmmmmmm",
+      "Sex": "Male",
+      "Dob": "11-11-2000",
+      "NID": "42325435",
+      "Address": "www",
+      "Remarks": "wwwww122121",
+      "PostedBy": "",
+      "EntryDate": "2024-11-10T12:33:07.136Z"
+    },
+    {
+      "RegNo": "dasd",
+      "Name": "sas",
+      "ContactNo": "1111111111111111",
+      "FatherName": "ffffffff",
+      "MotherName": "mmmmmmmmm",
+      "Sex": "Female",
+      "Dob": "2000-12-11",
+      "NID": "nnnnnnnnnnn",
+      "Address": "dsdas dasdas",
+      "Remarks": "dasda qqqqqqqqqqqqqqqq",
+      "PostedBy": "",
+      "EntryDate": "2024-11-10T12:33:07.136Z",
+      "id": "013a"
+    },
+    {
+      "id": "b87c",
+      "RegNo": "2001",
+      "Name": "eeeee",
+      "ContactNo": "2222222222",
+      "FatherName": "tttttttttt",
+      "MotherName": "uuuuuuuuuu",
+      "Sex": "Others",
+      "Dob": "2011-11-11",
+      "NID": "222222222",
+      "Address": "eeeeeeeeeeeeeee",
+      "Remarks": "",
+      "PostedBy": "",
+      "EntryDate": "2024-11-10T12:39:23.948Z"
+    }
+  ],
+  "doctorEntry": [
+    {
+      "Id": 1,
+      "Name": "Dr. John Smith",
+      "Address": "123 Health Ave, City Center",
+      "ContactNo": "555-1000",
+      "TakeCom": 1,
+      "UserName": "johnsmith",
+      "Valid": 1,
+      "EntryDate": "2024-10-25T09:00:00",
+      "ReportUserName": "admin1",
+      "MpoId": 101,
+      "IsChamberDoctor": 1,
+      "DrFee": 500,
+      "id": "80c1"
+    },
+    {
+      "Name": "Dr. Alice Johnson u",
+      "Address": "456 Medical Street, Northside",
+      "ContactNo": "555-2000",
+      "TakeCom": 0,
+      "IsChamberDoctor": 1,
+      "MpoId": 102,
+      "id": "6b81"
+    },
+    {
+      "Id": 3,
+      "Name": "Dr. Robert Lee",
+      "Address": "789 Wellness Rd, Eastpark",
+      "ContactNo": "555-3000",
+      "TakeCom": 1,
+      "UserName": "robertlee",
+      "Valid": 1,
+      "EntryDate": "2024-10-20T10:00:00",
+      "ReportUserName": "admin3",
+      "MpoId": 103,
+      "IsChamberDoctor": 0,
+      "DrFee": 550,
+      "id": "56e3"
+    },
+    {
+      "Id": 4,
+      "Name": "Dr. Jessica Brown",
+      "Address": "101 Healthy Lane, Southtown",
+      "ContactNo": "555-4000",
+      "TakeCom": 1,
+      "UserName": "jessicabrown",
+      "Valid": 1,
+      "EntryDate": "2024-10-18T11:00:00",
+      "ReportUserName": "admin4",
+      "MpoId": 104,
+      "IsChamberDoctor": 1,
+      "DrFee": 700,
+      "id": "d130"
+    },
+    {
+      "Id": 5,
+      "Name": "Dr. Michael Green",
+      "Address": "202 Hope St, Westfield",
+      "ContactNo": "555-5000",
+      "TakeCom": 1,
+      "UserName": "michaelgreen",
+      "Valid": 1,
+      "EntryDate": "2024-10-15T09:30:00",
+      "ReportUserName": "admin5",
+      "MpoId": 105,
+      "IsChamberDoctor": 0,
+      "DrFee": 650,
+      "id": "122a"
+    },
+    {
+      "Id": 6,
+      "Name": "Dr. Sarah White",
+      "Address": "303 Sunset Blvd, Hilltop",
+      "ContactNo": "555-6000",
+      "TakeCom": 1,
+      "UserName": "sarahwhite",
+      "Valid": 1,
+      "EntryDate": "2024-10-12T13:00:00",
+      "ReportUserName": "admin6",
+      "MpoId": 106,
+      "IsChamberDoctor": 1,
+      "DrFee": 750,
+      "id": "3108"
+    },
+    {
+      "Id": 7,
+      "Name": "Dr. Daniel King",
+      "Address": "404 River Rd, Lakeside",
+      "ContactNo": "555-7000",
+      "TakeCom": 1,
+      "UserName": "danielking",
+      "Valid": 1,
+      "EntryDate": "2024-10-10T11:45:00",
+      "ReportUserName": "admin7",
+      "MpoId": 107,
+      "IsChamberDoctor": 1,
+      "DrFee": 450,
+      "id": "66e4"
+    },
+    {
+      "Id": 8,
+      "Name": "Dr. Emma Clark",
+      "Address": "505 Sunrise Blvd, Green City",
+      "ContactNo": "555-8000",
+      "TakeCom": 1,
+      "UserName": "emmaclark",
+      "Valid": 1,
+      "EntryDate": "2024-10-08T10:15:00",
+      "ReportUserName": "admin8",
+      "MpoId": 108,
+      "IsChamberDoctor": 0,
+      "DrFee": 500,
+      "id": "ad10"
+    },
+    {
+      "Id": 9,
+      "Name": "Dr. Henry Adams",
+      "Address": "606 Park Ln, Silverbrook",
+      "ContactNo": "555-9000",
+      "TakeCom": 1,
+      "UserName": "henryadams",
+      "Valid": 1,
+      "EntryDate": "2024-10-05T14:30:00",
+      "ReportUserName": "admin9",
+      "MpoId": 109,
+      "IsChamberDoctor": 1,
+      "DrFee": 800,
+      "id": "d360"
+    },
+    {
+      "Id": 10,
+      "Name": "Dr. Olivia Walker",
+      "Address": "707 Crescent Ave, Oakwood",
+      "ContactNo": "555-1010",
+      "TakeCom": 1,
+      "UserName": "oliviawalker",
+      "Valid": 1,
+      "EntryDate": "2024-10-02T09:00:00",
+      "ReportUserName": "admin10",
+      "MpoId": 110,
+      "IsChamberDoctor": 1,
+      "DrFee": 550,
+      "id": "8de1"
+    },
+    {
+      "id": "f649",
+      "Name": "eeeeeee",
+      "Address": "",
+      "ContactNo": "",
+      "TakeCom": 0,
+      "IsChamberDoctor": 0,
+      "MpoId": 1345
+    }
+  ],
+  "doctorFee": [
+    {
+      "doctor": "3108",
+      "patient": "c5de",
+      "patientType": "Emergency",
+      "amount": "11",
+      "discount": "2",
+      "Remarks": "sdasdas",
+      "PostedBy": "",
+      "EntryDate": "2024-11-11T06:42:50.344Z",
+      "id": "770a"
+    },
+    {
+      "doctor": "d130",
+      "patient": "4035",
+      "patientType": "Indoor",
+      "amount": "21",
+      "discount": "4",
+      "Remarks": "sdasdsfdsfddas",
+      "PostedBy": "",
+      "EntryDate": "2024-11-11T06:42:50.344Z",
+      "id": "773a"
+    },
+    {
+      "id": "ca8c",
+      "doctor": "d130",
+      "patient": "a8a2",
+      "patientType": "Outdoor",
+      "amount": "33",
+      "discount": "11",
+      "Remarks": "dsadas",
+      "PostedBy": "",
+      "EntryDate": "2024-11-11T07:29:59.537Z"
+    },
+    {
+      "id": "e9e4",
+      "doctor": "d130",
+      "patient": "c5de",
+      "patientType": "Outdoor",
+      "amount": "22",
+      "discount": "",
+      "Remarks": "",
+      "PostedBy": "",
+      "EntryDate": "2024-11-11T17:14:52.897Z"
+    }
+  ]
+}

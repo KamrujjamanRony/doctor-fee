@@ -1,0 +1,34 @@
+public class PatientReg
+{
+    public int Id { get; set; }
+    public string? RegNo { get; set; }
+    public string? Name { get; set; }
+    public string? ContactNo { get; set; }
+    public string? FatherName { get; set; }
+    public string? MotherName { get; set; }
+    public string? Sex { get; set; }
+    public DateTime? Dob { get; set; }//Date of birth
+    public string? NID { get; set; }
+    public string? Address { get; set; }       
+    public string? Remarks { get; set; }
+    public string? PostedBy { get; set; }
+    public DateTime? EntryDate { get; set; }
+}
+
+============================================
+public class DoctorEntry
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Address { get; set; }
+    public string ContactNo { get; set; }
+    public int TakeCom { get; set; }
+    public int MpoId { get; set; }
+    public int IsChamberDoctor { get; set; }
+
+    public string UserName { get; set; }
+    public int Valid { get; set; }
+    public DateTime EntryDate { get; set; }
+    public string ReportUserName { get; set; }
+    public int DrFee { get; set; }
+}
