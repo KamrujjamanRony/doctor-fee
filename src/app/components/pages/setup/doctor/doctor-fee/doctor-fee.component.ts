@@ -9,11 +9,12 @@ import { SearchComponent } from "../../../../shared/svg/search/search.component"
 import { DoctorService } from '../../../../../services/doctor.service';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { DoctorFeeFeeService } from '../../../../../services/doctor-fee.service';
+import { DownArrowComponent } from "../../../../shared/svg/down-arrow/down-arrow.component";
 
 @Component({
   selector: 'app-doctor-fee',
   standalone: true,
-  imports: [ReactiveFormsModule, ToastSuccessComponent, SearchComponent, InputComponent, CommonModule],
+  imports: [ReactiveFormsModule, ToastSuccessComponent, SearchComponent, InputComponent, CommonModule, DownArrowComponent],
   templateUrl: './doctor-fee.component.html',
   styleUrl: './doctor-fee.component.css'
 })
@@ -32,7 +33,6 @@ export class DoctorFeeComponent {
   selectedPatient: any;
   selected: any;
 
-  highlightedIndex: number = -1;
   highlightedTr: number = -1;
 
   success = signal<any>("");
@@ -50,8 +50,8 @@ export class DoctorFeeComponent {
     PostedBy: [''],
     EntryDate: [this.today],
   });
-isLoading$: Observable<any> | undefined;
-hasError$: Observable<any> | undefined;
+  isLoading$: Observable<any> | undefined;
+  hasError$: Observable<any> | undefined;
 
   transform(value: any, args: any = 'dd/MM/yyyy'): any {
     if (!value) return null;
@@ -67,22 +67,25 @@ hasError$: Observable<any> | undefined;
     // Focus on the search input when the component is initialized
     setTimeout(() => {
       this.searchInput.nativeElement.focus();
-      console.log(this.filteredDoctorList())
-      console.log(this.filteredDoctorFeeList())
-      console.log(this.filteredPatientList())
-    }, 500); // Use setTimeout to ensure the DOM is ready
+    }, 0); // Use setTimeout to ensure the DOM is ready
   }
 
   onLoadPatients() {
     const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.patientService.getAllPatients());
-    data$.subscribe(data => this.filteredPatientList.set(data));
+    data$.subscribe(data => {
+      this.filteredPatientList.set(data);
+      this.patientOptions = this.filteredPatientList().map(p => ({ id: p.id, name: p.Name }));
+    });
     this.isLoading$ = isLoading$;
     this.hasError$ = hasError$;
   }
 
   onLoadDoctors() {
     const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.doctorService.getAllDoctors());
-    data$.subscribe(data => this.filteredDoctorList.set(data));
+    data$.subscribe(data => {
+      this.filteredDoctorList.set(data);
+      this.doctorOptions = this.filteredDoctorList().map(d => ({ id: d.id, name: d.Name, DrFee: d.DrFee }));
+    });
     this.isLoading$ = isLoading$;
     this.hasError$ = hasError$;
   }
@@ -112,14 +115,14 @@ hasError$: Observable<any> | undefined;
     this.searchQuery$.next(query);
   }
 
-  onDoctorChange(data: any){
+  onDoctorChange(data: any) {
     this.selectedDoctor = data;
     this.form.patchValue({
       doctor: this.selectedDoctor.id,
     });
   }
 
-  onPatientChange(data: any){
+  onPatientChange(data: any) {
     this.selectedPatient = data;
     this.form.patchValue({
       patient: this.selectedPatient.id,
@@ -164,7 +167,14 @@ hasError$: Observable<any> | undefined;
       return; // Exit if there are no items to navigate
     }
 
-    if (event.key === 'ArrowDown') {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      const inputsArray = this.formInputs.toArray();
+      if (inputsArray.length > 0) {
+        const firstInput = inputsArray[0];
+        firstInput.inputRef.nativeElement.focus();
+      }
+    } else if (event.key === 'ArrowDown') {
       event.preventDefault(); // Prevent default scrolling behavior
       this.highlightedTr = (this.highlightedTr + 1) % this.filteredPatientList().length;
     } else if (event.key === 'ArrowUp') {
@@ -235,7 +245,6 @@ hasError$: Observable<any> | undefined;
 
   onUpdate(data: any) {
     this.selected = data;
-    console.log(data)
     this.form.patchValue({
       doctor: data?.doctor,
       patient: data?.patient,
@@ -256,7 +265,7 @@ hasError$: Observable<any> | undefined;
     }, 0); // Delay to ensure the DOM is updated
 
     // Reset the highlighted row
-    this.highlightedIndex = -1;
+    this.highlightedIndexPatient = -1;
   }
 
   formReset(e: Event): void {
@@ -272,6 +281,125 @@ hasError$: Observable<any> | undefined;
       EntryDate: this.today
     });
   }
+
+  // ----------Patient---------------------------------------------------------------------------------
+  isPatientDropdownOpen: boolean = false;
+  patientOptions: any[] = [];
+  highlightedIndexPatient: number = -1;
+
+  handlePatientKeyDown(event: KeyboardEvent) {
+    if (event.key === 'ArrowDown') {
+      this.isPatientDropdownOpen = true;
+      event.preventDefault();
+    }
+    if (this.isPatientDropdownOpen && this.patientOptions.length > 0) {
+      if (event.key === 'ArrowDown') {
+        this.highlightedIndexPatient = (this.highlightedIndexPatient + 1) % this.patientOptions.length;
+        event.preventDefault();
+      } else if (event.key === 'ArrowUp') {
+        this.highlightedIndexPatient = (this.highlightedIndexPatient - 1 + this.patientOptions.length) % this.patientOptions.length;
+        event.preventDefault();
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        if (this.highlightedIndexPatient !== -1) {
+          this.selectPatient(this.patientOptions[this.highlightedIndexPatient]?.id);
+          this.isPatientDropdownOpen = false;
+        }
+      }
+    }
+  }
+
+  togglePatientDropdown(e: any) {
+    e.preventDefault();
+    this.isPatientDropdownOpen = !this.isPatientDropdownOpen;
+    this.highlightedIndexPatient = -1;
+  }
+
+  selectPatient(option: string) {
+    this.getControl('patient').setValue(option);
+    this.isPatientDropdownOpen = false;
+    this.highlightedIndexPatient = -1;
+  }
+
+  onPatientSearchChange(event: Event) {
+    const searchValue = (event.target as HTMLInputElement).value?.toLowerCase();
+    this.patientOptions = this.filteredPatientList().filter(option =>
+      option.Name.toLowerCase().includes(searchValue) ||
+      option.id.toLowerCase().includes(searchValue)
+    ).map(p => ({ id: p.id, name: p.Name }));
+    this.highlightedIndexPatient = -1;
+    if (searchValue === '') {
+      this.isPatientDropdownOpen = false;
+    } else {
+      this.isPatientDropdownOpen = true;
+    }
+  }
+
+  getPatientName(id: any){
+    const patient = this.patientOptions.find(p => p.id == id);
+    return patient?.name?? '';
+  }
+  //---------------------------------------------------------------------------------
+
+  // ----------Doctor---------------------------------------------------------------------------------
+  isDoctorDropdownOpen: boolean = false;
+  doctorOptions: any[] = [];
+  highlightedIndexDoctor: number = -1;
+
+  handleDoctorKeyDown(event: KeyboardEvent) {
+    if (event.key === 'ArrowDown') {
+      this.isDoctorDropdownOpen = true;
+      event.preventDefault();
+    }
+    if (this.isDoctorDropdownOpen && this.doctorOptions.length > 0) {
+      if (event.key === 'ArrowDown') {
+        this.highlightedIndexDoctor = (this.highlightedIndexDoctor + 1) % this.doctorOptions.length;
+        event.preventDefault();
+      } else if (event.key === 'ArrowUp') {
+        this.highlightedIndexDoctor = (this.highlightedIndexDoctor - 1 + this.doctorOptions.length) % this.doctorOptions.length;
+        event.preventDefault();
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        if (this.highlightedIndexDoctor !== -1) {
+          this.selectDoctor(this.doctorOptions[this.highlightedIndexDoctor]?.id);
+          this.isDoctorDropdownOpen = false;
+        }
+      }
+    }
+  }
+
+  toggleDoctorDropdown(e: any) {
+    e.preventDefault();
+    this.isDoctorDropdownOpen = !this.isDoctorDropdownOpen;
+    this.highlightedIndexDoctor = -1;
+  }
+
+  selectDoctor(option: any) {
+    this.getControl('doctor').setValue(option?.id ?? this.doctorOptions[this.highlightedIndexDoctor]?.id);
+    this.getControl('amount').setValue(option?.DrFee ?? this.doctorOptions[this.highlightedIndexDoctor]?.DrFee ?? 0);
+    this.isDoctorDropdownOpen = false;
+    this.highlightedIndexDoctor = -1;
+  }
+
+  onDoctorSearchChange(event: Event) {
+    const searchValue = (event.target as HTMLInputElement).value?.toLowerCase();
+    this.doctorOptions = this.filteredDoctorList().filter(option =>
+      option.Name.toLowerCase().includes(searchValue) ||
+      option.id.toLowerCase().includes(searchValue)
+    ).map(p => ({ id: p.id, name: p.Name }));
+    this.highlightedIndexDoctor = -1;
+    if (searchValue === '') {
+      this.isDoctorDropdownOpen = false;
+    } else {
+      this.isDoctorDropdownOpen = true;
+    }
+  }
+
+  getDoctorName(id: any){
+    const doctor = this.doctorOptions.find(p => p.id == id);
+    return doctor?.name?? '';
+  }
+  //---------------------------------------------------------------------------------
 
 
 }

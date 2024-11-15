@@ -11,15 +11,46 @@
         class="max-w-md mx-auto"
       >
 
-      <!-- Patient -->
-      <app-input
-        cType="select-search"
-        [options]="filteredPatientList()"
-        label="patient"
-        [formControl]="getControl('patient')"
-        (keydown.enter)="handleEnterKey($event, 0)"
-        (onSelectSearchInputChange)="onPatientChange($event)"
-      ></app-input>
+      <div class="flex flex-row gap-2 relative">
+        <!-- patient -->
+        <app-input
+        cType="select-text"
+          class="w-full"
+          label="patient"
+          [formControl]="getControl('patient')"
+          [options]="patientOptions"
+          (focus)="isPatientDropdownOpen = false"
+          (keydown.enter)="handleEnterKey($event, 0)"
+          (keydown)="handlePatientKeyDown($event)"
+          (input)="onPatientSearchChange($event)"
+        >
+          <button
+            (click)="togglePatientDropdown($event)"
+            class="absolute top-3 right-1"
+          >
+            <app-down-arrow></app-down-arrow>
+          </button>
+        </app-input>
+
+        <!-- Dropdown for sticker names -->
+        <div
+          *ngIf="isPatientDropdownOpen && patientOptions.length > 0"
+          class="absolute bg-white border border-gray-300 mt-12 w-full z-50 rounded shadow-lg"
+        >
+          <ul>
+            <li
+              *ngFor="let option of patientOptions; let i = index"
+              (click)="selectPatient(option?.name)"
+              [class.highlighted]="i === highlightedIndexPatient"
+              class="py-2 px-3 hover:text-white hover:bg-teal-600 cursor-pointer"
+            >
+              {{ option?.name }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      
 
       <!-- patientType -->
       <app-input
@@ -31,15 +62,44 @@
         (onSelectSearchInputChange)="onPatientChange($event)"
       ></app-input>
       
+      <div class="flex flex-row gap-2 relative">
         <!-- doctor -->
         <app-input
-          cType="select-search"
-          [options]="filteredDoctorList()"
+        cType="select-text"
+          class="w-full"
           label="doctor"
           [formControl]="getControl('doctor')"
+          [options]="doctorOptions"
+          (focus)="isDoctorDropdownOpen = false"
           (keydown.enter)="handleEnterKey($event, 2)"
-          (onSelectSearchInputChange)="onDoctorChange($event)"
-        ></app-input>
+          (keydown)="handleDoctorKeyDown($event)"
+          (input)="onDoctorSearchChange($event)"
+        >
+          <button
+            (click)="toggleDoctorDropdown($event)"
+            class="absolute top-3 right-1"
+          >
+            <app-down-arrow></app-down-arrow>
+          </button>
+        </app-input>
+
+        <!-- Dropdown for doctor -->
+        <div
+          *ngIf="isDoctorDropdownOpen && doctorOptions.length > 0"
+          class="absolute bg-white border border-gray-300 mt-12 w-full z-50 rounded shadow-lg"
+        >
+          <ul>
+            <li
+              *ngFor="let option of doctorOptions; let i = index"
+              (click)="selectDoctor(option)"
+              [class.highlighted]="i === highlightedIndexDoctor"
+              class="py-2 px-3 hover:text-white hover:bg-teal-600 cursor-pointer"
+            >
+              {{ option?.name }}
+            </li>
+          </ul>
+        </div>
+      </div>
 
         <!-- amount -->
         <app-input
@@ -146,7 +206,7 @@
                 scope="row"
                 class="p-1 font-medium whitespace-nowrap dark:text-white"
               >
-                {{ item?.patient }}
+                {{ getPatientName(item?.patient) }}
               </th>
               <th
                 scope="row"
@@ -155,7 +215,7 @@
                 {{ item?.patientType }}
               </th>
               <td class="p-1">
-                {{ item?.doctor }}
+                {{ getDoctorName(item?.doctor) }}
               </td>
               <td class="p-1">
                 {{ item?.amount }}

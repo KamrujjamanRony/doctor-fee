@@ -24,10 +24,9 @@ export class InputComponent implements ControlValueAccessor {
   @Output() onSelectSearchInputChange = new EventEmitter<void>();
   @ViewChild('inputRef', { static: false  }) inputRef!: ElementRef<HTMLInputElement>;  // ViewChild to get native input element
 
-  value: any = '';                         // Store the value for the input field
-  isDisabled: boolean = false;                // Store whether the input is disabled
-
-  filteredOptions = [...this.options];
+  value: any = '';                       
+  customValue: any = '';                       
+  isDisabled: boolean = false;
   selectedOption: any = null;
   dropdownOpen = false;
   highlightedIndex: number = -1;
@@ -36,26 +35,10 @@ export class InputComponent implements ControlValueAccessor {
   onChange = (_: any) => {};
   onTouch = () => {};
 
-  toggleDropdown(open: boolean) {
-    this.filteredOptions = [...this.options];
-    this.dropdownOpen = open;
-    if (open) this.highlightedIndex = -1;
-  }
-
-  onSearchChange(event: Event) {
-    const searchValue = (event.target as HTMLInputElement).value.toLowerCase();
-    this.filteredOptions = this.options.filter(option =>
-      option.Name.toLowerCase().includes(searchValue)
-    );
-    this.highlightedIndex = -1;
-  }
-
-  selectOption(option: any) {
-    this.onSelectSearchInputChange.emit(option);
-    this.value = option.Name;
-    this.selectedOption = option;
-    this.dropdownOpen = false;
-    this.highlightedIndex = -1;
+  onOptionSelected() {
+    return this.options.find(option =>
+      option.id.includes(this.value)
+    )?.name;
   }
 
   writeValue(value: any): void {
@@ -96,28 +79,6 @@ export class InputComponent implements ControlValueAccessor {
 
     this.onChange(this.value);
     this.onTouch();
-  }
-
-  handleKeydown(event: KeyboardEvent) {
-    if (event.key === 'ArrowDown') {
-      // Move highlight down
-      this.highlightedIndex =
-        (this.highlightedIndex + 1) % this.filteredOptions.length;
-      event.preventDefault();
-    } else if (event.key === 'ArrowUp') {
-      // Move highlight up
-      this.highlightedIndex =
-        (this.highlightedIndex - 1 + this.filteredOptions.length) %
-        this.filteredOptions.length;
-      event.preventDefault();
-    } else if (event.key === 'Enter' && this.highlightedIndex >= 0) {
-      // Select highlighted item on Enter key
-      this.selectOption(this.filteredOptions[this.highlightedIndex]);
-      event.preventDefault();
-    } else if (event.key === 'Escape') {
-      // Close dropdown on Escape key
-      this.dropdownOpen = false;
-    }
   }
 
 

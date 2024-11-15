@@ -128,7 +128,14 @@ export class RegistrationComponent {
       return; // Exit if there are no items to navigate
     }
 
-    if (event.key === 'ArrowDown') {
+  if (event.key === 'Tab') {
+    event.preventDefault();
+    const inputsArray = this.formInputs.toArray();
+    if (inputsArray.length > 0) {
+      const firstInput = inputsArray[0];
+      firstInput.inputRef.nativeElement.focus();
+    }
+  } else if (event.key === 'ArrowDown') {
       event.preventDefault(); // Prevent default scrolling behavior
       this.highlightedTr = (this.highlightedTr + 1) % this.filteredPatientList().length;
     } else if (event.key === 'ArrowUp') {

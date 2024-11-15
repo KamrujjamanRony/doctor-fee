@@ -1,282 +1,4 @@
 {
-  "test": [
-    {
-      "tName": "CBC",
-      "tCharge": 600,
-      "tLessItem": "Yes",
-      "tDefaultHnr": 5,
-      "tDefaultHnrAmtUnit": "%",
-      "tDefaultHnrAmt": 30,
-      "isDoctor": "",
-      "department": "",
-      "chrChange": "No",
-      "reportFileName": "file1",
-      "reportFee": "5",
-      "stickerName": "22222222",
-      "id": "b87e"
-    },
-    {
-      "tName": "RBS dffsd",
-      "tCharge": 60,
-      "tLessItem": "Yes",
-      "tDefaultHnr": 10,
-      "tDefaultHnrAmtUnit": "%",
-      "tDefaultHnrAmt": 6,
-      "isDoctor": "",
-      "department": "",
-      "chrChange": "No",
-      "reportFileName": "",
-      "reportFee": 0,
-      "stickerName": "",
-      "id": "4dbe"
-    },
-    {
-      "id": "468f",
-      "tName": "TSH",
-      "tCharge": 800,
-      "tLessItem": "Yes",
-      "tDefaultHnr": 0,
-      "tDefaultHnrAmtUnit": "%",
-      "tDefaultHnrAmt": 0,
-      "isVaqItem": "No",
-      "isDoctor": "",
-      "department": "",
-      "chrChange": "No",
-      "reportFileName": "",
-      "reportFee": 0,
-      "stickerName": ""
-    },
-    {
-      "tName": "Urine",
-      "tCharge": 300,
-      "tLessItem": "Yes",
-      "tDefaultHnr": 0,
-      "tDefaultHnrAmtUnit": "%",
-      "tDefaultHnrAmt": 0,
-      "isDoctor": "",
-      "department": "",
-      "chrChange": "No",
-      "reportFileName": "",
-      "reportFee": 0,
-      "stickerName": "ggggggggg",
-      "id": "f628"
-    },
-    {
-      "tName": "AAAb",
-      "tCharge": 500,
-      "tLessItem": "Yes",
-      "tDefaultHnr": 10,
-      "tDefaultHnrAmtUnit": "%",
-      "tDefaultHnrAmt": 50,
-      "isDoctor": "",
-      "department": "",
-      "chrChange": "No",
-      "reportFileName": "",
-      "reportFee": 0,
-      "stickerName": "",
-      "id": "9bf9"
-    },
-    {
-      "id": "519a",
-      "tName": "1111111",
-      "tCharge": 1111111,
-      "tLessItem": "Yes",
-      "tDefaultHnr": 0,
-      "tDefaultHnrAmtUnit": "%",
-      "tDefaultHnrAmt": 0,
-      "isVaqItem": "No",
-      "isDoctor": "No",
-      "department": "",
-      "chrChange": "No",
-      "reportFileName": "",
-      "reportFee": 0,
-      "stickerName": ""
-    },
-    {
-      "id": "79c6",
-      "tName": "2222222",
-      "tCharge": 111111,
-      "tLessItem": "Yes",
-      "tDefaultHnr": 0,
-      "tDefaultHnrAmtUnit": "%",
-      "tDefaultHnrAmt": 0,
-      "isVaqItem": "No",
-      "isDoctor": "No",
-      "department": "",
-      "chrChange": "No",
-      "reportFileName": "",
-      "reportFee": 0,
-      "stickerName": ""
-    },
-    {
-      "id": "cb7d",
-      "tName": "33333333333",
-      "tCharge": 222,
-      "tLessItem": "Yes",
-      "tDefaultHnr": 0,
-      "tDefaultHnrAmtUnit": "%",
-      "tDefaultHnrAmt": 0,
-      "isVaqItem": "No",
-      "isDoctor": "No",
-      "department": "",
-      "chrChange": "No",
-      "reportFileName": "",
-      "reportFee": 0,
-      "stickerName": ""
-    },
-    {
-      "id": "9668",
-      "tName": "44444444",
-      "tCharge": 32321,
-      "tLessItem": "Yes",
-      "tDefaultHnr": 0,
-      "tDefaultHnrAmtUnit": "%",
-      "tDefaultHnrAmt": 0,
-      "isVaqItem": "No",
-      "isDoctor": "No",
-      "department": "",
-      "chrChange": "No",
-      "reportFileName": "",
-      "reportFee": 0,
-      "stickerName": ""
-    },
-    {
-      "id": "d4c4",
-      "tName": "55555555555",
-      "tCharge": 555,
-      "tLessItem": "Yes",
-      "tDefaultHnr": 0,
-      "tDefaultHnrAmtUnit": "%",
-      "tDefaultHnrAmt": 0,
-      "isVaqItem": "No",
-      "isDoctor": "No",
-      "department": "",
-      "chrChange": "No",
-      "reportFileName": "",
-      "reportFee": 0,
-      "stickerName": ""
-    },
-    {
-      "id": "f757",
-      "tName": "6666666666",
-      "tCharge": 66,
-      "tLessItem": "Yes",
-      "tDefaultHnr": 0,
-      "tDefaultHnrAmtUnit": "%",
-      "tDefaultHnrAmt": 0,
-      "isVaqItem": "No",
-      "isDoctor": "No",
-      "department": "",
-      "chrChange": "No",
-      "reportFileName": "",
-      "reportFee": 0,
-      "stickerName": ""
-    },
-    {
-      "id": "9b19",
-      "tName": "777777777",
-      "tCharge": 77,
-      "tLessItem": "Yes",
-      "tDefaultHnr": 0,
-      "tDefaultHnrAmtUnit": "%",
-      "tDefaultHnrAmt": 0,
-      "isVaqItem": "No",
-      "isDoctor": "No",
-      "department": "",
-      "chrChange": "No",
-      "reportFileName": "",
-      "reportFee": 0,
-      "stickerName": ""
-    },
-    {
-      "id": "26cd",
-      "tName": "888888888888",
-      "tCharge": 88,
-      "tLessItem": "Yes",
-      "tDefaultHnr": 0,
-      "tDefaultHnrAmtUnit": "%",
-      "tDefaultHnrAmt": 0,
-      "isVaqItem": "No",
-      "isDoctor": "No",
-      "department": "",
-      "chrChange": "No",
-      "reportFileName": "",
-      "reportFee": 0,
-      "stickerName": ""
-    },
-    {
-      "id": "e0f4",
-      "tName": "999999999999",
-      "tCharge": 99,
-      "tLessItem": "Yes",
-      "tDefaultHnr": 0,
-      "tDefaultHnrAmtUnit": "%",
-      "tDefaultHnrAmt": 0,
-      "isVaqItem": "No",
-      "isDoctor": "No",
-      "department": "",
-      "chrChange": "No",
-      "reportFileName": "",
-      "reportFee": 0,
-      "stickerName": ""
-    }
-  ],
-  "doctor": [
-    {
-      "dName": "Doctor 12",
-      "address": "",
-      "contact": 0,
-      "takeCommission": "No",
-      "chamberDoctor": "No",
-      "mpo": "",
-      "id": "9177"
-    },
-    {
-      "dName": "Doctor 22",
-      "address": "qqqqqq",
-      "contact": 232131,
-      "takeCommission": "No",
-      "chamberDoctor": "No",
-      "mpo": "2321312",
-      "id": "dabe"
-    },
-    {
-      "dName": "eeeeee",
-      "address": "ww",
-      "contact": 0,
-      "takeCommission": "No",
-      "chamberDoctor": "No",
-      "mpo": "",
-      "id": "9856"
-    },
-    {
-      "id": "f415",
-      "dName": "uuuuuuuuu",
-      "address": "",
-      "contact": 0,
-      "takeCommission": "No",
-      "chamberDoctor": "No",
-      "mpo": ""
-    },
-    {
-      "id": "a8cd",
-      "dName": "ffffffffffffffff",
-      "address": "",
-      "contact": 0,
-      "takeCommission": "No",
-      "chamberDoctor": "No",
-      "mpo": ""
-    },
-    {
-      "id": "5a6e",
-      "dName": "gggggggggggggg",
-      "address": "",
-      "contact": 0,
-      "takeCommission": "No",
-      "chamberDoctor": "No",
-      "mpo": ""
-    }
-  ],
   "department": [
     {
       "id": "1",
@@ -587,7 +309,6 @@
   ],
   "doctorEntry": [
     {
-      "Id": 1,
       "Name": "Dr. John Smith",
       "Address": "123 Health Ave, City Center",
       "ContactNo": "555-1000",
@@ -611,7 +332,6 @@
       "id": "6b81"
     },
     {
-      "Id": 3,
       "Name": "Dr. Robert Lee",
       "Address": "789 Wellness Rd, Eastpark",
       "ContactNo": "555-3000",
@@ -626,7 +346,6 @@
       "id": "56e3"
     },
     {
-      "Id": 4,
       "Name": "Dr. Jessica Brown",
       "Address": "101 Healthy Lane, Southtown",
       "ContactNo": "555-4000",
@@ -641,7 +360,6 @@
       "id": "d130"
     },
     {
-      "Id": 5,
       "Name": "Dr. Michael Green",
       "Address": "202 Hope St, Westfield",
       "ContactNo": "555-5000",
@@ -656,7 +374,6 @@
       "id": "122a"
     },
     {
-      "Id": 6,
       "Name": "Dr. Sarah White",
       "Address": "303 Sunset Blvd, Hilltop",
       "ContactNo": "555-6000",
@@ -671,7 +388,6 @@
       "id": "3108"
     },
     {
-      "Id": 7,
       "Name": "Dr. Daniel King",
       "Address": "404 River Rd, Lakeside",
       "ContactNo": "555-7000",
@@ -686,7 +402,6 @@
       "id": "66e4"
     },
     {
-      "Id": 8,
       "Name": "Dr. Emma Clark",
       "Address": "505 Sunrise Blvd, Green City",
       "ContactNo": "555-8000",
@@ -701,7 +416,6 @@
       "id": "ad10"
     },
     {
-      "Id": 9,
       "Name": "Dr. Henry Adams",
       "Address": "606 Park Ln, Silverbrook",
       "ContactNo": "555-9000",
@@ -716,7 +430,6 @@
       "id": "d360"
     },
     {
-      "Id": 10,
       "Name": "Dr. Olivia Walker",
       "Address": "707 Crescent Ave, Oakwood",
       "ContactNo": "555-1010",
@@ -742,14 +455,14 @@
   ],
   "doctorFee": [
     {
-      "doctor": "3108",
-      "patient": "c5de",
-      "patientType": "Emergency",
-      "amount": "11",
-      "discount": "2",
-      "Remarks": "sdasdas",
+      "doctor": "d130",
+      "patient": "4035",
+      "patientType": "Indoor",
+      "amount": 700,
+      "discount": "444",
+      "Remarks": "dsfs sdfsdfsd dsfdsf",
       "PostedBy": "",
-      "EntryDate": "2024-11-11T06:42:50.344Z",
+      "EntryDate": "2024-11-15T19:34:16.479Z",
       "id": "770a"
     },
     {
@@ -764,7 +477,6 @@
       "id": "773a"
     },
     {
-      "id": "ca8c",
       "doctor": "d130",
       "patient": "a8a2",
       "patientType": "Outdoor",
@@ -772,7 +484,8 @@
       "discount": "11",
       "Remarks": "dsadas",
       "PostedBy": "",
-      "EntryDate": "2024-11-11T07:29:59.537Z"
+      "EntryDate": "2024-11-11T07:29:59.537Z",
+      "id": "ca8c"
     },
     {
       "id": "e9e4",
@@ -784,6 +497,17 @@
       "Remarks": "",
       "PostedBy": "",
       "EntryDate": "2024-11-11T17:14:52.897Z"
+    },
+    {
+      "id": "f0f2",
+      "doctor": "3108",
+      "patient": "4035",
+      "patientType": "Outdoor",
+      "amount": 0,
+      "discount": "",
+      "Remarks": "",
+      "PostedBy": "",
+      "EntryDate": "2024-11-15T19:52:06.931Z"
     }
   ]
 }
