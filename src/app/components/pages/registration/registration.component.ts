@@ -35,18 +35,18 @@ export class RegistrationComponent {
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   isSubmitted = false;
   form = this.fb.group({
-    RegNo: [''],
-    Name: ['', [Validators.required]],
-    ContactNo: ['', [Validators.required]],
-    FatherName: [''],
-    MotherName: [''],
-    Sex: ['Male'],
-    Dob: [''],
-    NID: [''],
-    Address: [''],
-    Remarks: [''],
-    PostedBy: [''],
-    EntryDate: [this.today],
+    regNo: [''],
+    name: ['', [Validators.required]],
+    contactNo: ['', [Validators.required]],
+    fatherName: [''],
+    motherName: [''],
+    sex: ['Male'],
+    dob: [''],
+    nid: [''],
+    address: [''],
+    remarks: [''],
+    postedBy: [''],
+    entryDate: [this.today],
   });
 
   transform(value: any, args: any = 'dd/MM/yyyy'): any {
@@ -76,9 +76,9 @@ export class RegistrationComponent {
     ]).pipe(
       map(([data, query]) =>
         data.filter((patientData: any) =>
-          patientData.Name?.toLowerCase().includes(query) ||
-          patientData.ContactNo?.includes(query) ||
-          patientData.RegNo?.includes(query)
+          patientData.name?.toLowerCase().includes(query) ||
+          patientData.contactNo?.includes(query) ||
+          patientData.regNo?.includes(query)
         )
       )
     ).subscribe(filteredData => this.filteredPatientList.set(filteredData));
@@ -128,14 +128,15 @@ export class RegistrationComponent {
       return; // Exit if there are no items to navigate
     }
 
-  if (event.key === 'Tab') {
-    event.preventDefault();
-    const inputsArray = this.formInputs.toArray();
-    if (inputsArray.length > 0) {
-      const firstInput = inputsArray[0];
-      firstInput.inputRef.nativeElement.focus();
-    }
-  } else if (event.key === 'ArrowDown') {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      const inputsArray = this.formInputs.toArray();
+      if (inputsArray.length > 0) {
+        const firstInput = inputsArray[0];
+        firstInput.inputRef.nativeElement.focus();
+        this.highlightedTr = -1;
+      }
+    } else if (event.key === 'ArrowDown') {
       event.preventDefault(); // Prevent default scrolling behavior
       this.highlightedTr = (this.highlightedTr + 1) % this.filteredPatientList().length;
     } else if (event.key === 'ArrowUp') {
@@ -165,8 +166,8 @@ export class RegistrationComponent {
             next: (response) => {
               if (response !== null && response !== undefined) {
                 this.success.set("Patient successfully updated!");
+                this.filteredPatientList.set([...this.filteredPatientList(), this.form.value])
                 this.formReset(e);
-                this.onLoadPatients();
                 this.isSubmitted = false;
                 this.selectedPatient = null;
                 setTimeout(() => {
@@ -185,8 +186,8 @@ export class RegistrationComponent {
             next: (response) => {
               if (response !== null && response !== undefined) {
                 this.success.set("Patient successfully added!");
+                this.filteredPatientList.set([...this.filteredPatientList(), this.form.value])
                 this.formReset(e);
-                this.onLoadPatients();
                 this.isSubmitted = false;
                 setTimeout(() => {
                   this.success.set("");
@@ -207,18 +208,18 @@ export class RegistrationComponent {
   onUpdate(data: any) {
     this.selectedPatient = data;
     this.form.patchValue({
-      RegNo: data?.RegNo,
-      Name: data?.Name,
-      ContactNo: data?.ContactNo,
-      FatherName: data?.FatherName,
-      MotherName: data?.MotherName,
-      Sex: data?.Sex,
-      Dob: this.transform(data?.Dob, 'yyyy-MM-dd'),
-      NID: data?.NID,
-      Address: data?.Address,
-      Remarks: data?.Remarks,
-      PostedBy: data?.PostedBy,
-      EntryDate: data?.EntryDate,
+      regNo: data?.regNo,
+      name: data?.name,
+      contactNo: data?.contactNo,
+      fatherName: data?.fatherName,
+      motherName: data?.motherName,
+      sex: data?.sex,
+      dob: this.transform(data?.dob, 'yyyy-MM-dd'),
+      nid: data?.nid,
+      address: data?.address,
+      remarks: data?.remarks,
+      postedBy: data?.postedBy,
+      entryDate: data?.entryDate,
     });
 
     // Focus the 'Name' input field after patching the value
@@ -236,19 +237,20 @@ export class RegistrationComponent {
   formReset(e: Event): void {
     e.preventDefault();
     this.form.reset({
-      RegNo: '',
-      Name: '',
-      ContactNo: '',
-      FatherName: '',
-      MotherName: '',
-      Sex: 'Male',
-      Dob: '',
-      NID: '',
-      Address: '',
-      Remarks: '',
-      PostedBy: '',
-      EntryDate: this.today
+      regNo: '',
+      name: '',
+      contactNo: '',
+      fatherName: '',
+      motherName: '',
+      sex: 'Male',
+      dob: '',
+      nid: '',
+      address: '',
+      remarks: '',
+      postedBy: '',
+      entryDate: this.today
     });
+    this.selectedPatient = null;
   }
 
 }

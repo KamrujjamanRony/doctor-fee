@@ -14,7 +14,7 @@
       <app-input
         cType="text"
         label="Doctor Name"
-        [formControl]="getControl('Name')"
+        [formControl]="getControl('name')"
         [isSubmitted]="isSubmitted"
         (keydown.enter)="handleEnterKey($event, 0)"
       ></app-input>
@@ -22,7 +22,7 @@
       <app-input
         cType="text"
         label="Address"
-        [formControl]="getControl('Address')"
+        [formControl]="getControl('address')"
         (keydown.enter)="handleEnterKey($event, 1)"
       ></app-input>
       <div class="grid grid-cols-3 gap-2">
@@ -30,7 +30,7 @@
         <app-input
           cType="text"
           label="Contact No"
-          [formControl]="getControl('ContactNo')"
+          [formControl]="getControl('contactNo')"
           (keydown.enter)="handleEnterKey($event, 2)"
         ></app-input>
         <!-- TakeCom -->
@@ -38,7 +38,7 @@
           cType="select"
           [options]="optionsD"
           label="Take Commission"
-          [formControl]="getControl('TakeCom')"
+          [formControl]="getControl('takeCom')"
           (keydown.enter)="handleEnterKey($event, 3)"
         ></app-input>
         <!-- IsChamberDoctor -->
@@ -46,7 +46,7 @@
           cType="select"
           [options]="optionsD"
           label="Chamber Doctor"
-          [formControl]="getControl('IsChamberDoctor')"
+          [formControl]="getControl('isChamberDoctor')"
           (keydown.enter)="handleEnterKey($event, 4)"
         ></app-input>
       </div>
@@ -55,7 +55,7 @@
         <!-- DrFee -->
         <app-input
           label="Doctor Fee"
-          [formControl]="getControl('DrFee')"
+          [formControl]="getControl('drFee')"
           (keydown.enter)="handleEnterKey($event, 5)"
         ></app-input>
         <!-- Valid -->
@@ -63,7 +63,7 @@
           cType="select"
           [options]="optionsD"
           label="Valid"
-          [formControl]="getControl('Valid')"
+          [formControl]="getControl('valid')"
           (keydown.enter)="handleEnterKey($event, 6)"
         ></app-input>
       </div>
@@ -73,7 +73,7 @@
         <app-input
           class="w-full"
           label="Mpo Id"
-          [formControl]="getControl('MpoId')"
+          [formControl]="getControl('mpoId')"
           (focus)="isDropdownOpen = false"
           (keydown.enter)="handleEnterKey($event, 7)"
           (keydown)="handleMpoKeyDown($event)"
@@ -171,7 +171,7 @@
       <p>There was an error loading data.</p>
       } @else {
       <table
-        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        class="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-400"
       >
         <thead
           class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
@@ -179,7 +179,8 @@
           <tr>
             <th scope="col" class="px-6 py-3">name</th>
             <th scope="col" class="px-6 py-3">Address</th>
-            <th scope="col" class="px-6 py-3">ContactNo no</th>
+            <th scope="col" class="px-6 py-3">Contact</th>
+            <th scope="col" class="px-6 py-3">fee</th>
             <th scope="col" class="px-6 py-3">mpo id</th>
             <th scope="col" class="px-6 py-3">is chamber doctor</th>
           </tr>
@@ -189,26 +190,29 @@
           <tr
             (click)="onUpdate(item)"
             id="row-{{ $index }}"
-            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
+            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer text-center"
             [ngClass]="{ '!bg-teal-600 text-white': $index === highlightedTr }"
           >
             <th
               scope="row"
-              class="px-6 py-4 font-medium whitespace-nowrap dark:text-white"
+              class="p-1 font-medium whitespace-nowrap dark:text-white"
             >
-              {{ item?.Name }}
+              {{ item?.name }}
             </th>
-            <td class="px-6 py-4">
-              {{ item?.Address }}
+            <td class="p-1">
+              {{ item?.address }}
             </td>
-            <td class="px-6 py-4">
-              {{ item?.ContactNo }}
+            <td class="p-1">
+              {{ item?.contactNo }}
             </td>
-            <td class="px-6 py-4">
-              {{ item?.MpoId }}
+            <td class="p-1">
+              {{ item?.drFee }}
             </td>
-            <td class="px-6 py-4">
-              {{ item?.IsChamberDoctor }}
+            <td class="p-1">
+              {{ item?.mpoId }}
+            </td>
+            <td class="p-1">
+              {{ is(item?.isChamberDoctor) }}
             </td>
           </tr>
           }

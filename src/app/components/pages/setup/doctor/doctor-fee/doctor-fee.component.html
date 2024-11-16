@@ -12,12 +12,12 @@
       >
 
       <div class="flex flex-row gap-2 relative">
-        <!-- patient -->
+        <!-- patientRegId -->
         <app-input
         cType="select-text"
           class="w-full"
           label="patient"
-          [formControl]="getControl('patient')"
+          [formControl]="getControl('patientRegId')"
           [options]="patientOptions"
           (focus)="isPatientDropdownOpen = false"
           (keydown.enter)="handleEnterKey($event, 0)"
@@ -40,7 +40,7 @@
           <ul>
             <li
               *ngFor="let option of patientOptions; let i = index"
-              (click)="selectPatient(option?.name)"
+              (click)="selectPatient(option?.id)"
               [class.highlighted]="i === highlightedIndexPatient"
               class="py-2 px-3 hover:text-white hover:bg-teal-600 cursor-pointer"
             >
@@ -63,12 +63,12 @@
       ></app-input>
       
       <div class="flex flex-row gap-2 relative">
-        <!-- doctor -->
+        <!-- doctorId -->
         <app-input
         cType="select-text"
           class="w-full"
           label="doctor"
-          [formControl]="getControl('doctor')"
+          [formControl]="getControl('doctorId')"
           [options]="doctorOptions"
           (focus)="isDoctorDropdownOpen = false"
           (keydown.enter)="handleEnterKey($event, 2)"
@@ -117,11 +117,11 @@
           (keydown.enter)="handleEnterKey($event, 4)"
         ></app-input>
         
-        <!-- Remarks -->
+        <!-- remarks -->
         <app-input
           cType="text"
           label="Remarks"
-          [formControl]="getControl('Remarks')"
+          [formControl]="getControl('remarks')"
           (keydown.enter)="handleEnterKey($event, 5)"
         ></app-input>
   
@@ -166,7 +166,7 @@
               id="table-search"
               autocomplete="off"
               class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
-              placeholder="Search for Patients"
+              placeholder="Search for Doctor Fee"
               (input)="onSearchDoctorFee($event)"
               (keydown)="handleSearchKeyDown($event)"
             />
@@ -195,18 +195,18 @@
             </tr>
           </thead>
           <tbody>
-            @for (item of filteredDoctorFeeList(); track item?.id || $index) {
+            @for (item of filteredDoctorFeeList(); track item?.gid || $index) {
             <tr
               (click)="onUpdate(item)"
               id="row-{{ $index }}"
-              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
+              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer text-center"
               [ngClass]="{ '!bg-teal-600 text-white': $index === highlightedTr }"
             >
               <th
                 scope="row"
                 class="p-1 font-medium whitespace-nowrap dark:text-white"
               >
-                {{ getPatientName(item?.patient) }}
+                {{ getPatientName(item?.patientRegId) }}
               </th>
               <th
                 scope="row"
@@ -215,7 +215,7 @@
                 {{ item?.patientType }}
               </th>
               <td class="p-1">
-                {{ getDoctorName(item?.doctor) }}
+                {{ getDoctorName(item?.doctorId) }}
               </td>
               <td class="p-1">
                 {{ item?.amount }}
@@ -224,13 +224,13 @@
                 {{ item?.discount }}
               </td>
               <td class="p-1">
-                {{ item?.Remarks }}
+                {{ item?.remarks }}
               </td>
               <td class="p-1">
-                {{ item?.PostedBy }}
+                {{ item?.postBy }}
               </td>
               <td class="p-1">
-                {{ transform(item?.EntryDate, "dd/MM/yyyy") }}
+                {{ transform(item?.entryDate, "dd/MM/yyyy") }}
               </td>
             </tr>
             }

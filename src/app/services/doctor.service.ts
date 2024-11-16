@@ -8,14 +8,14 @@ import { Observable } from 'rxjs';
 export class DoctorService {
 
   http = inject(HttpClient);
-  rootUrl = 'http://localhost:3000/doctorEntry'
+  rootUrl = 'http://localhost/hms/api/DoctorEntry'
 
   addDoctor(model: any | FormData): Observable<void>{
     return this.http.post<void>(this.rootUrl, model)
   }
 
   getAllDoctors(): Observable<any[]> {
-    return this.http.get<any[]>(this.rootUrl);
+    return this.http.get<any[]>(this.rootUrl + '/SearchDoctor');
   }
 
   getDoctor(id: any): Observable<any> {

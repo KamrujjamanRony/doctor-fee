@@ -4,6 +4,7 @@ import { HomeComponent } from './components/pages/home/home.component';
 import { DoctorEntryComponent } from './components/pages/setup/doctor/doctor-entry/doctor-entry.component';
 import { RegistrationComponent } from './components/pages/registration/registration.component';
 import { DoctorFeeComponent } from './components/pages/setup/doctor/doctor-fee/doctor-fee.component';
+import { ReportsComponent } from './components/pages/reports/reports.component';
 
 export const routes: Routes = [
     {
@@ -26,6 +27,10 @@ export const routes: Routes = [
           {
             path: 'setup/doctor/fee',
             component: DoctorFeeComponent
+          },
+          {
+            path: 'reports',
+            component: ReportsComponent
           },
         ],
       }

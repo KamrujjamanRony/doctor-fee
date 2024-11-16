@@ -11,19 +11,19 @@
       class="max-w-md mx-auto"
     >
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-        <!-- ContactNo -->
+        <!-- contactNo -->
         <app-input
           cType="text"
           label="Contact No"
-          [formControl]="getControl('ContactNo')"
+          [formControl]="getControl('contactNo')"
           [isSubmitted]="isSubmitted"
           (keydown.enter)="handleEnterKey($event, 0)"
         ></app-input>
-        <!-- RegNo -->
+        <!-- regNo -->
         <app-input
           cType="text"
           label="Registration No"
-          [formControl]="getControl('RegNo')"
+          [formControl]="getControl('regNo')"
           (keydown.enter)="handleEnterKey($event, 1)"
         ></app-input>
       </div>
@@ -33,65 +33,65 @@
         <app-input
           cType="text"
           label="Patient Name"
-          [formControl]="getControl('Name')"
+          [formControl]="getControl('name')"
           [isSubmitted]="isSubmitted"
           (keydown.enter)="handleEnterKey($event, 2)"
         ></app-input>
-        <!-- Sex -->
+        <!-- sex -->
         <app-input
           cType="select"
           [options]="options"
-          label="Sex"
-          [formControl]="getControl('Sex')"
+          label="sex"
+          [formControl]="getControl('sex')"
           (keydown.enter)="handleEnterKey($event, 3)"
         ></app-input>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-        <!-- FatherName -->
+        <!-- fatherName -->
         <app-input
           cType="text"
           label="Father Name"
-          [formControl]="getControl('FatherName')"
+          [formControl]="getControl('fatherName')"
           (keydown.enter)="handleEnterKey($event, 4)"
         ></app-input>
-        <!-- MotherName -->
+        <!-- motherName -->
         <app-input
           cType="text"
           label="Mother Name"
-          [formControl]="getControl('MotherName')"
+          [formControl]="getControl('motherName')"
           (keydown.enter)="handleEnterKey($event, 5)"
         ></app-input>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-        <!-- NID -->
+        <!-- nid -->
         <app-input
           cType="text"
-          label="NID"
-          [formControl]="getControl('NID')"
+          label="nid"
+          [formControl]="getControl('nid')"
           (keydown.enter)="handleEnterKey($event, 6)"
         ></app-input>
-        <!-- Dob -->
+        <!-- dob -->
         <app-input
           cType="date"
           label="Date of Birth"
-          [formControl]="getControl('Dob')"
+          [formControl]="getControl('dob')"
           (keydown.enter)="handleEnterKey($event, 7)"
         ></app-input>
       </div>
-      <!-- Address -->
+      <!-- address -->
       <app-input
         cType="text"
-        label="Address"
-        [formControl]="getControl('Address')"
+        label="address"
+        [formControl]="getControl('address')"
         (keydown.enter)="handleEnterKey($event, 8)"
       ></app-input>
-      <!-- Remarks -->
+      <!-- remarks -->
       <app-input
         cType="text"
-        label="Remarks"
-        [formControl]="getControl('Remarks')"
+        label="remarks"
+        [formControl]="getControl('remarks')"
         (keydown.enter)="handleEnterKey($event, 9)"
       ></app-input>
 
@@ -162,7 +162,7 @@
             <th scope="col" class="px-1 py-3">sex</th>
             <th scope="col" class="px-1 py-3">birth of day</th>
             <th scope="col" class="px-1 py-3">nid no.</th>
-            <th scope="col" class="px-1 py-3">Address</th>
+            <th scope="col" class="px-1 py-3">address</th>
             <th scope="col" class="px-1 py-3">remarks</th>
             <th scope="col" class="px-1 py-3">post by</th>
             <th scope="col" class="px-1 py-3">entry date</th>
@@ -173,50 +173,50 @@
           <tr
             (click)="onUpdate(item)"
             id="row-{{ $index }}"
-            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
+            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer text-center"
             [ngClass]="{ '!bg-teal-600 text-white': $index === highlightedTr }"
           >
             <th
               scope="row"
               class="p-1 font-medium whitespace-nowrap dark:text-white"
             >
-              {{ item?.RegNo }}
+              {{ item?.regNo }}
             </th>
             <th
               scope="row"
               class="p-1 font-medium whitespace-nowrap dark:text-white"
             >
-              {{ item?.Name }}
+              {{ item?.name }}
             </th>
             <td class="p-1">
-              {{ item?.ContactNo }}
+              {{ item?.contactNo }}
             </td>
             <td class="p-1">
-              {{ item?.FatherName }}
+              {{ item?.fatherName }}
             </td>
             <td class="p-1">
-              {{ item?.MotherName }}
+              {{ item?.motherName }}
             </td>
             <td class="p-1">
-              {{ item?.Sex }}
+              {{ item?.sex }}
             </td>
             <td class="p-1">
-              {{ transform(item?.Dob, "dd/MM/yyyy") }}
+              {{ transform(item?.dob, "dd/MM/yyyy") }}
             </td>
             <td class="p-1">
-              {{ item?.NID }}
+              {{ item?.nid }}
             </td>
             <td class="p-1">
-              {{ item?.Address }}
+              {{ item?.address }}
             </td>
             <td class="p-1">
-              {{ item?.Remarks }}
+              {{ item?.remarks }}
             </td>
             <td class="p-1">
-              {{ item?.PostedBy }}
+              {{ item?.postedBy }}
             </td>
             <td class="p-1">
-              {{ transform(item?.EntryDate, "dd/MM/yyyy") }}
+              {{ transform(item?.entryDate, "dd/MM/yyyy") }}
             </td>
           </tr>
           }

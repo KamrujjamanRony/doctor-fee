@@ -1,7 +1,7 @@
 public class PatientReg
 {
     public int Id { get; set; }
-    public string? RegNo { get; set; }
+    public string? regNo { get; set; }
     public string? Name { get; set; }
     public string? ContactNo { get; set; }
     public string? FatherName { get; set; }

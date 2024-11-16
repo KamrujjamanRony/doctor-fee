@@ -41,14 +41,14 @@ export class DoctorFeeComponent {
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   isSubmitted = false;
   form = this.fb.group({
-    doctor: ['', [Validators.required]],
-    patient: ['', [Validators.required]],
+    doctorId: ['', [Validators.required]],
+    patientRegId: ['', [Validators.required]],
     patientType: ['Outdoor'],
     amount: [''],
     discount: [''],
-    Remarks: [''],
-    PostedBy: [''],
-    EntryDate: [this.today],
+    remarks: [''],
+    postBy: [''],
+    entryDate: [this.today],
   });
   isLoading$: Observable<any> | undefined;
   hasError$: Observable<any> | undefined;
@@ -67,14 +67,14 @@ export class DoctorFeeComponent {
     // Focus on the search input when the component is initialized
     setTimeout(() => {
       this.searchInput.nativeElement.focus();
-    }, 0); // Use setTimeout to ensure the DOM is ready
+    }, 10);
   }
 
   onLoadPatients() {
     const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.patientService.getAllPatients());
     data$.subscribe(data => {
       this.filteredPatientList.set(data);
-      this.patientOptions = this.filteredPatientList().map(p => ({ id: p.id, name: p.Name }));
+      this.patientOptions = this.filteredPatientList().map(p => ({ id: p.id, name: p.name }));
     });
     this.isLoading$ = isLoading$;
     this.hasError$ = hasError$;
@@ -84,7 +84,7 @@ export class DoctorFeeComponent {
     const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.doctorService.getAllDoctors());
     data$.subscribe(data => {
       this.filteredDoctorList.set(data);
-      this.doctorOptions = this.filteredDoctorList().map(d => ({ id: d.id, name: d.Name, DrFee: d.DrFee }));
+      this.doctorOptions = this.filteredDoctorList().map(d => ({ id: d.id, name: d.name, drFee: d.drFee }));
     });
     this.isLoading$ = isLoading$;
     this.hasError$ = hasError$;
@@ -102,8 +102,8 @@ export class DoctorFeeComponent {
     ]).pipe(
       map(([data, query]) =>
         data.filter((doctorFeeData: any) =>
-          doctorFeeData.doctor?.toLowerCase().includes(query) ||
-          doctorFeeData.patient?.includes(query)
+          doctorFeeData.doctorId?.toString()?.includes(query) ||
+          doctorFeeData.patientRegId?.toString()?.includes(query)
         )
       )
     ).subscribe(filteredData => this.filteredDoctorFeeList.set(filteredData));
@@ -118,14 +118,14 @@ export class DoctorFeeComponent {
   onDoctorChange(data: any) {
     this.selectedDoctor = data;
     this.form.patchValue({
-      doctor: this.selectedDoctor.id,
+      doctorId: this.selectedDoctor.id,
     });
   }
 
   onPatientChange(data: any) {
     this.selectedPatient = data;
     this.form.patchValue({
-      patient: this.selectedPatient.id,
+      patientRegId: this.selectedPatient.id,
     });
   }
 
@@ -173,6 +173,7 @@ export class DoctorFeeComponent {
       if (inputsArray.length > 0) {
         const firstInput = inputsArray[0];
         firstInput.inputRef.nativeElement.focus();
+        this.highlightedTr = -1;
       }
     } else if (event.key === 'ArrowDown') {
       event.preventDefault(); // Prevent default scrolling behavior
@@ -197,15 +198,14 @@ export class DoctorFeeComponent {
     this.isSubmitted = true;
     console.log(this.form.value);
     if (this.form.valid) {
-      // console.log(this.form.value);
       if (this.selected) {
-        this.doctorFeeService.updateDoctorFee(this.selected.id, this.form.value)
+        this.doctorFeeService.updateDoctorFee(this.selected.gid, this.form.value)
           .subscribe({
             next: (response) => {
               if (response !== null && response !== undefined) {
                 this.success.set("Patient successfully updated!");
+                this.filteredDoctorFeeList.set([...this.filteredDoctorFeeList(), this.form.value])
                 this.formReset(e);
-                this.onLoadDoctorFees();
                 this.isSubmitted = false;
                 this.selected = null;
                 setTimeout(() => {
@@ -224,8 +224,8 @@ export class DoctorFeeComponent {
             next: (response) => {
               if (response !== null && response !== undefined) {
                 this.success.set("Patient successfully added!");
+                this.filteredDoctorFeeList.set([...this.filteredDoctorFeeList(), this.form.value])
                 this.formReset(e);
-                this.onLoadDoctorFees();
                 this.isSubmitted = false;
                 setTimeout(() => {
                   this.success.set("");
@@ -246,14 +246,14 @@ export class DoctorFeeComponent {
   onUpdate(data: any) {
     this.selected = data;
     this.form.patchValue({
-      doctor: data?.doctor,
-      patient: data?.patient,
+      doctorId: data?.doctorId,
+      patientRegId: data?.patientRegId,
       patientType: data?.patientType,
       amount: data?.amount,
       discount: data?.discount,
-      Remarks: data?.Remarks,
-      PostedBy: data?.PostedBy,
-      EntryDate: data?.EntryDate,
+      remarks: data?.remarks,
+      postBy: data?.postBy,
+      entryDate: data?.entryDate,
     });
 
     // Focus the 'Name' input field after patching the value
@@ -271,18 +271,19 @@ export class DoctorFeeComponent {
   formReset(e: Event): void {
     e.preventDefault();
     this.form.reset({
-      doctor: '',
-      patient: '',
+      doctorId: '',
+      patientRegId: '',
       patientType: 'Outdoor',
       amount: '',
       discount: '',
-      Remarks: '',
-      PostedBy: '',
-      EntryDate: this.today
+      remarks: '',
+      postBy: '',
+      entryDate: this.today
     });
+    this.selected = null;
   }
 
-  // ----------Patient---------------------------------------------------------------------------------
+  // ----------patientRegId---------------------------------------------------------------------------------
   isPatientDropdownOpen: boolean = false;
   patientOptions: any[] = [];
   highlightedIndexPatient: number = -1;
@@ -316,7 +317,7 @@ export class DoctorFeeComponent {
   }
 
   selectPatient(option: string) {
-    this.getControl('patient').setValue(option);
+    this.getControl('patientRegId').setValue(option);
     this.isPatientDropdownOpen = false;
     this.highlightedIndexPatient = -1;
   }
@@ -324,9 +325,9 @@ export class DoctorFeeComponent {
   onPatientSearchChange(event: Event) {
     const searchValue = (event.target as HTMLInputElement).value?.toLowerCase();
     this.patientOptions = this.filteredPatientList().filter(option =>
-      option.Name.toLowerCase().includes(searchValue) ||
-      option.id.toLowerCase().includes(searchValue)
-    ).map(p => ({ id: p.id, name: p.Name }));
+      option.name.toLowerCase().includes(searchValue) ||
+      option.id.toString().includes(searchValue)
+    ).map(p => ({ id: p.id, name: p.name }));
     this.highlightedIndexPatient = -1;
     if (searchValue === '') {
       this.isPatientDropdownOpen = false;
@@ -341,7 +342,7 @@ export class DoctorFeeComponent {
   }
   //---------------------------------------------------------------------------------
 
-  // ----------Doctor---------------------------------------------------------------------------------
+  // ----------doctorId---------------------------------------------------------------------------------
   isDoctorDropdownOpen: boolean = false;
   doctorOptions: any[] = [];
   highlightedIndexDoctor: number = -1;
@@ -375,7 +376,7 @@ export class DoctorFeeComponent {
   }
 
   selectDoctor(option: any) {
-    this.getControl('doctor').setValue(option?.id ?? this.doctorOptions[this.highlightedIndexDoctor]?.id);
+    this.getControl('doctorId').setValue(option?.id ?? this.doctorOptions[this.highlightedIndexDoctor]?.id);
     this.getControl('amount').setValue(option?.DrFee ?? this.doctorOptions[this.highlightedIndexDoctor]?.DrFee ?? 0);
     this.isDoctorDropdownOpen = false;
     this.highlightedIndexDoctor = -1;
@@ -384,9 +385,9 @@ export class DoctorFeeComponent {
   onDoctorSearchChange(event: Event) {
     const searchValue = (event.target as HTMLInputElement).value?.toLowerCase();
     this.doctorOptions = this.filteredDoctorList().filter(option =>
-      option.Name.toLowerCase().includes(searchValue) ||
-      option.id.toLowerCase().includes(searchValue)
-    ).map(p => ({ id: p.id, name: p.Name }));
+      option.name.toLowerCase().includes(searchValue) ||
+      option.id.toString().includes(searchValue)
+    ).map(p => ({ id: p.id, name: p.name }));
     this.highlightedIndexDoctor = -1;
     if (searchValue === '') {
       this.isDoctorDropdownOpen = false;

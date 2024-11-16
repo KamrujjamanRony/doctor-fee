@@ -22,8 +22,8 @@ export class DoctorEntryComponent {
   dataFetchService = inject(DataFetchService);
   filteredDoctorList = signal<any[]>([]);
 
-  options: any[] = [{id: 1, name:'Yes'}, {id: 0, name:'No'}];
-  optionsD: any[] = [{id: 0, name:'No'}, {id: 1, name:'Yes'}];
+  options: any[] = [{ id: 1, name: 'Yes' }, { id: 0, name: 'No' }];
+  optionsD: any[] = [{ id: 0, name: 'No' }, { id: 1, name: 'Yes' }];
   mpoOptions: string[] = [];
   isDropdownOpen: boolean = false;
   selectedDoctor: any;
@@ -40,23 +40,27 @@ export class DoctorEntryComponent {
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   isSubmitted = false;
   form = this.fb.group({
-    Name: ['', [Validators.required]],
-    Address: [''],
-    ContactNo: [''],
-    TakeCom: [0],
-    IsChamberDoctor: [0],
-    MpoId: [''],
-    UserName: [''],
-    Valid: [0],
-    EntryDate: [this.today],
-    ReportUserName: [''],
-    DrFee: [null],
+    name: ['', [Validators.required]],
+    address: [''],
+    contactNo: [''],
+    takeCom: [0],
+    isChamberDoctor: [0],
+    mpoId: [''],
+    userName: [''],
+    valid: [0],
+    entryDate: [this.today],
+    reportUserName: [''],
+    drFee: [null],
   });
 
   transform(value: any, args?: any): any {
     if (!value) return null;
     const datePipe = new DatePipe('en-US');
     return datePipe.transform(value, 'dd/MM/yyyy');
+  }
+
+  is(value: any) {
+    return value == 1 ? "Yes" : "No";
   }
 
   ngOnInit() {
@@ -80,9 +84,9 @@ export class DoctorEntryComponent {
     ]).pipe(
       map(([data, query]) =>
         data.filter((doctorData: any) =>
-          doctorData.Name?.toLowerCase().includes(query) ||
-          doctorData.ContactNo?.includes(query) ||
-          doctorData.RegNo?.includes(query)
+          doctorData.name?.toLowerCase().includes(query) ||
+          doctorData.contactNo?.includes(query) ||
+          doctorData.regNo?.includes(query)
         )
       )
     ).subscribe(filteredData => this.filteredDoctorList.set(filteredData));
@@ -102,10 +106,10 @@ export class DoctorEntryComponent {
   // Function to add a new sticker name
   addMpo(e: Event) {
     e.preventDefault();
-    const currentValue = this.getControl('MpoId').value;
+    const currentValue = this.getControl('mpoId').value;
     if (currentValue && !this.mpoOptions.includes(currentValue)) {
       this.mpoOptions.push(currentValue);
-      this.getControl('MpoId').setValue('');
+      this.getControl('mpoId').setValue('');
       this.isDropdownOpen = false; // Close the dropdown after adding
     }
   }
@@ -119,7 +123,7 @@ export class DoctorEntryComponent {
 
   // Set the sticker name from the dropdown
   selectMpo(option: string) {
-    this.getControl('MpoId').setValue(option);
+    this.getControl('mpoId').setValue(option);
     this.isDropdownOpen = false; // Close the dropdown
     this.highlightedIndex = -1; // Reset the highlighted index
   }
@@ -180,7 +184,7 @@ export class DoctorEntryComponent {
       }
     }
   }
-  
+
   // Handle key navigation in the search input
   handleSearchKeyDown(event: KeyboardEvent) {
     if (this.filteredDoctorList().length === 0) {
@@ -193,13 +197,14 @@ export class DoctorEntryComponent {
       if (inputsArray.length > 0) {
         const firstInput = inputsArray[0];
         firstInput.inputRef.nativeElement.focus();
+        this.highlightedTr = -1;
       }
     } else if (event.key === 'ArrowDown') {
       event.preventDefault(); // Prevent default scrolling behavior
       this.highlightedTr = (this.highlightedTr + 1) % this.filteredDoctorList().length;
     } else if (event.key === 'ArrowUp') {
       event.preventDefault(); // Prevent default scrolling behavior
-      this.highlightedTr = 
+      this.highlightedTr =
         (this.highlightedTr - 1 + this.filteredDoctorList().length) % this.filteredDoctorList().length;
     } else if (event.key === 'Enter') {
       event.preventDefault(); // Prevent form submission
@@ -218,65 +223,65 @@ export class DoctorEntryComponent {
     console.log(this.form.value);
     if (this.form.valid) {
       // console.log(this.form.value);
-      if(this.selectedDoctor){
+      if (this.selectedDoctor) {
         this.doctorService.updateDoctor(this.selectedDoctor.id, this.form.value)
-        .subscribe({
-          next: (response) => {
-            if (response !== null && response !== undefined) {
-              this.success.set("Doctor successfully updated!");
-              this.formReset(e);
-              this.onLoadDoctors();
-              this.isSubmitted = false;
-              this.selectedDoctor = null;
-              setTimeout(() => {
-                this.success.set("");
-              }, 3000);
-            }
+          .subscribe({
+            next: (response) => {
+              if (response !== null && response !== undefined) {
+                this.success.set("Doctor successfully updated!");
+                this.filteredDoctorList.set([...this.filteredDoctorList(), this.form.value])
+                this.isSubmitted = false;
+                this.selectedDoctor = null;
+                this.formReset(e);
+                setTimeout(() => {
+                  this.success.set("");
+                }, 3000);
+              }
 
-          },
-          error: (error) => {
-            console.error('Error register:', error);
-          }
-        });
+            },
+            error: (error) => {
+              console.error('Error register:', error);
+            }
+          });
       } else {
-      this.doctorService.addDoctor(this.form.value)
-        .subscribe({
-          next: (response) => {
-            if (response !== null && response !== undefined) {
-              this.success.set("Doctor successfully added!");
-              this.formReset(e);
-              this.onLoadDoctors();
-              this.isSubmitted = false;
-              setTimeout(() => {
-                this.success.set("");
-              }, 3000);
-            }
+        this.doctorService.addDoctor(this.form.value)
+          .subscribe({
+            next: (response) => {
+              if (response !== null && response !== undefined) {
+                this.success.set("Doctor successfully added!");
+                this.filteredDoctorList.set([...this.filteredDoctorList(), this.form.value])
+                this.isSubmitted = false;
+                this.formReset(e);
+                setTimeout(() => {
+                  this.success.set("");
+                }, 3000);
+              }
 
-          },
-          error: (error) => {
-            console.error('Error register:', error);
-          }
-        });
+            },
+            error: (error) => {
+              console.error('Error register:', error);
+            }
+          });
       }
     } else {
       console.log('Form is invalid');
     }
   }
 
-  onUpdate(data: any){
+  onUpdate(data: any) {
     this.selectedDoctor = data;
     this.form.patchValue({
-      Name: data?.Name,
-      Address: data?.Address,
-      ContactNo: data?.ContactNo,
-      TakeCom: data?.TakeCom,
-      IsChamberDoctor: data?.IsChamberDoctor,
-      MpoId: data?.MpoId,
-      UserName: data?.UserName,
-      Valid: data?.Valid,
-      EntryDate: data?.EntryDate,
-      ReportUserName: data?.ReportUserName,
-      DrFee: data?.DrFee,
+      name: data?.name,
+      address: data?.address,
+      contactNo: data?.contactNo,
+      takeCom: data?.takeCom,
+      isChamberDoctor: data?.isChamberDoctor,
+      mpoId: data?.mpoId,
+      userName: data?.userName,
+      valid: data?.valid,
+      entryDate: data?.entryDate,
+      reportUserName: data?.reportUserName,
+      drFee: data?.drFee,
     });
 
     // Focus the 'Name' input field after patching the value
@@ -294,18 +299,19 @@ export class DoctorEntryComponent {
   formReset(e: Event): void {
     e.preventDefault();
     this.form.reset({
-      Name: '',
-      Address: '',
-      ContactNo: '',
-      TakeCom: 0,
-      IsChamberDoctor: 0,
-      MpoId: '',
-      UserName: '',
-      Valid: 0,
-      EntryDate: this.today,
-      ReportUserName: '',
-      DrFee: null,
+      name: '',
+      address: '',
+      contactNo: '',
+      takeCom: 0,
+      isChamberDoctor: 0,
+      mpoId: '',
+      userName: '',
+      valid: 0,
+      entryDate: this.today,
+      reportUserName: '',
+      drFee: null,
     });
+    this.selectedDoctor = null;
   }
 
 }

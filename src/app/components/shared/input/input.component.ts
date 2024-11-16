@@ -37,7 +37,7 @@ export class InputComponent implements ControlValueAccessor {
 
   onOptionSelected() {
     return this.options.find(option =>
-      option.id.includes(this.value)
+      option.id.toString().includes(this.value)
     )?.name;
   }
 
