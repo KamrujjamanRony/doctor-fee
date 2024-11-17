@@ -98,7 +98,7 @@
       <div class="flex gap-2">
         <!-- Save -->
         <app-input
-          label="Save"
+        [label]="selectedPatient ? 'Update' : 'Save'"
           cType="submit"
           (keydown.enter)="handleEnterKey($event, 10)"
           class="w-full"

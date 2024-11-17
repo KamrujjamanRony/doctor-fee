@@ -4,7 +4,8 @@ import { HomeComponent } from './components/pages/home/home.component';
 import { DoctorEntryComponent } from './components/pages/setup/doctor/doctor-entry/doctor-entry.component';
 import { RegistrationComponent } from './components/pages/registration/registration.component';
 import { DoctorFeeComponent } from './components/pages/setup/doctor/doctor-fee/doctor-fee.component';
-import { ReportsComponent } from './components/pages/reports/reports.component';
+import { DoctorFeeReportComponent } from './components/pages/reports/doctor-fee-report/doctor-fee-report.component';
+import { DoctorsReportComponent } from './components/pages/reports/doctors-report/doctors-report.component';
 
 export const routes: Routes = [
     {
@@ -29,8 +30,12 @@ export const routes: Routes = [
             component: DoctorFeeComponent
           },
           {
-            path: 'reports',
-            component: ReportsComponent
+            path: 'reports/doctor-fee-report',
+            component: DoctorFeeReportComponent
+          },
+          {
+            path: 'reports/doctors-report',
+            component: DoctorsReportComponent
           },
         ],
       }

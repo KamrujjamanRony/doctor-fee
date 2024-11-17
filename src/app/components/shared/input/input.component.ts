@@ -20,6 +20,7 @@ export class InputComponent implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() cType: any;
   @Input() isSubmitted: boolean = false;
+  @Input() isSelect: boolean = false;
   @Input() options: any[] = [];
   @Output() onSelectSearchInputChange = new EventEmitter<void>();
   @ViewChild('inputRef', { static: false  }) inputRef!: ElementRef<HTMLInputElement>;  // ViewChild to get native input element

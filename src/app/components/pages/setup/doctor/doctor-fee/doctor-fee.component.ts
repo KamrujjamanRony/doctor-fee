@@ -28,7 +28,7 @@ export class DoctorFeeComponent {
   filteredDoctorList = signal<any[]>([]);
   filteredDoctorFeeList = signal<any[]>([]);
   private searchQuery$ = new BehaviorSubject<string>('');
-  options: any[] = [{ id: 'Outdoor', name: 'Outdoor' }, { id: 'Indoor', name: 'Indoor' }, { id: 'Emergency', name: 'Emergency' }];
+  options: any[] = [{ id: 'New', name: 'New' }, { id: 'Old', name: 'Old' }, { id: 'Others', name: 'Others' }];
   selectedDoctor: any;
   selectedPatient: any;
   selected: any;
@@ -74,10 +74,23 @@ export class DoctorFeeComponent {
     const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.patientService.getAllPatients());
     data$.subscribe(data => {
       this.filteredPatientList.set(data);
-      this.patientOptions = this.filteredPatientList().map(p => ({ id: p.id, name: p.name }));
+      this.patientOptions = this.filteredPatientList().map(p => ({ id: p.id, name: `${p.regNo} - ${p.name} - ${p.contactNo}` }));
     });
     this.isLoading$ = isLoading$;
     this.hasError$ = hasError$;
+    // Combine the original data stream with the search query to create a filtered list
+    combineLatest([
+      data$,
+      this.searchQuery$
+    ]).pipe(
+      map(([data, query]) =>
+        data.filter((patientData: any) =>
+          patientData.regNo?.toString()?.toLowerCase()?.includes(query) ||
+          patientData.name?.toString()?.toLowerCase()?.includes(query) ||
+          patientData.contactNo?.toString()?.toLowerCase()?.includes(query)
+        )
+      )
+    ).subscribe(filteredData => this.filteredPatientList.set(filteredData));
   }
 
   onLoadDoctors() {
@@ -92,25 +105,19 @@ export class DoctorFeeComponent {
 
   onLoadDoctorFees() {
     const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.doctorFeeService.getAllDoctorFees());
-    data$.subscribe(data => this.filteredDoctorFeeList.set(data));
+    data$.subscribe((data: any[]) => {
+      this.filteredDoctorFeeList.set(data.sort((a: any, b: any) => {
+        const dateA = new Date(a.entryDate).getTime();
+        const dateB = new Date(b.entryDate).getTime();
+        return dateB - dateA;
+      }));
+    });
     this.isLoading$ = isLoading$;
     this.hasError$ = hasError$;
-    // Combine the original data stream with the search query to create a filtered list
-    combineLatest([
-      data$,
-      this.searchQuery$
-    ]).pipe(
-      map(([data, query]) =>
-        data.filter((doctorFeeData: any) =>
-          doctorFeeData.doctorId?.toString()?.includes(query) ||
-          doctorFeeData.patientRegId?.toString()?.includes(query)
-        )
-      )
-    ).subscribe(filteredData => this.filteredDoctorFeeList.set(filteredData));
   }
 
-  // Method to filter DoctorFee list based on search query
-  onSearchDoctorFee(event: Event) {
+  
+  onSearchPatient(event: Event) {
     const query = (event.target as HTMLInputElement).value.toLowerCase();
     this.searchQuery$.next(query);
   }
@@ -187,8 +194,8 @@ export class DoctorFeeComponent {
 
       // Call onUpdate for the currently highlighted item
       if (this.highlightedTr !== -1) {
-        const selectedItem = this.filteredDoctorFeeList()[this.highlightedTr];
-        this.onUpdate(selectedItem); // Execute onUpdate for the selected row
+        const selectedItem = this.filteredPatientList()[this.highlightedTr];
+        this.onUpdate(selectedItem);
         this.highlightedTr = -1;
       }
     }
@@ -196,35 +203,14 @@ export class DoctorFeeComponent {
 
   onSubmit(e: Event) {
     this.isSubmitted = true;
-    console.log(this.form.value);
+    // console.log(this.form.value);
     if (this.form.valid) {
-      if (this.selected) {
-        this.doctorFeeService.updateDoctorFee(this.selected.gid, this.form.value)
-          .subscribe({
-            next: (response) => {
-              if (response !== null && response !== undefined) {
-                this.success.set("Patient successfully updated!");
-                this.filteredDoctorFeeList.set([...this.filteredDoctorFeeList(), this.form.value])
-                this.formReset(e);
-                this.isSubmitted = false;
-                this.selected = null;
-                setTimeout(() => {
-                  this.success.set("");
-                }, 3000);
-              }
-
-            },
-            error: (error) => {
-              console.error('Error register:', error);
-            }
-          });
-      } else {
         this.doctorFeeService.addDoctorFee(this.form.value)
           .subscribe({
             next: (response) => {
               if (response !== null && response !== undefined) {
                 this.success.set("Patient successfully added!");
-                this.filteredDoctorFeeList.set([...this.filteredDoctorFeeList(), this.form.value])
+                this.filteredDoctorFeeList.set([this.form.value, ...this.filteredDoctorFeeList()])
                 this.formReset(e);
                 this.isSubmitted = false;
                 setTimeout(() => {
@@ -237,7 +223,6 @@ export class DoctorFeeComponent {
               console.error('Error register:', error);
             }
           });
-      }
     } else {
       console.log('Form is invalid');
     }
@@ -246,23 +231,16 @@ export class DoctorFeeComponent {
   onUpdate(data: any) {
     this.selected = data;
     this.form.patchValue({
-      doctorId: data?.doctorId,
-      patientRegId: data?.patientRegId,
-      patientType: data?.patientType,
-      amount: data?.amount,
-      discount: data?.discount,
-      remarks: data?.remarks,
-      postBy: data?.postBy,
-      entryDate: data?.entryDate,
+      patientRegId: data?.id,
     });
 
     // Focus the 'Name' input field after patching the value
     setTimeout(() => {
-      const NameInput = this.formInputs.find(input => input.label === 'Contact No');
+      const NameInput = this.formInputs.find(input => input.label === 'Patient');
       if (NameInput && NameInput.inputRef) {
         NameInput.inputRef.nativeElement.focus(); // Programmatically focus the Name input
       }
-    }, 0); // Delay to ensure the DOM is updated
+    }, 10); // Delay to ensure the DOM is updated
 
     // Reset the highlighted row
     this.highlightedIndexPatient = -1;
@@ -337,7 +315,7 @@ export class DoctorFeeComponent {
   }
 
   getPatientName(id: any){
-    const patient = this.patientOptions.find(p => p.id == id);
+    const patient = this.filteredPatientList().find(p => p.id == id);
     return patient?.name?? '';
   }
   //---------------------------------------------------------------------------------
@@ -397,7 +375,7 @@ export class DoctorFeeComponent {
   }
 
   getDoctorName(id: any){
-    const doctor = this.doctorOptions.find(p => p.id == id);
+    const doctor = this.filteredDoctorList().find(p => p.id == id);
     return doctor?.name?? '';
   }
   //---------------------------------------------------------------------------------

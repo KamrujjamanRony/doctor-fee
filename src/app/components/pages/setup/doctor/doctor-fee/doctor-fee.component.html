@@ -1,7 +1,7 @@
 <section class="flex flex-col lg:flex-row gap-5 max-w-7xl mx-auto">
-    <div class="w-full border mb-10">
+    <div class="w-full md:w-1/2 border mb-10">
       <h1
-        class="text-2xl md:text-5xl font-bold text-teal-500 underline text-center mb-5"
+        class="text-xl md:text-3xl font-bold text-teal-500 underline text-center mb-5"
       >
         Doctor Fee Form
       </h1>
@@ -11,46 +11,16 @@
         class="max-w-md mx-auto"
       >
 
-      <div class="flex flex-row gap-2 relative">
-        <!-- patientRegId -->
-        <app-input
-        cType="select-text"
-          class="w-full"
-          label="patient"
-          [formControl]="getControl('patientRegId')"
-          [options]="patientOptions"
-          (focus)="isPatientDropdownOpen = false"
-          (keydown.enter)="handleEnterKey($event, 0)"
-          (keydown)="handlePatientKeyDown($event)"
-          (input)="onPatientSearchChange($event)"
-        >
-          <button
-            (click)="togglePatientDropdown($event)"
-            class="absolute top-3 right-1"
-          >
-            <app-down-arrow></app-down-arrow>
-          </button>
-        </app-input>
-
-        <!-- Dropdown for sticker names -->
-        <div
-          *ngIf="isPatientDropdownOpen && patientOptions.length > 0"
-          class="absolute bg-white border border-gray-300 mt-12 w-full z-50 rounded shadow-lg"
-        >
-          <ul>
-            <li
-              *ngFor="let option of patientOptions; let i = index"
-              (click)="selectPatient(option?.id)"
-              [class.highlighted]="i === highlightedIndexPatient"
-              class="py-2 px-3 hover:text-white hover:bg-teal-600 cursor-pointer"
-            >
-              {{ option?.name }}
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      
+      <!-- patientRegId -->
+      <app-input
+        cType="select"
+        [options]="patientOptions"
+        label="Patient"
+        [isSelect]="true"
+        [formControl]="getControl('patientRegId')"
+        (keydown.enter)="handleEnterKey($event, 0)"
+        (onSelectSearchInputChange)="onPatientChange($event)"
+      ></app-input>
 
       <!-- patientType -->
       <app-input
@@ -144,99 +114,169 @@
       </form>
     </div>
   
-    <div class="w-full border mb-10 px-3 max-h-[85vh] overflow-scroll">
-      <h1
-        class="text-2xl md:text-5xl font-bold text-teal-500 underline text-center"
-      >
-      Doctor Fee List
-      </h1>
-  
-      <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
-        <div class="pb-4 bg-white dark:bg-gray-900 ml-2">
-          <label for="table-search" class="sr-only">Search</label>
-          <div class="relative mt-1">
-            <div
-              class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
-            >
-              <app-search></app-search>
-            </div>
-            <input
-              #searchInput
-              type="text"
-              id="table-search"
-              autocomplete="off"
-              class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
-              placeholder="Search for Doctor Fee"
-              (input)="onSearchDoctorFee($event)"
-              (keydown)="handleSearchKeyDown($event)"
-            />
-          </div>
-        </div>
-        @if (isLoading$ | async) {
-        <p>Loading ...</p>
-        } @else if (hasError$ | async) {
-        <p>There was an error loading data.</p>
-        } @else {
-        <table
-          class="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-400"
+    <div class="w-full md:w-1/2">
+      <div class="w-full border mb-5 px-3 max-h-[45vh] overflow-scroll">
+        <h1
+          class="text-xl md:text-3xl font-bold text-teal-500 underline text-center"
         >
-          <thead
-            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+        Patient List
+        </h1>
+    
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
+          <div class="pb-4 bg-white dark:bg-gray-900 ml-2">
+            <label for="table-search" class="sr-only">Search</label>
+            <div class="relative mt-1">
+              <div
+                class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
+              >
+                <app-search></app-search>
+              </div>
+              <input
+                #searchInput
+                type="text"
+                id="table-search"
+                autocomplete="off"
+                class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
+                placeholder="Search for Patient"
+                (input)="onSearchPatient($event)"
+                (keydown)="handleSearchKeyDown($event)"
+              />
+            </div>
+          </div>
+          @if (isLoading$ | async) {
+          <p>Loading ...</p>
+          } @else if (hasError$ | async) {
+          <p>There was an error loading data.</p>
+          } @else {
+          <table
+            class="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
-            <tr>
-              <th scope="col" class="px-1 py-3">Patient</th>
-              <th scope="col" class="px-1 py-3">Type</th>
-              <th scope="col" class="px-1 py-3">Doctor</th>
-              <th scope="col" class="px-1 py-3">Amount</th>
-              <th scope="col" class="px-1 py-3">Discount</th>
-              <th scope="col" class="px-1 py-3">remarks</th>
-              <th scope="col" class="px-1 py-3">post by</th>
-              <th scope="col" class="px-1 py-3">entry date</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (item of filteredDoctorFeeList(); track item?.gid || $index) {
-            <tr
-              (click)="onUpdate(item)"
-              id="row-{{ $index }}"
-              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer text-center"
-              [ngClass]="{ '!bg-teal-600 text-white': $index === highlightedTr }"
+            <thead
+              class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
             >
-              <th
-                scope="row"
-                class="p-1 font-medium whitespace-nowrap dark:text-white"
+              <tr>
+                <th scope="col" class="px-1 py-3">Reg No.</th>
+                <th scope="col" class="px-1 py-3">Name</th>
+                <th scope="col" class="px-1 py-3">Mobile</th>
+                <th scope="col" class="px-1 py-3">Sex</th>
+                <th scope="col" class="px-1 py-3">Date of Birth</th>
+                <th scope="col" class="px-1 py-3">remarks</th>
+                <th scope="col" class="px-1 py-3">post by</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of filteredPatientList(); track item?.id || $index) {
+              <tr
+                (click)="onUpdate(item)"
+                id="row-{{ $index }}"
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
+                [ngClass]="{ '!bg-teal-600 text-white': $index === highlightedTr }"
               >
-                {{ getPatientName(item?.patientRegId) }}
-              </th>
-              <th
-                scope="row"
-                class="p-1 font-medium whitespace-nowrap dark:text-white"
+                <th
+                  scope="row"
+                  class="p-1 font-medium whitespace-nowrap dark:text-white"
+                >
+                  {{ item?.regNo }}
+                </th>
+                <th
+                  scope="row"
+                  class="p-1 font-medium whitespace-nowrap dark:text-white"
+                >
+                  {{ item?.name }}
+                </th>
+                <td class="p-1">
+                  {{ item?.contactNo }}
+                </td>
+                <td class="p-1">
+                  {{ item?.sex }}
+                </td>
+                <td class="p-1">
+                  {{ transform(item?.dob, "dd/MM/yyyy") }}
+                </td>
+                <td class="p-1">
+                  {{ item?.remarks }}
+                </td>
+                <td class="p-1">
+                  {{ item?.postBy }}
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+          }
+        </div>
+      </div>
+      <div class="w-full border mb-10 px-3 max-h-[40vh] overflow-scroll">
+        <h1
+          class="text-xl md:text-3xl font-bold text-teal-500 underline text-center"
+        >
+        Doctor Fee List
+        </h1>
+    
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
+          @if (isLoading$ | async) {
+          <p>Loading ...</p>
+          } @else if (hasError$ | async) {
+          <p>There was an error loading data.</p>
+          } @else {
+          <table
+            class="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-400"
+          >
+            <thead
+              class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+            >
+              <tr>
+                <th scope="col" class="px-1 py-3">Patient</th>
+                <th scope="col" class="px-1 py-3">Type</th>
+                <th scope="col" class="px-1 py-3">Doctor</th>
+                <th scope="col" class="px-1 py-3">Amount</th>
+                <th scope="col" class="px-1 py-3">Discount</th>
+                <th scope="col" class="px-1 py-3">remarks</th>
+                <th scope="col" class="px-1 py-3">post by</th>
+                <th scope="col" class="px-1 py-3">entry date</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of filteredDoctorFeeList().slice(0,3); track item?.gid || $index) {
+              <tr
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
               >
-                {{ item?.patientType }}
-              </th>
-              <td class="p-1">
-                {{ getDoctorName(item?.doctorId) }}
-              </td>
-              <td class="p-1">
-                {{ item?.amount }}
-              </td>
-              <td class="p-1">
-                {{ item?.discount }}
-              </td>
-              <td class="p-1">
-                {{ item?.remarks }}
-              </td>
-              <td class="p-1">
-                {{ item?.postBy }}
-              </td>
-              <td class="p-1">
-                {{ transform(item?.entryDate, "dd/MM/yyyy") }}
-              </td>
-            </tr>
-            }
-          </tbody>
-        </table>
-        }
+                <th
+                  scope="row"
+                  class="p-1 font-medium whitespace-nowrap dark:text-white"
+                >
+                  {{ getPatientName(item?.patientRegId) }}
+                </th>
+                <th
+                  scope="row"
+                  class="p-1 font-medium whitespace-nowrap dark:text-white"
+                >
+                  {{ item?.patientType }}
+                </th>
+                <td class="p-1">
+                  {{ getDoctorName(item?.doctorId) }}
+                </td>
+                <td class="p-1">
+                  {{ item?.amount }}
+                </td>
+                <td class="p-1">
+                  {{ item?.discount }}
+                </td>
+                <td class="p-1">
+                  {{ item?.remarks }}
+                </td>
+                <td class="p-1">
+                  {{ item?.postBy }}
+                </td>
+                <td class="p-1">
+                  {{ transform(item?.entryDate, "dd/MM/yyyy") }}
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+          }
+        </div>
       </div>
     </div>
   </section>

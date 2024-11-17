@@ -29,8 +29,15 @@ export class SidebarComponent {
       ]
     },
     {
-      id: 3, label: 'Reports', icon: 'reports', route: '/reports'
-    }
+      id: 3, label: 'Reports', icon: 'reports', menu: [
+        {
+          id: 31, label: 'Doctors', route: '/reports/doctors-report'
+        },
+        {
+          id: 32, label: 'Doctor Fee', route: '/reports/doctor-fee-report'
+        }
+      ]
+    },
   ]
 
 }

@@ -1,7 +1,7 @@
 <section class="flex flex-col lg:flex-row gap-5 max-w-7xl mx-auto">
   <div class="w-full border mb-10">
     <h1
-      class="text-2xl md:text-5xl font-bold text-teal-500 underline text-center mb-5"
+      class="text-xl md:text-3xl font-bold text-teal-500 underline text-center mb-5"
     >
       Doctor Form
     </h1>
@@ -25,7 +25,7 @@
         [formControl]="getControl('address')"
         (keydown.enter)="handleEnterKey($event, 1)"
       ></app-input>
-      <div class="grid grid-cols-3 gap-2">
+      <div class="grid grid-cols-2 gap-2">
         <!-- ContactNo -->
         <app-input
           cType="text"
@@ -33,6 +33,15 @@
           [formControl]="getControl('contactNo')"
           (keydown.enter)="handleEnterKey($event, 2)"
         ></app-input>
+        <!-- DrFee -->
+        <app-input
+          label="Doctor Fee"
+          [formControl]="getControl('drFee')"
+          (keydown.enter)="handleEnterKey($event, 5)"
+        ></app-input>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
         <!-- TakeCom -->
         <app-input
           cType="select"
@@ -49,27 +58,18 @@
           [formControl]="getControl('isChamberDoctor')"
           (keydown.enter)="handleEnterKey($event, 4)"
         ></app-input>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2">
-        <!-- DrFee -->
-        <app-input
-          label="Doctor Fee"
-          [formControl]="getControl('drFee')"
-          (keydown.enter)="handleEnterKey($event, 5)"
-        ></app-input>
         <!-- Valid -->
-        <app-input
+        <!-- <app-input
           cType="select"
           [options]="optionsD"
           label="Valid"
           [formControl]="getControl('valid')"
           (keydown.enter)="handleEnterKey($event, 6)"
-        ></app-input>
+        ></app-input> -->
       </div>
 
-      <div class="flex flex-row gap-2 relative">
         <!-- mpoId -->
+      <!-- <div class="flex flex-row gap-2 relative">
         <app-input
           class="w-full"
           label="Mpo Id"
@@ -85,8 +85,7 @@
             <app-down-arrow></app-down-arrow>
           </button>
         </app-input>
-
-        <!-- Add Button to add new sticker name -->
+        
         <div>
           <button
             (click)="addMpo($event)"
@@ -99,8 +98,7 @@
             </span>
           </button>
         </div>
-
-        <!-- Dropdown for sticker names -->
+        
         <div
           *ngIf="isDropdownOpen && mpoOptions.length > 0"
           class="absolute bg-white border border-gray-300 mt-12 w-full z-10 rounded shadow-lg"
@@ -116,12 +114,12 @@
             </li>
           </ul>
         </div>
-      </div>
+      </div> -->
 
       <div class="flex gap-2">
         <!-- Save -->
         <app-input
-          label="Save"
+          [label]="selectedDoctor ? 'Update' : 'Save'"
           cType="submit"
           (keydown.enter)="handleEnterKey($event, 8)"
           class="w-full"
@@ -139,7 +137,7 @@
 
   <div class="w-full border mb-10 px-3 max-h-[85vh] overflow-scroll">
     <h1
-      class="text-2xl md:text-5xl font-bold text-teal-500 underline text-center"
+      class="text-xl md:text-3xl font-bold text-teal-500 underline text-center"
     >
       Doctor List
     </h1>
@@ -177,12 +175,12 @@
           class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
         >
           <tr>
-            <th scope="col" class="px-6 py-3">name</th>
-            <th scope="col" class="px-6 py-3">Address</th>
-            <th scope="col" class="px-6 py-3">Contact</th>
-            <th scope="col" class="px-6 py-3">fee</th>
-            <th scope="col" class="px-6 py-3">mpo id</th>
-            <th scope="col" class="px-6 py-3">is chamber doctor</th>
+            <th scope="col" class="p-1">name</th>
+            <th scope="col" class="p-1">Contact</th>
+            <!-- <th scope="col" class="p-1">Address</th>
+            <th scope="col" class="p-1">fee</th> -->
+            <!-- <th scope="col" class="p-1">mpo id</th> -->
+            <!-- <th scope="col" class="p-1">is chamber doctor</th> -->
           </tr>
         </thead>
         <tbody>
@@ -190,30 +188,30 @@
           <tr
             (click)="onUpdate(item)"
             id="row-{{ $index }}"
-            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer text-center"
+            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
             [ngClass]="{ '!bg-teal-600 text-white': $index === highlightedTr }"
           >
-            <th
+            <td
               scope="row"
-              class="p-1 font-medium whitespace-nowrap dark:text-white"
+              class="p-1"
             >
               {{ item?.name }}
-            </th>
-            <td class="p-1">
-              {{ item?.address }}
             </td>
             <td class="p-1">
               {{ item?.contactNo }}
             </td>
+            <!-- <td class="p-1">
+              {{ item?.address }}
+            </td>
             <td class="p-1">
               {{ item?.drFee }}
-            </td>
-            <td class="p-1">
+            </td> -->
+            <!-- <td class="p-1">
               {{ item?.mpoId }}
-            </td>
-            <td class="p-1">
+            </td> -->
+            <!-- <td class="p-1">
               {{ is(item?.isChamberDoctor) }}
-            </td>
+            </td> -->
           </tr>
           }
         </tbody>
