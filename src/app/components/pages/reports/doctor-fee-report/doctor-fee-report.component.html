@@ -101,15 +101,15 @@
           class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
         >
           <tr>
+            <th scope="col" class="px-1 py-3">entry date</th>
             <th scope="col" class="px-1 py-3">Reg</th>
             <th scope="col" class="px-1 py-3">Patient</th>
             <th scope="col" class="px-1 py-3">Type</th>
             <th scope="col" class="px-1 py-3">Doctor</th>
             <th scope="col" class="px-1 py-3">Amount</th>
             <th scope="col" class="px-1 py-3">Discount</th>
-            <th scope="col" class="px-1 py-3">remarks</th>
             <th scope="col" class="px-1 py-3">post by</th>
-            <th scope="col" class="px-1 py-3">entry date</th>
+            <th scope="col" class="px-1 py-3">remarks</th>
           </tr>
         </thead>
         <tbody>
@@ -117,7 +117,10 @@
           <tr
             id="row-{{ $index }}"
             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
-          >
+          > 
+          <td class="p-1">
+            {{ transform(item?.entryDate, "dd/MM/yyyy") }}
+          </td>
             <td
               scope="row"
               class="p-1 font-medium whitespace-nowrap dark:text-white"
@@ -146,13 +149,10 @@
               {{ item?.discount }}
             </td>
             <td class="p-1">
-              {{ item?.remarks }}
-            </td>
-            <td class="p-1">
               {{ item?.postBy }}
             </td>
             <td class="p-1">
-              {{ transform(item?.entryDate, "dd/MM/yyyy") }}
+              {{ item?.remarks }}
             </td>
           </tr>
           }
