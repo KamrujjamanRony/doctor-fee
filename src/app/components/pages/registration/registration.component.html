@@ -1,14 +1,14 @@
-<section class="flex flex-col lg:flex-row gap-5 max-w-7xl mx-auto">
-  <div class="w-full border mb-10">
+<section class="flex flex-col lg:flex-row gap-5">
+  <div class="border mb-10">
     <h1
-      class="text-2xl md:text-5xl font-bold text-teal-500 underline text-center mb-5"
+      class="text-xl md:text-3xl font-bold text-teal-500 underline text-center mb-5"
     >
       Patient Form
     </h1>
     <form
       [formGroup]="form"
       (ngSubmit)="onSubmit($event)"
-      class="max-w-md mx-auto"
+      class="min-w-[500px] mx-auto px-2"
     >
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
         <!-- contactNo -->
@@ -116,7 +116,7 @@
 
   <div class="w-full border mb-10 px-3 max-h-[85vh] overflow-scroll">
     <h1
-      class="text-2xl md:text-5xl font-bold text-teal-500 underline text-center"
+      class="text-xl md:text-3xl font-bold text-teal-500 underline text-center"
     >
       Patient List
     </h1>
@@ -173,7 +173,7 @@
           <tr
             (click)="onUpdate(item)"
             id="row-{{ $index }}"
-            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer text-center"
+            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
             [ngClass]="{ '!bg-teal-600 text-white': $index === highlightedTr }"
           >
             <th
