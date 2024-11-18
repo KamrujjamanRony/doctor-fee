@@ -1,62 +1,98 @@
 <section class="flex flex-col lg:flex-row gap-5 max-w-7xl mx-auto">
-    <div class="w-full md:w-1/2 border mb-10">
-      <h1
-        class="text-xl md:text-3xl font-bold text-teal-500 underline text-center mb-5"
-      >
-        Doctor Fee Form
-      </h1>
-      <form
-        [formGroup]="form"
-        (ngSubmit)="onSubmit($event)"
-        class="max-w-md mx-auto"
-      >
+  <div class="w-full md:w-1/2 border mb-10 px-2">
+    <h1
+      class="text-xl md:text-3xl font-bold text-teal-500 underline text-center mb-5"
+    >
+      Doctor Fee Form
+    </h1>
+    <form
+      [formGroup]="form"
+      (ngSubmit)="onSubmit($event)"
+      class="max-w-md mx-auto"
+    >
 
       <!-- patientRegId -->
-      <app-input
-        cType="select"
-        [options]="patientOptions"
-        label="Patient"
-        [isSelect]="true"
-        [formControl]="getControl('patientRegId')"
-        (keydown.enter)="handleEnterKey($event, 0)"
-        (onSelectSearchInputChange)="onPatientChange($event)"
-      ></app-input>
+      <div class="gap-2 relative">
+        <Field label="patientRegId">
+          <input
+            #inputRef
+            type="text"
+            [value]="displayPatient(getControl('patientRegId').value)"
+            [formControl]="getControl('patientRegId')"
+            [disabled]="selectedPatient"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            [class.invalid]="
+              getControl('patientRegId').invalid &&
+              getControl('patientRegId').touched
+            "
+            placeholder=""
+            (keydown.enter)="handleEnterKey($event, 0)"
+            (keydown)="handlePatientKeyDown($event)"
+            (input)="onPatientSearchChange($event)"
+          />
+        </Field>
+
+        <!-- Dropdown for sticker names -->
+        <div
+          *ngIf="isPatientDropdownOpen && patientOptions.length > 0 && isPatientEnable"
+          class="absolute bg-white border border-gray-300 -mt-2 w-full z-50 rounded shadow-lg"
+        >
+          <ul>
+            <li
+              *ngFor="let option of patientOptions; let i = index"
+              (click)="onSelectPatient(option)"
+              [class.highlighted]="i === highlightedIndexPatient"
+              class="py-2 px-3 hover:text-white hover:bg-teal-600 cursor-pointer"
+            >
+              {{ option?.name }}
+            </li>
+          </ul>
+        </div>
+      </div>
 
       <!-- patientType -->
-      <app-input
-        cType="select"
-        [options]="options"
-        label="Patient Type"
-        [formControl]="getControl('patientType')"
-        (keydown.enter)="handleEnterKey($event, 1)"
-        (onSelectSearchInputChange)="onPatientChange($event)"
-      ></app-input>
-      
-      <div class="flex flex-row gap-2 relative">
-        <!-- doctorId -->
-        <app-input
-        cType="select-text"
-          class="w-full"
-          label="doctor"
-          [formControl]="getControl('doctorId')"
-          [options]="doctorOptions"
-          (focus)="isDoctorDropdownOpen = false"
-          (keydown.enter)="handleEnterKey($event, 2)"
-          (keydown)="handleDoctorKeyDown($event)"
-          (input)="onDoctorSearchChange($event)"
+       <Field label="Patient Type" [isInvalid]="false">
+        <select
+          #inputRef
+          name="patientType"
+          [formControl]="getControl('patientType')"
+          placeholder=""
+          (keydown.enter)="handleEnterKey($event, 1)"
+          class="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
         >
-          <button
-            (click)="toggleDoctorDropdown($event)"
-            class="absolute top-3 right-1"
-          >
-            <app-down-arrow></app-down-arrow>
-          </button>
-        </app-input>
+          @for(option of options; track $index){
+          <option [value]="option" class="capitalize">
+            {{ option }}
+          </option>
+          }
+        </select>
+       </Field>
+
+       <!-- doctorId -->
+      <div class="gap-2 relative">
+        <Field label="doctorId">
+          <input
+          #inputRef
+            type="text"
+            [value]="displayDoctor(getControl('doctorId').value)"
+            [formControl]="getControl('doctorId')"
+            [disabled]="selectedDoctor"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            [class.invalid]="
+              getControl('doctorId').invalid &&
+              getControl('doctorId').touched
+            "
+            placeholder=""
+            (keydown.enter)="handleEnterKey($event, 2)"
+            (keydown)="handleDoctorKeyDown($event)"
+            (input)="onDoctorSearchChange($event)"
+          />
+        </Field>
 
         <!-- Dropdown for doctor -->
         <div
-          *ngIf="isDoctorDropdownOpen && doctorOptions.length > 0"
-          class="absolute bg-white border border-gray-300 mt-12 w-full z-50 rounded shadow-lg"
+          *ngIf="isDoctorDropdownOpen && doctorOptions.length > 0 && isDoctorEnable"
+          class="absolute bg-white border border-gray-300 -mt-2 w-full z-50 rounded shadow-lg"
         >
           <ul>
             <li
@@ -71,217 +107,229 @@
         </div>
       </div>
 
-        <!-- amount -->
-        <app-input
-          cType="text"
-          label="amount"
+      <!-- amount -->
+      <Field label="amount">
+        <input
+        #inputRef
+          type="text"
           [formControl]="getControl('amount')"
+          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          [class.invalid]="
+            getControl('amount').invalid &&
+            getControl('amount').touched
+          "
+          placeholder=""
           (keydown.enter)="handleEnterKey($event, 3)"
-        ></app-input>
+        />
+      </Field>
 
-        <!-- discount -->
-        <app-input
-          cType="text"
-          label="discount"
+      <!-- discount -->
+      <Field label="discount">
+        <input
+        #inputRef
+          type="text"
           [formControl]="getControl('discount')"
+          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          [class.invalid]="
+            getControl('discount').invalid &&
+            getControl('discount').touched
+          "
+          placeholder=""
           (keydown.enter)="handleEnterKey($event, 4)"
-        ></app-input>
-        
-        <!-- remarks -->
-        <app-input
-          cType="text"
-          label="Remarks"
-          [formControl]="getControl('remarks')"
+        />
+      </Field>
+
+      <!-- nextFlowDate -->
+      <Field label="nextFlowDate">
+        <input
+        #inputRef
+          type="date"
+          [formControl]="getControl('nextFlowDate')"
+          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          [class.invalid]="
+            getControl('nextFlowDate').invalid &&
+            getControl('nextFlowDate').touched
+          "
+          placeholder=""
           (keydown.enter)="handleEnterKey($event, 5)"
-        ></app-input>
-  
-        <div class="flex gap-2">
-          <!-- Save -->
-          <app-input
-            label="Save"
-            cType="submit"
-            (keydown.enter)="handleEnterKey($event, 6)"
-            class="w-full"
-          ></app-input>
-  
-          <button
-            (click)="formReset($event)"
-            class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-1 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
-          >
-            Clear
-          </button>
-        </div>
-      </form>
-    </div>
-  
-    <div class="w-full md:w-1/2">
-      <div class="w-full border mb-5 px-3 max-h-[45vh] overflow-scroll">
-        <h1
-          class="text-xl md:text-3xl font-bold text-teal-500 underline text-center"
+        />
+      </Field>
+
+      <!-- remarks -->
+      <Field label="remarks">
+        <input
+        #inputRef
+          type="text"
+          [formControl]="getControl('remarks')"
+          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          [class.invalid]="
+            getControl('remarks').invalid &&
+            getControl('remarks').touched
+          "
+          placeholder=""
+          (keydown.enter)="handleEnterKey($event, 6)"
+        />
+      </Field>
+        
+
+      <div class="flex gap-2">
+        <!-- Save -->
+        <input
+        #inputRef
+          type="submit"
+          [value]="selected ? 'Update' : 'Save'"
+          class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-1 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10 w-full"
+          (keydown.enter)="handleEnterKey($event, 7)"
+        />
+
+        <button
+          (click)="formReset($event)"
+          class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-1 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10"
         >
-        Patient List
-        </h1>
-    
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
-          <div class="pb-4 bg-white dark:bg-gray-900 ml-2">
-            <label for="table-search" class="sr-only">Search</label>
-            <div class="relative mt-1">
-              <div
-                class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
-              >
-                <app-search></app-search>
-              </div>
-              <input
-                #searchInput
-                type="text"
-                id="table-search"
-                autocomplete="off"
-                class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
-                placeholder="Search for Patient"
-                (input)="onSearchPatient($event)"
-                (keydown)="handleSearchKeyDown($event)"
-              />
+          Clear
+        </button>
+      </div>
+    </form>
+  </div>
+
+
+    <div class="w-full border px-3 h-[95vh] overflow-scroll">
+      <h1
+        class="text-xl md:text-3xl font-bold text-teal-500 underline text-center"
+      >
+        Fee List
+      </h1>
+
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
+        <div class="pb-4 bg-white dark:bg-gray-900 ml-2">
+          <label for="table-search" class="sr-only">Search</label>
+          <div class="relative mt-1">
+            <div
+              class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
+            >
+              <app-search></app-search>
             </div>
+            <input
+              #searchInput
+              type="text"
+              id="table-search"
+              autocomplete="off"
+              class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
+              placeholder="Search for Fee"
+              (input)="onSearchPatient($event)"
+              (keydown)="handleSearchKeyDown($event)"
+            />
           </div>
-          @if (isLoading$ | async) {
-          <p>Loading ...</p>
-          } @else if (hasError$ | async) {
-          <p>There was an error loading data.</p>
-          } @else {
-          <table
-            class="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-400"
-          >
-            <thead
-              class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-            >
-              <tr>
-                <th scope="col" class="px-1 py-3">Reg No.</th>
-                <th scope="col" class="px-1 py-3">Name</th>
-                <th scope="col" class="px-1 py-3">Mobile</th>
-                <th scope="col" class="px-1 py-3">Sex</th>
-                <th scope="col" class="px-1 py-3">Date of Birth</th>
-                <th scope="col" class="px-1 py-3">remarks</th>
-                <th scope="col" class="px-1 py-3">post by</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (item of filteredPatientList(); track item?.id || $index) {
-              <tr
-                (click)="onUpdate(item)"
-                id="row-{{ $index }}"
-                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
-                [ngClass]="{ '!bg-teal-600 text-white': $index === highlightedTr }"
-              >
-                <th
-                  scope="row"
-                  class="p-1 font-medium whitespace-nowrap dark:text-white"
-                >
-                  {{ item?.regNo }}
-                </th>
-                <th
-                  scope="row"
-                  class="p-1 font-medium whitespace-nowrap dark:text-white"
-                >
-                  {{ item?.name }}
-                </th>
-                <td class="p-1">
-                  {{ item?.contactNo }}
-                </td>
-                <td class="p-1">
-                  {{ item?.sex }}
-                </td>
-                <td class="p-1">
-                  {{ transform(item?.dob, "dd/MM/yyyy") }}
-                </td>
-                <td class="p-1">
-                  {{ item?.remarks }}
-                </td>
-                <td class="p-1">
-                  {{ item?.postBy }}
-                </td>
-              </tr>
-              }
-            </tbody>
-          </table>
-          }
         </div>
-      </div>
-      <div class="w-full border mb-10 px-3 max-h-[40vh] overflow-scroll">
-        <h1
-          class="text-xl md:text-3xl font-bold text-teal-500 underline text-center"
+        @if (isLoading$ | async) {
+        <p>Loading ...</p>
+        } @else if (hasError$ | async) {
+        <p>There was an error loading data.</p>
+        } @else {
+        <table
+          class="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-400"
         >
-        Doctor Fee List
-        </h1>
-    
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
-          @if (isLoading$ | async) {
-          <p>Loading ...</p>
-          } @else if (hasError$ | async) {
-          <p>There was an error loading data.</p>
-          } @else {
-          <table
-            class="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-400"
+          <thead
+            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
           >
-            <thead
-              class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+          <tr>
+            <th scope="col" class="px-1 py-3">Reg</th>
+            <th scope="col" class="px-1 py-3">Patient</th>
+            <th scope="col" class="px-1 py-3">Contact</th>
+            <th scope="col" class="px-1 py-3">Doctor</th>
+            <th scope="col" class="px-1 py-3">Next followup date</th>
+            <th scope="col" class="px-1 py-3">Edit</th>
+            <th scope="col" class="px-1 py-3">Delete</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (item of filteredDoctorFeeList().slice(0,20); track item?.gid ||
+            $index) {
+            <tr
+              id="row-{{ $index }}"
+              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
+              [ngClass]="{
+                '!bg-teal-600 text-white': $index === highlightedTr
+              }"
             >
-              <tr>
-                <th scope="col" class="px-1 py-3">Patient</th>
-                <th scope="col" class="px-1 py-3">Type</th>
-                <th scope="col" class="px-1 py-3">Doctor</th>
-                <th scope="col" class="px-1 py-3">Amount</th>
-                <th scope="col" class="px-1 py-3">Discount</th>
-                <th scope="col" class="px-1 py-3">remarks</th>
-                <th scope="col" class="px-1 py-3">post by</th>
-                <th scope="col" class="px-1 py-3">entry date</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (item of filteredDoctorFeeList().slice(0,3); track item?.gid || $index) {
-              <tr
-                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
-              >
-                <th
-                  scope="row"
-                  class="p-1 font-medium whitespace-nowrap dark:text-white"
-                >
-                  {{ getPatientName(item?.patientRegId) }}
-                </th>
-                <th
-                  scope="row"
-                  class="p-1 font-medium whitespace-nowrap dark:text-white"
-                >
-                  {{ item?.patientType }}
-                </th>
-                <td class="p-1">
-                  {{ getDoctorName(item?.doctorId) }}
-                </td>
-                <td class="p-1">
-                  {{ item?.amount }}
-                </td>
-                <td class="p-1">
-                  {{ item?.discount }}
-                </td>
-                <td class="p-1">
-                  {{ item?.remarks }}
-                </td>
-                <td class="p-1">
-                  {{ item?.postBy }}
-                </td>
-                <td class="p-1">
-                  {{ transform(item?.entryDate, "dd/MM/yyyy") }}
-                </td>
-              </tr>
-              }
-            </tbody>
-          </table>
-          }
-        </div>
+            <td class="p-1">
+              {{ item?.regNo }}
+            </td>
+            <th
+            scope="row"
+            class="p-1 font-medium whitespace-nowrap dark:text-white"
+          >
+            {{ getPatientName(item?.patientRegId) }}
+          </th>
+          <th
+            scope="row"
+            class="p-1 font-medium whitespace-nowrap dark:text-white"
+          >
+            {{ item?.contactNo }}
+          </th>
+          <td class="p-1">
+            {{ getDoctorName(item?.doctorId) }}
+          </td>
+          <td class="p-1">
+            @if (item?.nextFlowDate) {
+              <button (click)="onFollowUpUpdate(item)">{{ transform(item?.nextFlowDate) }}</button>
+            } @else {
+              <button class="text-yellow-400 hover:bg-white px-1 rounded" (click)="onFollowUpUpdate(item)">followUpDate</button>
+            }
+            
+          </td>
+          <td class="p-1">
+            <button class="text-yellow-400 hover:bg-white px-1 rounded" (click)="onUpdate(item)">Edit</button>
+          </td>
+          <td class="p-1">
+            <button class="text-rose-400 hover:bg-white px-1 rounded" (click)="onDelete(item.gid)">Delete</button>
+          </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+        }
       </div>
     </div>
-  </section>
-  
-  @if (success()) {
-  <app-toast-success [title]="success()"></app-toast-success>
-  }
-  
+
+</section>
+
+@if (success()) {
+<app-toast-success [title]="success()"></app-toast-success>
+}
+
+@if (followupModal) {
+  <ModalWrapper title="Next Followup Date" (closeModal)="closeFollowupModal()">
+    <h1 class="text-sm text-teal-600 font-semibold">{{followupModalData?.regNo}} - {{followupModalData?.patientName}} - {{followupModalData?.contactNo}}</h1>
+    <form
+        [formGroup]="form"
+        (ngSubmit)="onSubmit($event)"
+        class="max-w-md mx-auto mt-2"
+      >
+    <Field label="nextFlowDate">
+      <input
+      #inputRef
+        type="date"
+        [formControl]="getControl('nextFlowDate')"
+        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        [class.invalid]="
+          getControl('nextFlowDate').invalid &&
+          getControl('nextFlowDate').touched
+        "
+        placeholder=""
+        (keydown.enter)="handleEnterKey($event, 5)"
+      />
+    </Field>
+    <!-- Save -->
+    <input
+    #inputRef
+      type="submit"
+      [value]="selected ? 'Update' : 'Save'"
+      class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-1 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10 w-full"
+      (keydown.enter)="handleEnterKey($event, 7)"
+    />
+  </form>
+  </ModalWrapper>
+}
+
+

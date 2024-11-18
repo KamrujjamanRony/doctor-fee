@@ -2,19 +2,20 @@ import { Component, ElementRef, inject, QueryList, signal, ViewChild, ViewChildr
 import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PatientService } from '../../../../../services/patient.service';
 import { DataFetchService } from '../../../../../services/useDataFetch';
-import { InputComponent } from '../../../../shared/input/input.component';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ToastSuccessComponent } from "../../../../shared/toast/toast-success/toast-success.component";
 import { SearchComponent } from "../../../../shared/svg/search/search.component";
 import { DoctorService } from '../../../../../services/doctor.service';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { DoctorFeeFeeService } from '../../../../../services/doctor-fee.service';
-import { DownArrowComponent } from "../../../../shared/svg/down-arrow/down-arrow.component";
+import { FieldComponent } from "../../../../shared/field/field.component";
+import { ModalWrapperComponent } from "../../../../shared/modal-wrapper/modal-wrapper.component";
+
 
 @Component({
   selector: 'app-doctor-fee',
   standalone: true,
-  imports: [ReactiveFormsModule, ToastSuccessComponent, SearchComponent, InputComponent, CommonModule, DownArrowComponent],
+  imports: [ReactiveFormsModule, ToastSuccessComponent, SearchComponent, CommonModule, FieldComponent, ModalWrapperComponent],
   templateUrl: './doctor-fee.component.html',
   styleUrl: './doctor-fee.component.css'
 })
@@ -28,7 +29,7 @@ export class DoctorFeeComponent {
   filteredDoctorList = signal<any[]>([]);
   filteredDoctorFeeList = signal<any[]>([]);
   private searchQuery$ = new BehaviorSubject<string>('');
-  options: any[] = [{ id: 'New', name: 'New' }, { id: 'Old', name: 'Old' }, { id: 'Others', name: 'Others' }];
+  options: any[] = ['New', 'Old', 'Others'];
   selectedDoctor: any;
   selectedPatient: any;
   selected: any;
@@ -37,19 +38,22 @@ export class DoctorFeeComponent {
 
   success = signal<any>("");
   today = new Date();
-  @ViewChildren(InputComponent) formInputs!: QueryList<InputComponent>;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+  @ViewChildren('inputRef') inputRefs!: QueryList<ElementRef>;
   isSubmitted = false;
-  form = this.fb.group({
-    doctorId: ['', [Validators.required]],
-    patientRegId: ['', [Validators.required]],
-    patientType: ['Outdoor'],
+  form = this.fb.group<any>({
+    doctorId: [{ value: '', disabled: false }, [Validators.required]],
+    patientRegId: [{ value: '', disabled: false }, [Validators.required]],
+    patientType: ['New'],
     amount: [''],
     discount: [''],
     remarks: [''],
     postBy: [''],
+    nextFlowDate: [null],
     entryDate: [this.today],
   });
+
+
   isLoading$: Observable<any> | undefined;
   hasError$: Observable<any> | undefined;
 
@@ -78,19 +82,6 @@ export class DoctorFeeComponent {
     });
     this.isLoading$ = isLoading$;
     this.hasError$ = hasError$;
-    // Combine the original data stream with the search query to create a filtered list
-    combineLatest([
-      data$,
-      this.searchQuery$
-    ]).pipe(
-      map(([data, query]) =>
-        data.filter((patientData: any) =>
-          patientData.regNo?.toString()?.toLowerCase()?.includes(query) ||
-          patientData.name?.toString()?.toLowerCase()?.includes(query) ||
-          patientData.contactNo?.toString()?.toLowerCase()?.includes(query)
-        )
-      )
-    ).subscribe(filteredData => this.filteredPatientList.set(filteredData));
   }
 
   onLoadDoctors() {
@@ -114,9 +105,26 @@ export class DoctorFeeComponent {
     });
     this.isLoading$ = isLoading$;
     this.hasError$ = hasError$;
+    // Combine the original data stream with the search query to create a filtered list
+    combineLatest([
+      data$,
+      this.searchQuery$
+    ]).pipe(
+      map(([data, query]) =>
+        data.filter((filterData: any) =>
+          filterData.regNo?.toString()?.toLowerCase()?.includes(query) ||
+          filterData.doctorName?.toString()?.toLowerCase()?.includes(query) ||
+          filterData.patientName?.toString()?.toLowerCase()?.includes(query) ||
+          filterData.contactNo?.toString()?.toLowerCase()?.includes(query) ||
+          filterData.patientType?.toString()?.toLowerCase()?.includes(query) ||
+          filterData.remarks?.toString()?.toLowerCase()?.includes(query) ||
+          filterData.postBy?.toString()?.toLowerCase()?.includes(query)
+        )
+      )
+    ).subscribe(filteredData => this.filteredDoctorFeeList.set(filteredData));
   }
 
-  
+
   onSearchPatient(event: Event) {
     const query = (event.target as HTMLInputElement).value.toLowerCase();
     this.searchQuery$.next(query);
@@ -141,30 +149,18 @@ export class DoctorFeeComponent {
     return this.form.get(controlName) as FormControl;
   }
 
-  // Handle the Enter key to focus the next input field
-  handleEnterKey(event: Event, index: number) {
+
+  handleEnterKey(event: Event, currentIndex: number) {
     const keyboardEvent = event as KeyboardEvent;
-    if (keyboardEvent.key === 'Enter') {
-      event.preventDefault(); // Prevent form submission
-      const inputsArray = this.formInputs.toArray();
+    event.preventDefault();
+    const inputs = this.inputRefs.toArray();
 
-      if (index < inputsArray.length) {
-        const nextInput = inputsArray[index + 1];
-
-        if (nextInput && nextInput.inputRef) {
-          // If the next input is a submit button
-          if (nextInput.cType === 'submit') {
-            // Check if it's already focused; if not, focus it first
-            (document.activeElement !== nextInput.inputRef.nativeElement) && nextInput.inputRef.nativeElement.focus();
-          } else {
-            // Focus on the next input if it's not a submit button
-            nextInput.inputRef.nativeElement.focus();
-          }
-        } else {
-          // Submit the form if it's already focused and Enter is pressed
-          this.onSubmit(event);
-        }
-      }
+    if (currentIndex + 1 < inputs.length) {
+      // If the next input exists, focus it
+      inputs[currentIndex + 1].nativeElement.focus();
+    } else {
+      // Optionally, submit the form if it's the last input
+      this.onSubmit(keyboardEvent);
     }
   }
 
@@ -176,12 +172,8 @@ export class DoctorFeeComponent {
 
     if (event.key === 'Tab') {
       event.preventDefault();
-      const inputsArray = this.formInputs.toArray();
-      if (inputsArray.length > 0) {
-        const firstInput = inputsArray[0];
-        firstInput.inputRef.nativeElement.focus();
-        this.highlightedTr = -1;
-      }
+      const inputs = this.inputRefs.toArray();
+      inputs[0].nativeElement.focus();
     } else if (event.key === 'ArrowDown') {
       event.preventDefault(); // Prevent default scrolling behavior
       this.highlightedTr = (this.highlightedTr + 1) % this.filteredPatientList().length;
@@ -203,14 +195,20 @@ export class DoctorFeeComponent {
 
   onSubmit(e: Event) {
     this.isSubmitted = true;
-    // console.log(this.form.value);
+    this.form.get('doctorId')?.enable();
+    this.isDoctorEnable = true;
+    this.form.get('patientRegId')?.enable();
+    this.isPatientEnable = true;
+    console.log(this.form.value);
     if (this.form.valid) {
+      if (!this.selected) {
         this.doctorFeeService.addDoctorFee(this.form.value)
           .subscribe({
             next: (response) => {
               if (response !== null && response !== undefined) {
                 this.success.set("Patient successfully added!");
-                this.filteredDoctorFeeList.set([this.form.value, ...this.filteredDoctorFeeList()])
+                console.log(response)
+                this.filteredDoctorFeeList.set([response, ...this.filteredDoctorFeeList()])
                 this.formReset(e);
                 this.isSubmitted = false;
                 setTimeout(() => {
@@ -223,39 +221,96 @@ export class DoctorFeeComponent {
               console.error('Error register:', error);
             }
           });
+      } else {
+        this.doctorFeeService.updateDoctorFee(this.selected, this.form.value)
+          .subscribe({
+            next: (response) => {
+              if (response !== null && response !== undefined) {
+                this.success.set("Patient successfully updated!");
+                this.filteredDoctorFeeList.set([response, ...this.filteredDoctorFeeList()])
+                this.isSubmitted = false;
+                this.selected = null;
+                this.formReset(e);
+                setTimeout(() => {
+                  this.success.set("");
+                }, 3000);
+              }
+            },
+            error: (error) => {
+              console.error('Error register:', error);
+            }
+          });
+
+      }
+
+      this.followupModal = false;
+
     } else {
       console.log('Form is invalid');
     }
   }
 
   onUpdate(data: any) {
-    this.selected = data;
+    this.selected = data.gid;
+    console.log(data)
+
+    // Format the nextFlowDate to YYYY-MM-DD
+    const formattedDate = data?.nextFlowDate
+      ? new Date(data.nextFlowDate).toISOString().split('T')[0]
+      : '';
+
     this.form.patchValue({
-      patientRegId: data?.id,
+      patientRegId: data?.patientRegId,
+      doctorId: data?.doctorId,
+      patientType: data?.patientType,
+      amount: data?.amount,
+      discount: data?.discount,
+      remarks: data?.remarks,
+      postBy: data?.postBy,
+      nextFlowDate: formattedDate,
+      entryDate: data?.entryDate,
     });
 
     // Focus the 'Name' input field after patching the value
     setTimeout(() => {
-      const NameInput = this.formInputs.find(input => input.label === 'Patient');
-      if (NameInput && NameInput.inputRef) {
-        NameInput.inputRef.nativeElement.focus(); // Programmatically focus the Name input
-      }
+      const inputs = this.inputRefs.toArray();
+      inputs[0].nativeElement.focus();
     }, 10); // Delay to ensure the DOM is updated
 
     // Reset the highlighted row
     this.highlightedIndexPatient = -1;
   }
 
+  onDelete(id: any) {
+    console.log(id)
+    this.doctorFeeService.deleteDoctorFee(id).subscribe(data => {
+      if (data === 1) {
+        this.success.set("Doctor fee deleted successfully!");
+        this.filteredDoctorFeeList.set(this.filteredDoctorFeeList().filter(d => d.gid !== id));
+        setTimeout(() => {
+          this.success.set("");
+        }, 3000);
+      } else {
+        console.error('Error deleting doctor fee:', data);
+      }
+    });
+  }
+
   formReset(e: Event): void {
     e.preventDefault();
+    this.form.get('doctorId')?.enable();
+    this.isDoctorEnable = true;
+    this.form.get('patientRegId')?.enable();
+    this.isPatientEnable = true;
     this.form.reset({
       doctorId: '',
       patientRegId: '',
-      patientType: 'Outdoor',
+      patientType: 'New',
       amount: '',
       discount: '',
       remarks: '',
       postBy: '',
+      nextFlowDate: null,
       entryDate: this.today
     });
     this.selected = null;
@@ -265,6 +320,12 @@ export class DoctorFeeComponent {
   isPatientDropdownOpen: boolean = false;
   patientOptions: any[] = [];
   highlightedIndexPatient: number = -1;
+  isPatientEnable: boolean = true;
+
+  displayPatient(id: any) {
+    const find = this.patientOptions.find(p => p.id === id);
+    return find?.name ?? '';
+  }
 
   handlePatientKeyDown(event: KeyboardEvent) {
     if (event.key === 'ArrowDown') {
@@ -281,7 +342,7 @@ export class DoctorFeeComponent {
       } else if (event.key === 'Enter') {
         event.preventDefault();
         if (this.highlightedIndexPatient !== -1) {
-          this.selectPatient(this.patientOptions[this.highlightedIndexPatient]?.id);
+          this.onSelectPatient(this.patientOptions[this.highlightedIndexPatient]);
           this.isPatientDropdownOpen = false;
         }
       }
@@ -294,9 +355,11 @@ export class DoctorFeeComponent {
     this.highlightedIndexPatient = -1;
   }
 
-  selectPatient(option: string) {
-    this.getControl('patientRegId').setValue(option);
+  onSelectPatient(option: any) {
+    this.getControl('patientRegId').setValue(option?.id ?? this.patientOptions[this.highlightedIndexPatient]?.id);
     this.isPatientDropdownOpen = false;
+    this.form.get('patientRegId')?.disable();
+    this.isPatientEnable = false;
     this.highlightedIndexPatient = -1;
   }
 
@@ -304,8 +367,9 @@ export class DoctorFeeComponent {
     const searchValue = (event.target as HTMLInputElement).value?.toLowerCase();
     this.patientOptions = this.filteredPatientList().filter(option =>
       option.name.toLowerCase().includes(searchValue) ||
-      option.id.toString().includes(searchValue)
-    ).map(p => ({ id: p.id, name: p.name }));
+      option.regNo.toString().toLowerCase().includes(searchValue) ||
+      option.contactNo.toString().toLowerCase().includes(searchValue)
+    ).map(p => ({ id: p.id, name: `${p.regNo} - ${p.name} - ${p.contactNo}` }));
     this.highlightedIndexPatient = -1;
     if (searchValue === '') {
       this.isPatientDropdownOpen = false;
@@ -314,9 +378,9 @@ export class DoctorFeeComponent {
     }
   }
 
-  getPatientName(id: any){
+  getPatientName(id: any) {
     const patient = this.filteredPatientList().find(p => p.id == id);
-    return patient?.name?? '';
+    return patient?.name ?? '';
   }
   //---------------------------------------------------------------------------------
 
@@ -324,6 +388,12 @@ export class DoctorFeeComponent {
   isDoctorDropdownOpen: boolean = false;
   doctorOptions: any[] = [];
   highlightedIndexDoctor: number = -1;
+  isDoctorEnable: boolean = true;
+
+  displayDoctor(id: any) {
+    const find = this.doctorOptions.find(p => p.id === id);
+    return find?.name ?? '';
+  }
 
   handleDoctorKeyDown(event: KeyboardEvent) {
     if (event.key === 'ArrowDown') {
@@ -340,7 +410,7 @@ export class DoctorFeeComponent {
       } else if (event.key === 'Enter') {
         event.preventDefault();
         if (this.highlightedIndexDoctor !== -1) {
-          this.selectDoctor(this.doctorOptions[this.highlightedIndexDoctor]?.id);
+          this.selectDoctor(this.doctorOptions[this.highlightedIndexDoctor]);
           this.isDoctorDropdownOpen = false;
         }
       }
@@ -356,15 +426,17 @@ export class DoctorFeeComponent {
   selectDoctor(option: any) {
     this.getControl('doctorId').setValue(option?.id ?? this.doctorOptions[this.highlightedIndexDoctor]?.id);
     this.getControl('amount').setValue(option?.DrFee ?? this.doctorOptions[this.highlightedIndexDoctor]?.DrFee ?? 0);
+    this.getControl('discount').setValue(0);
     this.isDoctorDropdownOpen = false;
+    this.form.get('doctorId')?.disable();
+    this.isDoctorEnable = false;
     this.highlightedIndexDoctor = -1;
   }
 
   onDoctorSearchChange(event: Event) {
     const searchValue = (event.target as HTMLInputElement).value?.toLowerCase();
     this.doctorOptions = this.filteredDoctorList().filter(option =>
-      option.name.toLowerCase().includes(searchValue) ||
-      option.id.toString().includes(searchValue)
+      option.name.toLowerCase().includes(searchValue)
     ).map(p => ({ id: p.id, name: p.name }));
     this.highlightedIndexDoctor = -1;
     if (searchValue === '') {
@@ -374,11 +446,39 @@ export class DoctorFeeComponent {
     }
   }
 
-  getDoctorName(id: any){
+  getDoctorName(id: any) {
     const doctor = this.filteredDoctorList().find(p => p.id == id);
-    return doctor?.name?? '';
+    return doctor?.name ?? '';
   }
   //---------------------------------------------------------------------------------
+
+  // Modals --------------------------------------------------------------------------
+  followupModal = false;
+  followupModalData: any;
+
+  onFollowUpUpdate(item: any) {
+    this.followupModalData = item;
+    this.followupModal = true;
+    this.onUpdate(item);
+  }
+
+  closeFollowupModal() {
+    this.followupModal = false;
+    this.form.reset({
+      doctorId: '',
+      patientRegId: '',
+      patientType: 'New',
+      amount: '',
+      discount: '',
+      remarks: '',
+      postBy: '',
+      nextFlowDate: null,
+      entryDate: this.today
+    });
+    this.selected = null;
+    this.isSubmitted = false;
+    this.highlightedTr = -1;
+  }
 
 
 }
