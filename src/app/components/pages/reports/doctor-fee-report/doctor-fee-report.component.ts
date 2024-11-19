@@ -59,8 +59,6 @@ export class DoctorFeeReportComponent {
     data$.subscribe(data => {
       this.filteredPatientList.set(data);
     });
-    this.isLoading$ = isLoading$;
-    this.hasError$ = hasError$;
   }
 
   onLoadDoctors() {
@@ -68,8 +66,6 @@ export class DoctorFeeReportComponent {
     data$.subscribe(data => {
       this.filteredDoctorList.set(data.sort((a, b) => a.name - b.name));
     });
-    this.isLoading$ = isLoading$;
-    this.hasError$ = hasError$;
   }
 
   onLoadDoctorFees() {
@@ -110,11 +106,18 @@ export class DoctorFeeReportComponent {
     });
   }
 
-
-
-  onInputChange(): void {
-    // this.fetchAppointments();
-    console.log("Under construction...")
+  onFilterData() {
+    const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.doctorFeeService.getFilteredDoctorFee(this.fromDate, this.toDate, this.nextFollowDate));
+    data$.subscribe(data => {
+      this.DoctorFeeList.set(data);
+      this.filteredDoctorFeeList.set(data);
+      // Create a unique list of doctor options
+      const uniqueDoctors = Array.from(new Map(data.map((d: any) => [d.doctorId, { id: d.doctorId, name: d.doctorName }])).values());
+      // Set unique doctor options
+      this.filteredDoctorOptions.set(uniqueDoctors);
+    });
+    this.isLoading$ = isLoading$;
+    this.hasError$ = hasError$;
   }
 
   onSelectInputChange(): void {

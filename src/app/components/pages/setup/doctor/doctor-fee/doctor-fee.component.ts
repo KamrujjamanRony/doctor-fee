@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, QueryList, signal, ViewChild, ViewChildren } from '@angular/core';
-import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PatientService } from '../../../../../services/patient.service';
 import { DataFetchService } from '../../../../../services/useDataFetch';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -15,7 +15,7 @@ import { ModalWrapperComponent } from "../../../../shared/modal-wrapper/modal-wr
 @Component({
   selector: 'app-doctor-fee',
   standalone: true,
-  imports: [ReactiveFormsModule, ToastSuccessComponent, SearchComponent, CommonModule, FieldComponent, ModalWrapperComponent],
+  imports: [ReactiveFormsModule, FormsModule, ToastSuccessComponent, SearchComponent, CommonModule, FieldComponent, ModalWrapperComponent],
   templateUrl: './doctor-fee.component.html',
   styleUrl: './doctor-fee.component.css'
 })
@@ -33,6 +33,9 @@ export class DoctorFeeComponent {
   selectedDoctor: any;
   selectedPatient: any;
   selected: any;
+  fromDate: any;
+  toDate: any;
+  nextFollowDate: any;
 
   highlightedTr: number = -1;
 
@@ -80,8 +83,6 @@ export class DoctorFeeComponent {
       this.filteredPatientList.set(data);
       this.patientOptions = this.filteredPatientList().map(p => ({ id: p.id, name: `${p.regNo} - ${p.name} - ${p.contactNo}` }));
     });
-    this.isLoading$ = isLoading$;
-    this.hasError$ = hasError$;
   }
 
   onLoadDoctors() {
@@ -90,8 +91,6 @@ export class DoctorFeeComponent {
       this.filteredDoctorList.set(data);
       this.doctorOptions = this.filteredDoctorList().map(d => ({ id: d.id, name: d.name, drFee: d.drFee }));
     });
-    this.isLoading$ = isLoading$;
-    this.hasError$ = hasError$;
   }
 
   onLoadDoctorFees() {
@@ -122,6 +121,15 @@ export class DoctorFeeComponent {
         )
       )
     ).subscribe(filteredData => this.filteredDoctorFeeList.set(filteredData));
+  }
+
+  onFilterData() {
+    const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.doctorFeeService.getFilteredDoctorFee(this.fromDate, this.toDate, this.nextFollowDate));
+    data$.subscribe(data => {
+      this.filteredDoctorFeeList.set(data);
+    });
+    this.isLoading$ = isLoading$;
+    this.hasError$ = hasError$;
   }
 
 
@@ -282,18 +290,19 @@ export class DoctorFeeComponent {
   }
 
   onDelete(id: any) {
-    console.log(id)
-    this.doctorFeeService.deleteDoctorFee(id).subscribe(data => {
-      if (data === 1) {
-        this.success.set("Doctor fee deleted successfully!");
-        this.filteredDoctorFeeList.set(this.filteredDoctorFeeList().filter(d => d.gid !== id));
-        setTimeout(() => {
-          this.success.set("");
-        }, 3000);
-      } else {
-        console.error('Error deleting doctor fee:', data);
-      }
-    });
+    if (confirm("Are you sure you want to delete?")) {
+      this.doctorFeeService.deleteDoctorFee(id).subscribe(data => {
+        if (data === 1) {
+          this.success.set("Doctor fee deleted successfully!");
+          this.filteredDoctorFeeList.set(this.filteredDoctorFeeList().filter(d => d.gid !== id));
+          setTimeout(() => {
+            this.success.set("");
+          }, 3000);
+        } else {
+          console.error('Error deleting doctor fee:', data);
+        }
+      });
+    }
   }
 
   formReset(e: Event): void {
@@ -314,6 +323,14 @@ export class DoctorFeeComponent {
       entryDate: this.today
     });
     this.selected = null;
+  }
+
+  handleClearFilter() {
+    this.searchQuery$.next("");
+    this.searchInput.nativeElement.value = "";
+    this.fromDate = '';
+    this.toDate = '';
+    this.nextFollowDate = '';
   }
 
   // ----------patientRegId---------------------------------------------------------------------------------

@@ -66,7 +66,13 @@ export class RegistrationComponent {
 
   onLoadPatients() {
     const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.patientService.getAllPatients());
-    data$.subscribe(data => this.filteredPatientList.set(data));
+    data$.subscribe(data => {
+      this.filteredPatientList.set(data.sort((a: any, b: any) => {
+        const dateA = new Date(a.entryDate).getTime();
+        const dateB = new Date(b.entryDate).getTime();
+        return dateB - dateA;
+      }))
+    });
     this.isLoading$ = isLoading$;
     this.hasError$ = hasError$;
     // Combine the original data stream with the search query to create a filtered list
@@ -232,6 +238,24 @@ export class RegistrationComponent {
 
     // Reset the highlighted row
     this.highlightedIndex = -1;
+  }
+
+  onDelete(id: any) {
+    if(confirm("Are you sure you want to delete?")) {
+      this.patientService.deletePatient(id).subscribe(data => {
+        console.log(data)
+        if (data === 1) {
+          this.success.set("Doctor fee deleted successfully!");
+          this.filteredPatientList.set(this.filteredPatientList().filter(d => d.id !== id));
+          setTimeout(() => {
+            this.success.set("");
+          }, 3000);
+        } else {
+          console.error('Error deleting doctor fee:', data);
+        }
+      });
+    }
+    
   }
 
   formReset(e: Event): void {

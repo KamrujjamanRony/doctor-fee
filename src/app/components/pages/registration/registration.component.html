@@ -114,7 +114,7 @@
     </form>
   </div>
 
-  <div class="w-full border mb-10 px-3 max-h-[85vh] overflow-scroll">
+  <div class="w-full border mb-10 px-3 max-h-[98vh] overflow-scroll">
     <h1
       class="text-xl md:text-3xl font-bold text-teal-500 underline text-center"
     >
@@ -142,11 +142,15 @@
           />
         </div>
       </div>
+      
+
       @if (isLoading$ | async) {
-      <p>Loading ...</p>
-      } @else if (hasError$ | async) {
-      <p>There was an error loading data.</p>
-      } @else {
+        <p class="text-3xl font-bold text-center p-10 text-teal-600">Loading ...</p>
+        } @else if (hasError$ | async) {
+        <p class="text-3xl font-bold text-center p-10 text-red-600">There was an error loading data.</p>
+        } @else if (filteredPatientList().length === 0) {
+          <p class="text-3xl font-bold text-center p-10 text-orange-600">Data is Empty.</p>
+          } @else {
       <table
         class="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-400"
       >
@@ -166,15 +170,15 @@
             <th scope="col" class="px-1 py-3">remarks</th>
             <th scope="col" class="px-1 py-3">post by</th>
             <th scope="col" class="px-1 py-3">entry date</th>
+            <th scope="col" class="px-1 py-3">Edit</th>
+            <th scope="col" class="px-1 py-3">Delete</th>
           </tr>
         </thead>
         <tbody>
-          @for (item of filteredPatientList(); track item?.id || $index) {
+          @for (item of filteredPatientList().slice(0,20); track item?.id || $index) {
           <tr
-            (click)="onUpdate(item)"
             id="row-{{ $index }}"
             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
-            [ngClass]="{ '!bg-teal-600 text-white': $index === highlightedTr }"
           >
             <th
               scope="row"
@@ -217,6 +221,12 @@
             </td>
             <td class="p-1">
               {{ transform(item?.entryDate, "dd/MM/yyyy") }}
+            </td>
+            <td>
+              <button class="text-yellow-400 hover:bg-white px-1 rounded" (click)="onUpdate(item)">Edit</button>
+            </td>
+            <td>
+              <button class="text-rose-400 hover:bg-white px-1 rounded" (click)="onDelete(item.id)">Delete</button>
             </td>
           </tr>
           }

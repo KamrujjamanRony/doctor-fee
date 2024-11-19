@@ -70,7 +70,13 @@ export class DoctorEntryComponent {
 
   onLoadDoctors() {
     const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.doctorService.getAllDoctors());
-    data$.subscribe(data => this.filteredDoctorList.set(data));
+    data$.subscribe(data => {
+      this.filteredDoctorList.set(data.sort((a: any, b: any) => {
+        const dateA = new Date(a.entryDate).getTime();
+        const dateB = new Date(b.entryDate).getTime();
+        return dateB - dateA;
+      }));
+    });
     this.isLoading$ = isLoading$;
     this.hasError$ = hasError$;
     // Combine the original data stream with the search query to create a filtered list
@@ -232,6 +238,23 @@ export class DoctorEntryComponent {
         NameInput.inputRef.nativeElement.focus(); // Programmatically focus the Name input
       }
     }, 0); // Delay to ensure the DOM is updated
+  }
+
+  onDelete(id: any) {
+    if(confirm("Are you sure you want to delete?")) {
+      this.doctorService.deleteDoctor(id).subscribe(data => {
+        console.log(data)
+        if (data === 1) {
+          this.success.set("Doctor deleted successfully!");
+          this.filteredDoctorList.set(this.filteredDoctorList().filter(d => d.id !== id));
+          setTimeout(() => {
+            this.success.set("");
+          }, 3000);
+        } else {
+          console.error('Error deleting doctor fee:', data);
+        }
+      });
+    }
   }
 
   formReset(e: Event): void {

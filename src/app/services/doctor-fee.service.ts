@@ -18,8 +18,28 @@ export class DoctorFeeFeeService {
     return this.http.get<any[]>(this.rootUrl + '/SearchDoctorFee');
   }
 
+  getFilteredDoctorFee(fromDate: any, toDate: any, nextFlowDate: any): Observable<any> {
+    let endPoint;
+    if (fromDate && !toDate && !nextFlowDate) {
+      endPoint = `fromDate=${fromDate}&toDate=${fromDate}`
+    } else if (fromDate && toDate && !nextFlowDate) {
+      endPoint = `fromDate=${fromDate}&toDate=${toDate}`
+    } else if (fromDate && !toDate && nextFlowDate) {
+      endPoint = `fromDate=${fromDate}&toDate=${fromDate}&nextFlowDate=${nextFlowDate}`
+    } else if (!fromDate && !toDate && nextFlowDate) {
+      endPoint = `nextFlowDate=${nextFlowDate}`
+    } else if (!fromDate && toDate && !nextFlowDate) {
+      endPoint = `fromDate=${toDate}&toDate=${toDate}`
+    } else if (!fromDate && toDate && nextFlowDate) {
+      endPoint = `fromDate=${toDate}&toDate=${toDate}&nextFlowDate=${nextFlowDate}`
+    } else if (fromDate && toDate && nextFlowDate) {
+      endPoint = `fromDate=${fromDate}&toDate=${toDate}&nextFlowDate=${nextFlowDate}`
+    }
+    return this.http.get<any>(`${this.rootUrl}/GetDoctorNextFlowDateSearch?${endPoint}`);
+  }
+
   getDoctorFee(id: any): Observable<any> {
-    return this.http.get<any>(`${this.rootUrl}/${id}`);
+    return this.http.get<any>(`${this.rootUrl}/GetDoctorNextFlowDateSearch?doctorId=${id}`);
   }
 
   updateDoctorFee(id: any, updateDoctorFeeRequest: any | FormData): Observable<any>{
