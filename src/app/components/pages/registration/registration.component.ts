@@ -1,21 +1,27 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, ElementRef, inject, QueryList, signal, ViewChild, ViewChildren } from '@angular/core';
 import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputComponent } from '../../shared/input/input.component';
 import { SearchComponent } from '../../shared/svg/search/search.component';
 import { ToastSuccessComponent } from '../../shared/toast/toast-success/toast-success.component';
 import { PatientService } from '../../../services/patient.service';
 import { DataFetchService } from '../../../services/useDataFetch';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { FieldComponent } from "../../shared/field/field.component";
 
 @Component({
   selector: 'app-registration',
   standalone: true,
-  imports: [ReactiveFormsModule, InputComponent, SearchComponent, ToastSuccessComponent, CommonModule],
+  imports: [ReactiveFormsModule, SearchComponent, ToastSuccessComponent, CommonModule, FieldComponent],
   templateUrl: './registration.component.html',
   styleUrl: './registration.component.css'
 })
 export class RegistrationComponent {
+onPatientSearchChange($event: Event) {
+throw new Error('Method not implemented.');
+}
+handlePatientKeyDown($event: KeyboardEvent) {
+throw new Error('Method not implemented.');
+}
   fb = inject(NonNullableFormBuilder);
   private patientService = inject(PatientService);
   dataFetchService = inject(DataFetchService);
@@ -23,7 +29,7 @@ export class RegistrationComponent {
   private searchQuery$ = new BehaviorSubject<string>('');
   isLoading$: Observable<any> | undefined;
   hasError$: Observable<any> | undefined;
-  options: any[] = [{ id: 'Male', name: 'Male' }, { id: 'Female', name: 'Female' }, { id: 'Others', name: 'Others' }];
+  options: any[] = [{ id: '', name: 'Select Sex' }, { id: 'Male', name: 'Male' }, { id: 'Female', name: 'Female' }, { id: 'Others', name: 'Others' }];
   selectedPatient: any;
 
   highlightedIndex: number = -1;
@@ -31,16 +37,16 @@ export class RegistrationComponent {
 
   success = signal<any>("");
   today = new Date();
-  @ViewChildren(InputComponent) formInputs!: QueryList<InputComponent>;
+  @ViewChildren('inputRef') inputRefs!: QueryList<ElementRef>;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   isSubmitted = false;
   form = this.fb.group({
-    regNo: [''],
+    regNo: [{ value: '', disabled: true }],
     name: ['', [Validators.required]],
     contactNo: ['', [Validators.required]],
     fatherName: [''],
     motherName: [''],
-    sex: ['Male'],
+    sex: [''],
     dob: [''],
     nid: [''],
     address: [''],
@@ -101,30 +107,17 @@ export class RegistrationComponent {
     return this.form.get(controlName) as FormControl;
   }
 
-  // Handle the Enter key to focus the next input field
-  handleEnterKey(event: Event, index: number) {
+
+  handleEnterKey(event: Event, currentIndex: number) {
     const keyboardEvent = event as KeyboardEvent;
-    if (keyboardEvent.key === 'Enter') {
-      event.preventDefault(); // Prevent form submission
-      const inputsArray = this.formInputs.toArray();
+    event.preventDefault();
+    const allInputs = this.inputRefs.toArray();
+    const inputs = allInputs.filter((i: any) => !i.nativeElement.disabled);
 
-      if (index < inputsArray.length) {
-        const nextInput = inputsArray[index + 1];
-
-        if (nextInput && nextInput.inputRef) {
-          // If the next input is a submit button
-          if (nextInput.cType === 'submit') {
-            // Check if it's already focused; if not, focus it first
-            (document.activeElement !== nextInput.inputRef.nativeElement) && nextInput.inputRef.nativeElement.focus();
-          } else {
-            // Focus on the next input if it's not a submit button
-            nextInput.inputRef.nativeElement.focus();
-          }
-        } else {
-          // Submit the form if it's already focused and Enter is pressed
-          this.onSubmit(event);
-        }
-      }
+    if (currentIndex + 1 < inputs.length) {
+      inputs[currentIndex + 1].nativeElement.focus();
+    } else {
+      this.onSubmit(keyboardEvent);
     }
   }
 
@@ -136,12 +129,8 @@ export class RegistrationComponent {
 
     if (event.key === 'Tab') {
       event.preventDefault();
-      const inputsArray = this.formInputs.toArray();
-      if (inputsArray.length > 0) {
-        const firstInput = inputsArray[0];
-        firstInput.inputRef.nativeElement.focus();
-        this.highlightedTr = -1;
-      }
+      const inputs = this.inputRefs.toArray();
+      inputs[0].nativeElement.focus();
     } else if (event.key === 'ArrowDown') {
       event.preventDefault(); // Prevent default scrolling behavior
       this.highlightedTr = (this.highlightedTr + 1) % this.filteredPatientList().length;
@@ -155,7 +144,7 @@ export class RegistrationComponent {
       // Call onUpdate for the currently highlighted item
       if (this.highlightedTr !== -1) {
         const selectedItem = this.filteredPatientList()[this.highlightedTr];
-        this.onUpdate(selectedItem); // Execute onUpdate for the selected row
+        this.onUpdate(selectedItem);
         this.highlightedTr = -1;
       }
     }
@@ -163,6 +152,7 @@ export class RegistrationComponent {
 
   onSubmit(e: Event) {
     this.isSubmitted = true;
+    this.form.get('regNo')?.enable();
     console.log(this.form.value);
     if (this.form.valid) {
       // console.log(this.form.value);
@@ -172,7 +162,8 @@ export class RegistrationComponent {
             next: (response) => {
               if (response !== null && response !== undefined) {
                 this.success.set("Patient successfully updated!");
-                this.filteredPatientList.set([...this.filteredPatientList(), this.form.value])
+                const rest = this.filteredPatientList().filter(p => p.id !== response.id)
+                this.filteredPatientList.set([response, ...rest])
                 this.formReset(e);
                 this.isSubmitted = false;
                 this.selectedPatient = null;
@@ -192,7 +183,7 @@ export class RegistrationComponent {
             next: (response) => {
               if (response !== null && response !== undefined) {
                 this.success.set("Patient successfully added!");
-                this.filteredPatientList.set([...this.filteredPatientList(), this.form.value])
+                this.filteredPatientList.set([response, ...this.filteredPatientList()])
                 this.formReset(e);
                 this.isSubmitted = false;
                 setTimeout(() => {
@@ -209,6 +200,8 @@ export class RegistrationComponent {
     } else {
       console.log('Form is invalid');
     }
+    
+    this.form.get('regNo')?.disable();
   }
 
   onUpdate(data: any) {
@@ -230,10 +223,8 @@ export class RegistrationComponent {
 
     // Focus the 'Name' input field after patching the value
     setTimeout(() => {
-      const NameInput = this.formInputs.find(input => input.label === 'Contact No');
-      if (NameInput && NameInput.inputRef) {
-        NameInput.inputRef.nativeElement.focus(); // Programmatically focus the Name input
-      }
+      const inputs = this.inputRefs.toArray();
+      inputs[0].nativeElement.focus();
     }, 0); // Delay to ensure the DOM is updated
 
     // Reset the highlighted row
@@ -243,8 +234,7 @@ export class RegistrationComponent {
   onDelete(id: any) {
     if(confirm("Are you sure you want to delete?")) {
       this.patientService.deletePatient(id).subscribe(data => {
-        console.log(data)
-        if (data === 1) {
+        if (data.id) {
           this.success.set("Doctor fee deleted successfully!");
           this.filteredPatientList.set(this.filteredPatientList().filter(d => d.id !== id));
           setTimeout(() => {
@@ -266,7 +256,7 @@ export class RegistrationComponent {
       contactNo: '',
       fatherName: '',
       motherName: '',
-      sex: 'Male',
+      sex: '',
       dob: '',
       nid: '',
       address: '',

@@ -207,15 +207,16 @@ export class DoctorFeeComponent {
     this.isDoctorEnable = true;
     this.form.get('patientRegId')?.enable();
     this.isPatientEnable = true;
-    console.log(this.form.value);
+    console.log(this.form.value)
     if (this.form.valid) {
+      console.log(this.form.get('nextFlowDate')?.value === "" ? "get the value" : "not found")
+      this.form.get('nextFlowDate')?.value === "" ? this.form.patchValue({nextFlowDate: null}) : "ami pari na ar";
       if (!this.selected) {
         this.doctorFeeService.addDoctorFee(this.form.value)
           .subscribe({
             next: (response) => {
               if (response !== null && response !== undefined) {
                 this.success.set("Patient successfully added!");
-                console.log(response)
                 this.filteredDoctorFeeList.set([response, ...this.filteredDoctorFeeList()])
                 this.formReset(e);
                 this.isSubmitted = false;
@@ -235,7 +236,8 @@ export class DoctorFeeComponent {
             next: (response) => {
               if (response !== null && response !== undefined) {
                 this.success.set("Patient successfully updated!");
-                this.filteredDoctorFeeList.set([response, ...this.filteredDoctorFeeList()])
+                const rest = this.filteredDoctorFeeList().filter(d => d.gid !== response.gid);
+                this.filteredDoctorFeeList.set([response, ...rest]);
                 this.isSubmitted = false;
                 this.selected = null;
                 this.formReset(e);
@@ -292,7 +294,7 @@ export class DoctorFeeComponent {
   onDelete(id: any) {
     if (confirm("Are you sure you want to delete?")) {
       this.doctorFeeService.deleteDoctorFee(id).subscribe(data => {
-        if (data === 1) {
+        if (data.gid) {
           this.success.set("Doctor fee deleted successfully!");
           this.filteredDoctorFeeList.set(this.filteredDoctorFeeList().filter(d => d.gid !== id));
           setTimeout(() => {

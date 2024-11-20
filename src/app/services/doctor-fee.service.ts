@@ -15,7 +15,7 @@ export class DoctorFeeFeeService {
   }
 
   getAllDoctorFees(): Observable<any[]> {
-    return this.http.get<any[]>(this.rootUrl + '/SearchDoctorFee');
+    return this.http.post<any[]>(this.rootUrl + '/SearchDoctorFee', {});
   }
 
   getFilteredDoctorFee(fromDate: any, toDate: any, nextFlowDate: any): Observable<any> {
@@ -34,8 +34,10 @@ export class DoctorFeeFeeService {
       endPoint = `fromDate=${toDate}&toDate=${toDate}&nextFlowDate=${nextFlowDate}`
     } else if (fromDate && toDate && nextFlowDate) {
       endPoint = `fromDate=${fromDate}&toDate=${toDate}&nextFlowDate=${nextFlowDate}`
+    } else {
+      endPoint = ''
     }
-    return this.http.get<any>(`${this.rootUrl}/GetDoctorNextFlowDateSearch?${endPoint}`);
+    return this.http.post<any>(`${this.rootUrl}/GetDoctorNextFlowDateSearch?${endPoint}`, {});
   }
 
   getDoctorFee(id: any): Observable<any> {
@@ -43,10 +45,10 @@ export class DoctorFeeFeeService {
   }
 
   updateDoctorFee(id: any, updateDoctorFeeRequest: any | FormData): Observable<any>{
-    return this.http.put<any>(`${this.rootUrl}/${id}`, updateDoctorFeeRequest);
+    return this.http.put<any>(`${this.rootUrl}/EditDoctorFee/${id}`, updateDoctorFeeRequest);
   }
 
   deleteDoctorFee(id: any): Observable<any>{
-    return this.http.delete<any>(`${this.rootUrl}/${id}`);
+    return this.http.post<any>(`${this.rootUrl}/DeleteDoctorFee?id=${id}`, {});
   }
 }

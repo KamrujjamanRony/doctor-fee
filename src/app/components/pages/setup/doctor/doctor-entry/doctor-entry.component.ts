@@ -1,17 +1,17 @@
 import { Component, ElementRef, inject, QueryList, signal, ViewChild, ViewChildren } from '@angular/core';
 import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputComponent } from '../../../../shared/input/input.component';
 import { CommonModule, DatePipe } from '@angular/common';
 import { SearchComponent } from '../../../../shared/svg/search/search.component';
 import { ToastSuccessComponent } from '../../../../shared/toast/toast-success/toast-success.component';
 import { DoctorService } from '../../../../../services/doctor.service';
 import { DataFetchService } from '../../../../../services/useDataFetch';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { FieldComponent } from "../../../../shared/field/field.component";
 
 @Component({
   selector: 'app-doctor-entry',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputComponent, SearchComponent, ToastSuccessComponent],
+  imports: [CommonModule, ReactiveFormsModule, SearchComponent, ToastSuccessComponent, FieldComponent],
   templateUrl: './doctor-entry.component.html',
   styleUrl: './doctor-entry.component.css'
 })
@@ -32,7 +32,7 @@ export class DoctorEntryComponent {
   today = new Date();
   isLoading$: Observable<any> | undefined;
   hasError$: Observable<any> | undefined;
-  @ViewChildren(InputComponent) formInputs!: QueryList<InputComponent>;
+  @ViewChildren('inputRef') inputRefs!: QueryList<ElementRef>;
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   isSubmitted = false;
   form = this.fb.group({
@@ -41,12 +41,12 @@ export class DoctorEntryComponent {
     contactNo: [''],
     takeCom: [0],
     isChamberDoctor: [0],
-    mpoId: [''],
+    mpoId: [0],
     userName: [''],
     valid: [0],
     entryDate: [this.today],
     reportUserName: [''],
-    drFee: [null],
+    drFee: [0],
   });
 
   transform(value: any, args?: any): any {
@@ -105,34 +105,20 @@ export class DoctorEntryComponent {
     return this.form.get(controlName) as FormControl;
   }
 
-  // Handle the Enter key to focus the next input field
-  handleEnterKey(event: Event, index: number) {
+
+  handleEnterKey(event: Event, currentIndex: number) {
     const keyboardEvent = event as KeyboardEvent;
-    if (keyboardEvent.key === 'Enter') {
-      event.preventDefault(); // Prevent form submission
-      const inputsArray = this.formInputs.toArray();
+    event.preventDefault();
+    const allInputs = this.inputRefs.toArray();
+    const inputs = allInputs.filter((i: any) => !i.nativeElement.disabled);
 
-      if (index < inputsArray.length) {
-        const nextInput = inputsArray[index + 1];
-
-        if (nextInput && nextInput.inputRef) {
-          // If the next input is a submit button
-          if (nextInput.cType === 'submit') {
-            // Check if it's already focused; if not, focus it first
-            (document.activeElement !== nextInput.inputRef.nativeElement) && nextInput.inputRef.nativeElement.focus();
-          } else {
-            // Focus on the next input if it's not a submit button
-            nextInput.inputRef.nativeElement.focus();
-          }
-        } else {
-          // Submit the form if it's already focused and Enter is pressed
-          this.onSubmit(event);
-        }
-      }
+    if (currentIndex + 1 < inputs.length) {
+      inputs[currentIndex + 1].nativeElement.focus();
+    } else {
+      this.onSubmit(keyboardEvent);
     }
   }
-
-  // Handle key navigation in the search input
+  
   handleSearchKeyDown(event: KeyboardEvent) {
     if (this.filteredDoctorList().length === 0) {
       return; // Exit if there are no items to navigate
@@ -140,12 +126,8 @@ export class DoctorEntryComponent {
 
     if (event.key === 'Tab') {
       event.preventDefault();
-      const inputsArray = this.formInputs.toArray();
-      if (inputsArray.length > 0) {
-        const firstInput = inputsArray[0];
-        firstInput.inputRef.nativeElement.focus();
-        this.highlightedTr = -1;
-      }
+      const inputs = this.inputRefs.toArray();
+      inputs[0].nativeElement.focus();
     } else if (event.key === 'ArrowDown') {
       event.preventDefault(); // Prevent default scrolling behavior
       this.highlightedTr = (this.highlightedTr + 1) % this.filteredDoctorList().length;
@@ -159,7 +141,7 @@ export class DoctorEntryComponent {
       // Call onUpdate for the currently highlighted item
       if (this.highlightedTr !== -1) {
         const selectedItem = this.filteredDoctorList()[this.highlightedTr];
-        this.onUpdate(selectedItem); // Execute onUpdate for the selected row
+        this.onUpdate(selectedItem);
         this.highlightedTr = -1;
       }
     }
@@ -169,6 +151,7 @@ export class DoctorEntryComponent {
     this.isSubmitted = true;
     console.log(this.form.value);
     if (this.form.valid) {
+      this.form.value.drFee ?? this.form.patchValue({drFee: 0});
       // console.log(this.form.value);
       if (this.selectedDoctor) {
         this.doctorService.updateDoctor(this.selectedDoctor.id, this.form.value)
@@ -176,7 +159,8 @@ export class DoctorEntryComponent {
             next: (response) => {
               if (response !== null && response !== undefined) {
                 this.success.set("Doctor successfully updated!");
-                this.filteredDoctorList.set([...this.filteredDoctorList(), this.form.value])
+                const rest = this.filteredDoctorList().filter(d => d.id !== response.id);
+                this.filteredDoctorList.set([response, ...rest]);
                 this.isSubmitted = false;
                 this.selectedDoctor = null;
                 this.formReset(e);
@@ -196,7 +180,7 @@ export class DoctorEntryComponent {
             next: (response) => {
               if (response !== null && response !== undefined) {
                 this.success.set("Doctor successfully added!");
-                this.filteredDoctorList.set([...this.filteredDoctorList(), this.form.value])
+                this.filteredDoctorList.set([response, ...this.filteredDoctorList()])
                 this.isSubmitted = false;
                 this.formReset(e);
                 setTimeout(() => {
@@ -228,23 +212,21 @@ export class DoctorEntryComponent {
       valid: data?.valid,
       entryDate: data?.entryDate,
       reportUserName: data?.reportUserName,
-      drFee: data?.drFee,
+      drFee: data?.drFee || 0,
     });
 
     // Focus the 'Name' input field after patching the value
     setTimeout(() => {
-      const NameInput = this.formInputs.find(input => input.label === 'Doctor Name');
-      if (NameInput && NameInput.inputRef) {
-        NameInput.inputRef.nativeElement.focus(); // Programmatically focus the Name input
-      }
+      const inputs = this.inputRefs.toArray();
+      inputs[0].nativeElement.focus();
     }, 0); // Delay to ensure the DOM is updated
   }
 
   onDelete(id: any) {
+    console.log(id)
     if(confirm("Are you sure you want to delete?")) {
       this.doctorService.deleteDoctor(id).subscribe(data => {
-        console.log(data)
-        if (data === 1) {
+        if (data.id) {
           this.success.set("Doctor deleted successfully!");
           this.filteredDoctorList.set(this.filteredDoctorList().filter(d => d.id !== id));
           setTimeout(() => {
@@ -265,12 +247,12 @@ export class DoctorEntryComponent {
       contactNo: '',
       takeCom: 0,
       isChamberDoctor: 0,
-      mpoId: '',
+      mpoId: 0,
       userName: '',
       valid: 0,
       entryDate: this.today,
       reportUserName: '',
-      drFee: null,
+      drFee: 0,
     });
     this.selectedDoctor = null;
   }

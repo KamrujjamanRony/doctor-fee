@@ -12,97 +12,179 @@
     >
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
         <!-- contactNo -->
-        <app-input
-          cType="text"
-          label="Contact No"
-          [formControl]="getControl('contactNo')"
-          [isSubmitted]="isSubmitted"
-          (keydown.enter)="handleEnterKey($event, 0)"
-        ></app-input>
+        <Field label="contactNo">
+          <input
+            #inputRef
+            type="text"
+            maxlength="11"
+            [formControl]="getControl('contactNo')"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            [class.invalid]="
+              getControl('contactNo').invalid &&
+              getControl('contactNo').touched
+            "
+            placeholder=""
+            (keydown.enter)="handleEnterKey($event, 0)"
+          />
+        </Field>
         <!-- regNo -->
-        <app-input
-          cType="text"
-          label="Registration No"
-          [formControl]="getControl('regNo')"
-          (keydown.enter)="handleEnterKey($event, 1)"
-        ></app-input>
+        <Field label="regNo">
+          <input
+            #inputRef
+            type="text"
+            [value]="getControl('regNo').value"
+            [formControl]="getControl('regNo')"
+            [disabled]="getControl('regNo').disabled"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            [class.invalid]="
+              getControl('regNo').invalid &&
+              getControl('regNo').touched
+            "
+            placeholder=""
+          />
+        </Field>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-        <!-- Name -->
-        <app-input
-          cType="text"
-          label="Patient Name"
-          [formControl]="getControl('name')"
-          [isSubmitted]="isSubmitted"
-          (keydown.enter)="handleEnterKey($event, 2)"
-        ></app-input>
+        <!-- name -->
+        <Field label="name">
+          <input
+            #inputRef
+            type="text"
+            [formControl]="getControl('name')"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            [class.invalid]="
+              getControl('name').invalid &&
+              getControl('name').touched
+            "
+            placeholder=""
+            (keydown.enter)="handleEnterKey($event, 1)"
+          />
+        </Field>
         <!-- sex -->
-        <app-input
-          cType="select"
-          [options]="options"
-          label="sex"
+       <Field label="Sex" [isInvalid]="false">
+        <select
+          #inputRef
+          name="sex"
           [formControl]="getControl('sex')"
-          (keydown.enter)="handleEnterKey($event, 3)"
-        ></app-input>
+          placeholder=""
+          (keydown.enter)="handleEnterKey($event, 2)"
+          class="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        >
+          @for(option of options; track $index){
+          <option [value]="option.id" class="capitalize">
+            {{ option.name }}
+          </option>
+          }
+        </select>
+       </Field>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
         <!-- fatherName -->
-        <app-input
-          cType="text"
-          label="Father Name"
-          [formControl]="getControl('fatherName')"
-          (keydown.enter)="handleEnterKey($event, 4)"
-        ></app-input>
+        <Field label="fatherName">
+          <input
+            #inputRef
+            type="text"
+            [formControl]="getControl('fatherName')"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            [class.invalid]="
+              getControl('fatherName').invalid &&
+              getControl('fatherName').touched
+            "
+            placeholder=""
+            (keydown.enter)="handleEnterKey($event, 3)"
+          />
+        </Field>
         <!-- motherName -->
-        <app-input
-          cType="text"
-          label="Mother Name"
-          [formControl]="getControl('motherName')"
-          (keydown.enter)="handleEnterKey($event, 5)"
-        ></app-input>
+        <Field label="motherName">
+          <input
+            #inputRef
+            type="text"
+            [formControl]="getControl('motherName')"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            [class.invalid]="
+              getControl('motherName').invalid &&
+              getControl('motherName').touched
+            "
+            placeholder=""
+            (keydown.enter)="handleEnterKey($event, 4)"
+          />
+        </Field>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
         <!-- nid -->
-        <app-input
-          cType="text"
-          label="nid"
-          [formControl]="getControl('nid')"
-          (keydown.enter)="handleEnterKey($event, 6)"
-        ></app-input>
+        <Field label="nid">
+          <input
+            #inputRef
+            type="text"
+            [formControl]="getControl('nid')"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            [class.invalid]="
+              getControl('nid').invalid &&
+              getControl('nid').touched
+            "
+            placeholder=""
+            (keydown.enter)="handleEnterKey($event, 5)"
+          />
+        </Field>
         <!-- dob -->
-        <app-input
-          cType="date"
-          label="Date of Birth"
-          [formControl]="getControl('dob')"
-          (keydown.enter)="handleEnterKey($event, 7)"
-        ></app-input>
+        <Field label="dob">
+          <input
+            #inputRef
+            type="date"
+            [formControl]="getControl('dob')"
+            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            [class.invalid]="
+              getControl('dob').invalid &&
+              getControl('dob').touched
+            "
+            placeholder=""
+            (keydown.enter)="handleEnterKey($event, 6)"
+          />
+        </Field>
       </div>
       <!-- address -->
-      <app-input
-        cType="text"
-        label="address"
-        [formControl]="getControl('address')"
-        (keydown.enter)="handleEnterKey($event, 8)"
-      ></app-input>
+      <Field label="address">
+        <input
+          #inputRef
+          type="text"
+          [formControl]="getControl('address')"
+          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          [class.invalid]="
+            getControl('address').invalid &&
+            getControl('address').touched
+          "
+          placeholder=""
+          (keydown.enter)="handleEnterKey($event, 7)"
+        />
+      </Field>
       <!-- remarks -->
-      <app-input
-        cType="text"
-        label="remarks"
-        [formControl]="getControl('remarks')"
-        (keydown.enter)="handleEnterKey($event, 9)"
-      ></app-input>
+      <Field label="remarks">
+        <input
+          #inputRef
+          type="text"
+          [formControl]="getControl('remarks')"
+          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          [class.invalid]="
+            getControl('remarks').invalid &&
+            getControl('remarks').touched
+          "
+          placeholder=""
+          (keydown.enter)="handleEnterKey($event, 8)"
+        />
+      </Field>
 
       <div class="flex gap-2">
         <!-- Save -->
-        <app-input
-        [label]="selectedPatient ? 'Update' : 'Save'"
-          cType="submit"
-          (keydown.enter)="handleEnterKey($event, 10)"
-          class="w-full"
-        ></app-input>
+        <input
+        #inputRef
+          type="submit"
+          [value]="selectedPatient ? 'Update' : 'Save'"
+          class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-1 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10 w-full"
+          (keydown.enter)="handleEnterKey($event, 9)"
+        />
 
         <button
           (click)="formReset($event)"
@@ -171,7 +253,7 @@
             <th scope="col" class="px-1 py-3">post by</th>
             <th scope="col" class="px-1 py-3">entry date</th>
             <th scope="col" class="px-1 py-3">Edit</th>
-            <th scope="col" class="px-1 py-3">Delete</th>
+            <th scope="col" class="px-1 py-3 hidden">Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -225,7 +307,7 @@
             <td>
               <button class="text-yellow-400 hover:bg-white px-1 rounded" (click)="onUpdate(item)">Edit</button>
             </td>
-            <td>
+            <td hidden>
               <button class="text-rose-400 hover:bg-white px-1 rounded" (click)="onDelete(item.id)">Delete</button>
             </td>
           </tr>

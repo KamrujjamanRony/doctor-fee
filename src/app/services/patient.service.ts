@@ -15,7 +15,7 @@ export class PatientService {
   }
 
   getAllPatients(): Observable<any[]> {
-    return this.http.get<any[]>(this.rootUrl + '/SearchPatient');
+    return this.http.post<any[]>(this.rootUrl + '/SearchPatient', '');
   }
 
   getPatient(id: any): Observable<any> {
@@ -23,10 +23,10 @@ export class PatientService {
   }
 
   updatePatient(id: any, updatePatientRequest: any | FormData): Observable<any>{
-    return this.http.put<any>(`${this.rootUrl}/${id}`, updatePatientRequest);
+    return this.http.put<any>(`${this.rootUrl}/EditPatientReg/${id}`, updatePatientRequest);
   }
 
   deletePatient(id: any): Observable<any>{
-    return this.http.delete<any>(`${this.rootUrl}/${id}`);
+    return this.http.post<any>(`${this.rootUrl}/DeletePatientReg?id=${id}`, '');
   }
 }
