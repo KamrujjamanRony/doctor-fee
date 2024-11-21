@@ -25,10 +25,15 @@ export class DoctorFeeComponent {
   private doctorService = inject(DoctorService);
   private doctorFeeService = inject(DoctorFeeFeeService);
   dataFetchService = inject(DataFetchService);
+  isLoading$: Observable<any> | undefined;
+  hasError$: Observable<any> | undefined;
   filteredPatientList = signal<any[]>([]);
   filteredDoctorList = signal<any[]>([]);
   filteredDoctorFeeList = signal<any[]>([]);
+  success = signal<any>("");
   private searchQuery$ = new BehaviorSubject<string>('');
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+  @ViewChildren('inputRef') inputRefs!: QueryList<ElementRef>;
   options: any[] = ['New', 'Old', 'Others'];
   selectedDoctor: any;
   selectedPatient: any;
@@ -36,36 +41,24 @@ export class DoctorFeeComponent {
   fromDate: any;
   toDate: any;
   nextFollowDate: any;
-
   highlightedTr: number = -1;
-
-  success = signal<any>("");
   today = new Date();
-  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
-  @ViewChildren('inputRef') inputRefs!: QueryList<ElementRef>;
   isSubmitted = false;
+
   form = this.fb.group<any>({
     doctorId: [{ value: '', disabled: false }, [Validators.required]],
     patientRegId: [{ value: '', disabled: false }, [Validators.required]],
-    patientType: ['New'],
+    patientType: ['New', [Validators.required]],
     amount: [''],
     discount: [''],
     remarks: [''],
     postBy: [''],
     nextFlowDate: [null],
-    entryDate: [this.today],
+    entryDate: [this.today, [Validators.required]],
   });
 
 
-  isLoading$: Observable<any> | undefined;
-  hasError$: Observable<any> | undefined;
-
-  transform(value: any, args: any = 'dd/MM/yyyy'): any {
-    if (!value) return null;
-    const datePipe = new DatePipe('en-US');
-    return datePipe.transform(value, args);
-  }
-
+  // ------ Fetch Methods -------------------------------------------------------------
   ngOnInit() {
     this.onLoadDoctorFees();
     this.onLoadPatients();
@@ -132,73 +125,15 @@ export class DoctorFeeComponent {
     this.hasError$ = hasError$;
   }
 
-
-  onSearchPatient(event: Event) {
+  onSearchDoctorFee(event: Event) {
     const query = (event.target as HTMLInputElement).value.toLowerCase();
     this.searchQuery$.next(query);
   }
+  // ------ Fetch Methods End -------------------------------------------------------------
 
-  onDoctorChange(data: any) {
-    this.selectedDoctor = data;
-    this.form.patchValue({
-      doctorId: this.selectedDoctor.id,
-    });
-  }
-
-  onPatientChange(data: any) {
-    this.selectedPatient = data;
-    this.form.patchValue({
-      patientRegId: this.selectedPatient.id,
-    });
-  }
-
-  // Simplified method to get form controls
+  // All Form methods ----------------------------------------------------------------
   getControl(controlName: string): FormControl {
     return this.form.get(controlName) as FormControl;
-  }
-
-
-  handleEnterKey(event: Event, currentIndex: number) {
-    const keyboardEvent = event as KeyboardEvent;
-    event.preventDefault();
-    const inputs = this.inputRefs.toArray();
-
-    if (currentIndex + 1 < inputs.length) {
-      // If the next input exists, focus it
-      inputs[currentIndex + 1].nativeElement.focus();
-    } else {
-      // Optionally, submit the form if it's the last input
-      this.onSubmit(keyboardEvent);
-    }
-  }
-
-  // Handle key navigation in the search input
-  handleSearchKeyDown(event: KeyboardEvent) {
-    if (this.filteredPatientList().length === 0) {
-      return; // Exit if there are no items to navigate
-    }
-
-    if (event.key === 'Tab') {
-      event.preventDefault();
-      const inputs = this.inputRefs.toArray();
-      inputs[0].nativeElement.focus();
-    } else if (event.key === 'ArrowDown') {
-      event.preventDefault(); // Prevent default scrolling behavior
-      this.highlightedTr = (this.highlightedTr + 1) % this.filteredPatientList().length;
-    } else if (event.key === 'ArrowUp') {
-      event.preventDefault(); // Prevent default scrolling behavior
-      this.highlightedTr =
-        (this.highlightedTr - 1 + this.filteredPatientList().length) % this.filteredPatientList().length;
-    } else if (event.key === 'Enter') {
-      event.preventDefault(); // Prevent form submission
-
-      // Call onUpdate for the currently highlighted item
-      if (this.highlightedTr !== -1) {
-        const selectedItem = this.filteredPatientList()[this.highlightedTr];
-        this.onUpdate(selectedItem);
-        this.highlightedTr = -1;
-      }
-    }
   }
 
   onSubmit(e: Event) {
@@ -236,6 +171,7 @@ export class DoctorFeeComponent {
             next: (response) => {
               if (response !== null && response !== undefined) {
                 this.success.set("Patient successfully updated!");
+                console.log(response)
                 const rest = this.filteredDoctorFeeList().filter(d => d.gid !== response.gid);
                 this.filteredDoctorFeeList.set([response, ...rest]);
                 this.isSubmitted = false;
@@ -266,8 +202,13 @@ export class DoctorFeeComponent {
 
     // Format the nextFlowDate to YYYY-MM-DD
     const formattedDate = data?.nextFlowDate
-      ? new Date(data.nextFlowDate).toISOString().split('T')[0]
-      : '';
+  ? (() => {
+      const date = new Date(data.nextFlowDate);
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    })()
+  : '';
+
+    console.log(formattedDate)
 
     this.form.patchValue({
       patientRegId: data?.patientRegId,
@@ -334,6 +275,57 @@ export class DoctorFeeComponent {
     this.toDate = '';
     this.nextFollowDate = '';
   }
+   // All Form methods End ----------------------------------------------------------------
+
+   // All Utilities ----------------------------------------------------------------
+  transform(value: any, args: any = 'dd/MM/yyyy'): any {
+    if (!value) return null;
+    const datePipe = new DatePipe('en-US');
+    return datePipe.transform(value, args);
+  }
+
+  handleEnterKey(event: Event, currentIndex: number) {
+    const keyboardEvent = event as KeyboardEvent;
+    event.preventDefault();
+    const inputs = this.inputRefs.toArray();
+
+    if (currentIndex + 1 < inputs.length) {
+      // If the next input exists, focus it
+      inputs[currentIndex + 1].nativeElement.focus();
+    } else {
+      // Optionally, submit the form if it's the last input
+      this.onSubmit(keyboardEvent);
+    }
+  }
+  
+  handleSearchKeyDown(event: KeyboardEvent) {
+    if (this.filteredPatientList().length === 0) {
+      return; // Exit if there are no items to navigate
+    }
+
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      const inputs = this.inputRefs.toArray();
+      inputs[0].nativeElement.focus();
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault(); // Prevent default scrolling behavior
+      this.highlightedTr = (this.highlightedTr + 1) % this.filteredPatientList().length;
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault(); // Prevent default scrolling behavior
+      this.highlightedTr =
+        (this.highlightedTr - 1 + this.filteredPatientList().length) % this.filteredPatientList().length;
+    } else if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent form submission
+
+      // Call onUpdate for the currently highlighted item
+      if (this.highlightedTr !== -1) {
+        const selectedItem = this.filteredPatientList()[this.highlightedTr];
+        this.onUpdate(selectedItem);
+        this.highlightedTr = -1;
+      }
+    }
+  }
+   // All Utilities End ----------------------------------------------------------------
 
   // ----------patientRegId---------------------------------------------------------------------------------
   isPatientDropdownOpen: boolean = false;
@@ -382,6 +374,13 @@ export class DoctorFeeComponent {
     this.highlightedIndexPatient = -1;
   }
 
+  onPatientChange(data: any) {
+    this.selectedPatient = data;
+    this.form.patchValue({
+      patientRegId: this.selectedPatient.id,
+    });
+  }
+
   onPatientSearchChange(event: Event) {
     const searchValue = (event.target as HTMLInputElement).value?.toLowerCase();
     this.patientOptions = this.filteredPatientList().filter(option =>
@@ -401,7 +400,16 @@ export class DoctorFeeComponent {
     const patient = this.filteredPatientList().find(p => p.id == id);
     return patient?.name ?? '';
   }
-  //---------------------------------------------------------------------------------
+  
+  onClearPatient(event: Event){
+    event.preventDefault();
+    this.form.get('patientRegId')?.enable();
+    this.form.patchValue({
+      patientRegId: ''
+    });
+    this.isPatientEnable = true;
+  }
+  //----------patientRegId End-------------------------------------------------------------------------
 
   // ----------doctorId---------------------------------------------------------------------------------
   isDoctorDropdownOpen: boolean = false;
@@ -452,6 +460,13 @@ export class DoctorFeeComponent {
     this.highlightedIndexDoctor = -1;
   }
 
+  onDoctorChange(data: any) {
+    this.selectedDoctor = data;
+    this.form.patchValue({
+      doctorId: this.selectedDoctor.id,
+    });
+  }
+
   onDoctorSearchChange(event: Event) {
     const searchValue = (event.target as HTMLInputElement).value?.toLowerCase();
     this.doctorOptions = this.filteredDoctorList().filter(option =>
@@ -469,7 +484,18 @@ export class DoctorFeeComponent {
     const doctor = this.filteredDoctorList().find(p => p.id == id);
     return doctor?.name ?? '';
   }
-  //---------------------------------------------------------------------------------
+  
+
+  onClearDoctor(event: Event){
+    event.preventDefault();
+    this.form.get('doctorId')?.enable();
+    this.form.patchValue({
+      doctorId: '',
+      amount: 0
+    });
+    this.isDoctorEnable = true;
+  }
+  //----------doctorId End----------------------------------------------------------------------
 
   // Modals --------------------------------------------------------------------------
   followupModal = false;
@@ -498,6 +524,5 @@ export class DoctorFeeComponent {
     this.isSubmitted = false;
     this.highlightedTr = -1;
   }
-
-
+  // Modals End --------------------------------------------------------------------------
 }

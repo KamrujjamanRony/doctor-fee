@@ -37,15 +37,15 @@ export class DoctorEntryComponent {
   isSubmitted = false;
   form = this.fb.group({
     name: ['', [Validators.required]],
-    address: [''],
-    contactNo: [''],
+    address: ['', [Validators.required]],
+    contactNo: ['', [Validators.required]],
     takeCom: [0],
     isChamberDoctor: [0],
     mpoId: [0],
-    userName: [''],
+    userName: ['superSoft', [Validators.required]],
     valid: [0],
     entryDate: [this.today],
-    reportUserName: [''],
+    reportUserName: ['superSoft', [Validators.required]],
     drFee: [0],
   });
 
@@ -248,10 +248,10 @@ export class DoctorEntryComponent {
       takeCom: 0,
       isChamberDoctor: 0,
       mpoId: 0,
-      userName: '',
+      userName: 'superSoft',
       valid: 0,
       entryDate: this.today,
-      reportUserName: '',
+      reportUserName: 'superSoft',
       drFee: 0,
     });
     this.selectedDoctor = null;

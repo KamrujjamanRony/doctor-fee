@@ -32,6 +32,7 @@ export class DoctorFeeReportComponent {
   toDate: any;
   nextFollowDate: any;
   selectedDoctor: any = '';
+  marginTop: any = 0;
   private searchQuery$ = new BehaviorSubject<string>('');
   isLoading$: Observable<any> | undefined;
   hasError$: Observable<any> | undefined;
@@ -118,7 +119,6 @@ export class DoctorFeeReportComponent {
     this.hasError$ = hasError$;
     combineLatest([data$, this.searchQuery$]).pipe(
       map(([data, query]) => {
-        console.log(query)
         if (!query.trim()) {
           return data;
         }
@@ -289,9 +289,8 @@ export class DoctorFeeReportComponent {
 
   generatePDF() {
     const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'A4' });
-  
-    // Define dynamic margin top for the header
-    let headerMarginTop = 10;
+
+    let headerMarginTop = this.marginTop + 10;
   
     // Adjust margin based on conditions
     if (this.selectedDoctor) {

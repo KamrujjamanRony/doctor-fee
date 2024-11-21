@@ -46,13 +46,13 @@ throw new Error('Method not implemented.');
     contactNo: ['', [Validators.required]],
     fatherName: [''],
     motherName: [''],
-    sex: [''],
-    dob: [''],
+    sex: ['', [Validators.required]],
+    dob: ['', [Validators.required]],
     nid: [''],
-    address: [''],
+    address: ['', [Validators.required]],
     remarks: [''],
-    postedBy: [''],
-    entryDate: [this.today],
+    postedBy: ['superSoft', [Validators.required]],
+    entryDate: [this.today, [Validators.required]],
   });
 
   transform(value: any, args: any = 'dd/MM/yyyy'): any {
@@ -261,7 +261,7 @@ throw new Error('Method not implemented.');
       nid: '',
       address: '',
       remarks: '',
-      postedBy: '',
+      postedBy: 'superSoft',
       entryDate: this.today
     });
     this.selectedPatient = null;

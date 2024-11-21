@@ -30,7 +30,11 @@
             (keydown)="handlePatientKeyDown($event)"
             (input)="onPatientSearchChange($event)"
           />
+          @if (getControl('patientRegId').value) {
+            <button (click)="onClearPatient($event)" class="px-1 bg-red-300 rounded-sm text-white absolute top-2 right-0">X</button>
+          }
         </Field>
+        
 
         <!-- Dropdown for sticker names -->
         <div
@@ -77,7 +81,7 @@
             [value]="displayDoctor(getControl('doctorId').value)"
             [formControl]="getControl('doctorId')"
             [disabled]="selectedDoctor"
-            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+            class="block py-2.5 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
             [class.invalid]="
               getControl('doctorId').invalid &&
               getControl('doctorId').touched
@@ -87,6 +91,10 @@
             (keydown)="handleDoctorKeyDown($event)"
             (input)="onDoctorSearchChange($event)"
           />
+          @if (getControl('doctorId').value) {
+            <button (click)="onClearDoctor($event)" class="px-1 bg-red-300 rounded-sm text-white absolute top-2 right-0">X</button>
+          }
+          
         </Field>
 
         <!-- Dropdown for doctor -->
@@ -218,7 +226,7 @@
                 autocomplete="off"
                 class="block ps-10 text-xs text-gray-900 border border-gray-300 rounded bg-gray-50 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
                 placeholder="Search for Fee"
-                (input)="onSearchPatient($event)"
+                (input)="onSearchDoctorFee($event)"
                 (keydown)="handleSearchKeyDown($event)"
               />
             </div>
@@ -381,5 +389,3 @@
   </form>
   </ModalWrapper>
 }
-
-
