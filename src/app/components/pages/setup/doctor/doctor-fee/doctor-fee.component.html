@@ -284,6 +284,7 @@
             <th scope="col" class="px-1 py-3">Contact</th>
             <th scope="col" class="px-1 py-3">Doctor</th>
             <th scope="col" class="px-1 py-3">Next followup date</th>
+            <th scope="col" class="px-1 py-3">Entry date</th>
             <th scope="col" class="px-1 py-3">Edit</th>
             <th scope="col" class="px-1 py-3">Delete</th>
           </tr>
@@ -325,7 +326,9 @@
             } @else {
               <button class="text-yellow-400 hover:bg-white px-1 rounded" (click)="onFollowUpUpdate(item)">followUpDate</button>
             }
-            
+          </td>
+          <td class="p-1">
+            {{ transform(item?.entryDate) }}
           </td>
           <td class="p-1">
             <button class="text-yellow-400 hover:bg-white px-1 rounded" (click)="onUpdate(item)">Edit</button>

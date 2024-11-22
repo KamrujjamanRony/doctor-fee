@@ -21,15 +21,15 @@ export class DoctorEntryComponent {
   dataFetchService = inject(DataFetchService);
   filteredDoctorList = signal<any[]>([]);
 
-  isChamberOptions: any[] = [{ id: -1, name: 'No' }, { id: 1, name: 'Yes' }];
-  takeComOptions: any[] = [{ id: 0, name: 'No' }, { id: 1, name: 'Yes' }];
+  isChamberOptions: any[] = [{ id: "", name: 'Select' },{ id: -1, name: 'No' }, { id: 1, name: 'Yes' }];
+  takeComOptions: any[] = [{ id: "", name: 'Select' },{ id: 0, name: 'No' }, { id: 1, name: 'Yes' }];
   selectedDoctor: any;
   newMpo: string = '';
   highlightedTr: number = -1;
   success = signal<any>("");
 
-  isChamber: any = -1;
-  takeCom: any = 0;
+  isChamber: any = "";
+  takeCom: any = "";
 
   private searchQuery$ = new BehaviorSubject<string>('');
   today = new Date();

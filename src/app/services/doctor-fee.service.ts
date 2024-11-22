@@ -21,25 +21,6 @@ export class DoctorFeeFeeService {
   getFilteredDoctorFee(fromDate: any, toDate: any, nextFlowDate: any): Observable<any> {
     console.log(fromDate, toDate, nextFlowDate)
     const endPoint = nextFlowDate ? `nextFlowDate=${nextFlowDate}` : `fromDate=${fromDate}&toDate=${toDate ? toDate : fromDate}`;
-    
-
-    // if (fromDate && !toDate && !nextFlowDate) {
-    //   endPoint = `fromDate=${fromDate}&toDate=${fromDate}`
-    // } else if (fromDate && toDate && !nextFlowDate) {
-    //   endPoint = `fromDate=${fromDate}&toDate=${toDate}`
-    // } else if (fromDate && !toDate && nextFlowDate) {
-    //   endPoint = `fromDate=${fromDate}&toDate=${fromDate}&nextFlowDate=${nextFlowDate}`
-    // } else if (!fromDate && !toDate && nextFlowDate) {
-    //   endPoint = `nextFlowDate=${nextFlowDate}`
-    // } else if (!fromDate && toDate && !nextFlowDate) {
-    //   endPoint = `fromDate=${toDate}&toDate=${toDate}`
-    // } else if (!fromDate && toDate && nextFlowDate) {
-    //   endPoint = `fromDate=${toDate}&toDate=${toDate}&nextFlowDate=${nextFlowDate}`
-    // } else if (fromDate && toDate && nextFlowDate) {
-    //   endPoint = `fromDate=${fromDate}&toDate=${toDate}&nextFlowDate=${nextFlowDate}`
-    // } else {
-    //   endPoint = ''
-    // }
     return this.http.post<any>(`${this.rootUrl}/GetDoctorNextFlowDateSearch?${endPoint}`, {});
   }
 
