@@ -153,7 +153,6 @@ throw new Error('Method not implemented.');
   onSubmit(e: Event) {
     this.isSubmitted = true;
     this.form.get('regNo')?.enable();
-    console.log(this.form.value);
     if (this.form.valid) {
       // console.log(this.form.value);
       if (this.selectedPatient) {
@@ -198,7 +197,7 @@ throw new Error('Method not implemented.');
           });
       }
     } else {
-      console.log('Form is invalid');
+      alert('Form is invalid! Please Fill Contact No, Name, Sex, Date of Birth and Address.');
     }
     
     this.form.get('regNo')?.disable();
@@ -264,6 +263,7 @@ throw new Error('Method not implemented.');
       postedBy: 'superSoft',
       entryDate: this.today
     });
+    this.isSubmitted = false;
     this.selectedPatient = null;
   }
 

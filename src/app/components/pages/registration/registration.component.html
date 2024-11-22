@@ -12,7 +12,7 @@
     >
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
         <!-- contactNo -->
-        <Field label="contactNo">
+        <Field label="contact No.">
           <input
             #inputRef
             type="text"
@@ -20,15 +20,16 @@
             [formControl]="getControl('contactNo')"
             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
             [class.invalid]="
-              getControl('contactNo').invalid &&
-              getControl('contactNo').touched
+              (getControl('contactNo').invalid &&
+              getControl('contactNo').touched) || isSubmitted
             "
             placeholder=""
             (keydown.enter)="handleEnterKey($event, 0)"
+            required
           />
         </Field>
         <!-- regNo -->
-        <Field label="regNo">
+        <Field label="register No.">
           <input
             #inputRef
             type="text"
@@ -36,10 +37,7 @@
             [formControl]="getControl('regNo')"
             [disabled]="getControl('regNo').disabled"
             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-            [class.invalid]="
-              getControl('regNo').invalid &&
-              getControl('regNo').touched
-            "
+            
             placeholder=""
           />
         </Field>
@@ -47,18 +45,19 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
         <!-- name -->
-        <Field label="name">
+        <Field label="patient name">
           <input
             #inputRef
             type="text"
             [formControl]="getControl('name')"
             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
             [class.invalid]="
-              getControl('name').invalid &&
-              getControl('name').touched
+              (getControl('name').invalid &&
+              getControl('name').touched) || isSubmitted
             "
             placeholder=""
             (keydown.enter)="handleEnterKey($event, 1)"
+            required
           />
         </Field>
         <!-- sex -->
@@ -69,6 +68,11 @@
           [formControl]="getControl('sex')"
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 2)"
+          [class.invalid]="
+              (getControl('sex').invalid &&
+              getControl('sex').touched) || isSubmitted
+            "
+          required
           class="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
         >
           @for(option of options; track $index){
@@ -82,31 +86,25 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
         <!-- fatherName -->
-        <Field label="fatherName">
+        <Field label="father Name">
           <input
             #inputRef
             type="text"
             [formControl]="getControl('fatherName')"
             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-            [class.invalid]="
-              getControl('fatherName').invalid &&
-              getControl('fatherName').touched
-            "
+            
             placeholder=""
             (keydown.enter)="handleEnterKey($event, 3)"
           />
         </Field>
         <!-- motherName -->
-        <Field label="motherName">
+        <Field label="mother Name">
           <input
             #inputRef
             type="text"
             [formControl]="getControl('motherName')"
             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-            [class.invalid]="
-              getControl('motherName').invalid &&
-              getControl('motherName').touched
-            "
+            
             placeholder=""
             (keydown.enter)="handleEnterKey($event, 4)"
           />
@@ -121,27 +119,25 @@
             type="text"
             [formControl]="getControl('nid')"
             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-            [class.invalid]="
-              getControl('nid').invalid &&
-              getControl('nid').touched
-            "
+            
             placeholder=""
             (keydown.enter)="handleEnterKey($event, 5)"
           />
         </Field>
         <!-- dob -->
-        <Field label="dob">
+        <Field label="date of birth">
           <input
             #inputRef
             type="date"
             [formControl]="getControl('dob')"
             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
             [class.invalid]="
-              getControl('dob').invalid &&
-              getControl('dob').touched
+              (getControl('dob').invalid &&
+              getControl('dob').touched) || isSubmitted
             "
             placeholder=""
             (keydown.enter)="handleEnterKey($event, 6)"
+            required
           />
         </Field>
       </div>
@@ -153,11 +149,12 @@
           [formControl]="getControl('address')"
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           [class.invalid]="
-            getControl('address').invalid &&
-            getControl('address').touched
-          "
+              (getControl('address').invalid &&
+              getControl('address').touched) || isSubmitted
+            "
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 7)"
+          required
         />
       </Field>
       <!-- remarks -->
@@ -167,10 +164,7 @@
           type="text"
           [formControl]="getControl('remarks')"
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          [class.invalid]="
-            getControl('remarks').invalid &&
-            getControl('remarks').touched
-          "
+          
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 8)"
         />
@@ -218,7 +212,7 @@
             id="table-search"
             autocomplete="off"
             class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
-            placeholder="Search for Patients"
+            placeholder="Search"
             (input)="onSearchPatient($event)"
             (keydown)="handleSearchKeyDown($event)"
           />
@@ -243,15 +237,15 @@
             <th scope="col" class="px-1 py-3">Reg. No.</th>
             <th scope="col" class="px-1 py-3">name</th>
             <th scope="col" class="px-1 py-3">contact</th>
-            <th scope="col" class="px-1 py-3">father</th>
-            <th scope="col" class="px-1 py-3">mother</th>
+            <!-- <th scope="col" class="px-1 py-3">father</th> -->
+            <!-- <th scope="col" class="px-1 py-3">mother</th> -->
             <th scope="col" class="px-1 py-3">sex</th>
             <th scope="col" class="px-1 py-3">birth of day</th>
-            <th scope="col" class="px-1 py-3">nid no.</th>
+            <!-- <th scope="col" class="px-1 py-3">nid no.</th> -->
             <th scope="col" class="px-1 py-3">address</th>
             <th scope="col" class="px-1 py-3">remarks</th>
-            <th scope="col" class="px-1 py-3">post by</th>
-            <th scope="col" class="px-1 py-3">entry date</th>
+            <!-- <th scope="col" class="px-1 py-3">post by</th> -->
+            <!-- <th scope="col" class="px-1 py-3">entry date</th> -->
             <th scope="col" class="px-1 py-3">Edit</th>
             <th scope="col" class="px-1 py-3 hidden">Delete</th>
           </tr>
@@ -277,33 +271,33 @@
             <td class="p-1">
               {{ item?.contactNo }}
             </td>
-            <td class="p-1">
+            <!-- <td class="p-1">
               {{ item?.fatherName }}
-            </td>
-            <td class="p-1">
+            </td> -->
+            <!-- <td class="p-1">
               {{ item?.motherName }}
-            </td>
+            </td> -->
             <td class="p-1">
               {{ item?.sex }}
             </td>
             <td class="p-1">
               {{ transform(item?.dob, "dd/MM/yyyy") }}
             </td>
-            <td class="p-1">
+            <!-- <td class="p-1">
               {{ item?.nid }}
-            </td>
+            </td> -->
             <td class="p-1">
               {{ item?.address }}
             </td>
             <td class="p-1">
               {{ item?.remarks }}
             </td>
-            <td class="p-1">
+            <!-- <td class="p-1">
               {{ item?.postedBy }}
-            </td>
-            <td class="p-1">
+            </td> -->
+            <!-- <td class="p-1">
               {{ transform(item?.entryDate, "dd/MM/yyyy") }}
-            </td>
+            </td> -->
             <td>
               <button class="text-yellow-400 hover:bg-white px-1 rounded" (click)="onUpdate(item)">Edit</button>
             </td>

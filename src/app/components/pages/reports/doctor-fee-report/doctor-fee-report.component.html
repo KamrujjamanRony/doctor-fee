@@ -128,7 +128,8 @@
             <th scope="col" class="px-1 py-3">Doctor</th>
             <th scope="col" class="px-1 py-3">Amount</th>
             <th scope="col" class="px-1 py-3">Discount</th>
-            <th scope="col" class="px-1 py-3">post by</th>
+            <th scope="col" class="px-1 py-3">Next Follow Date</th>
+            <!-- <th scope="col" class="px-1 py-3">post by</th> -->
             <th scope="col" class="px-1 py-3">remarks</th>
           </tr>
         </thead>
@@ -172,8 +173,11 @@
               {{ item?.discount }}
             </td>
             <td class="p-1">
-              {{ item?.postBy }}
+              {{ transform(item?.nextFlowDate, "dd/MM/yyyy") }}
             </td>
+            <!-- <td class="p-1">
+              {{ item?.postBy }}
+            </td> -->
             <td class="p-1">
               {{ item?.remarks }}
             </td>

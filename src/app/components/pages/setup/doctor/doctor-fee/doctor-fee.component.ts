@@ -48,11 +48,11 @@ export class DoctorFeeComponent {
   form = this.fb.group<any>({
     doctorId: [{ value: '', disabled: false }, [Validators.required]],
     patientRegId: [{ value: '', disabled: false }, [Validators.required]],
-    patientType: ['New', [Validators.required]],
+    patientType: ['New'],
     amount: [''],
     discount: [''],
     remarks: [''],
-    postBy: [''],
+    postBy: ['superSoft'],
     nextFlowDate: [null],
     entryDate: [this.today, [Validators.required]],
   });
@@ -64,10 +64,11 @@ export class DoctorFeeComponent {
     this.onLoadPatients();
     this.onLoadDoctors();
 
-    // Focus on the search input when the component is initialized
-    setTimeout(() => {
-      this.searchInput.nativeElement.focus();
-    }, 10);
+   // Focus the 'Name' input field after patching the value
+   setTimeout(() => {
+    const inputs = this.inputRefs.toArray();
+    inputs[0].nativeElement.focus();
+  }, 10); // Delay to ensure the DOM is updated
   }
 
   onLoadPatients() {
@@ -79,7 +80,7 @@ export class DoctorFeeComponent {
   }
 
   onLoadDoctors() {
-    const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.doctorService.getAllDoctors());
+    const { data$ } = this.dataFetchService.fetchData(this.doctorService.getFilterDoctors(1, ""));
     data$.subscribe(data => {
       this.filteredDoctorList.set(data);
       this.doctorOptions = this.filteredDoctorList().map(d => ({ id: d.id, name: d.name, drFee: d.drFee }));
@@ -142,10 +143,8 @@ export class DoctorFeeComponent {
     this.isDoctorEnable = true;
     this.form.get('patientRegId')?.enable();
     this.isPatientEnable = true;
-    console.log(this.form.value)
+    // console.log(this.form.value)
     if (this.form.valid) {
-      console.log(this.form.get('nextFlowDate')?.value === "" ? "get the value" : "not found")
-      this.form.get('nextFlowDate')?.value === "" ? this.form.patchValue({nextFlowDate: null}) : "ami pari na ar";
       if (!this.selected) {
         this.doctorFeeService.addDoctorFee(this.form.value)
           .subscribe({
@@ -171,7 +170,6 @@ export class DoctorFeeComponent {
             next: (response) => {
               if (response !== null && response !== undefined) {
                 this.success.set("Patient successfully updated!");
-                console.log(response)
                 const rest = this.filteredDoctorFeeList().filter(d => d.gid !== response.gid);
                 this.filteredDoctorFeeList.set([response, ...rest]);
                 this.isSubmitted = false;
@@ -192,13 +190,12 @@ export class DoctorFeeComponent {
       this.followupModal = false;
 
     } else {
-      console.log('Form is invalid');
+      alert('Form is invalid! Please Fill Patient and Doctor.');
     }
   }
 
   onUpdate(data: any) {
     this.selected = data.gid;
-    console.log(data)
 
     // Format the nextFlowDate to YYYY-MM-DD
     const formattedDate = data?.nextFlowDate
@@ -207,8 +204,6 @@ export class DoctorFeeComponent {
       return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     })()
   : '';
-
-    console.log(formattedDate)
 
     this.form.patchValue({
       patientRegId: data?.patientRegId,
@@ -261,10 +256,11 @@ export class DoctorFeeComponent {
       amount: '',
       discount: '',
       remarks: '',
-      postBy: '',
+      postBy: 'superSoft',
       nextFlowDate: null,
       entryDate: this.today
     });
+    this.isSubmitted = false;
     this.selected = null;
   }
 

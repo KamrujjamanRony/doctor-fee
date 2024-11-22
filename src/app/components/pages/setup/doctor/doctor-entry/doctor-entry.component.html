@@ -18,11 +18,12 @@
           [formControl]="getControl('name')"
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           [class.invalid]="
-            getControl('name').invalid &&
-            getControl('name').touched
-          "
+              (getControl('name').invalid &&
+              getControl('name').touched) || isSubmitted
+            "
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 0)"
+          required
         />
       </Field>
       <!-- Address -->
@@ -33,40 +34,39 @@
           [formControl]="getControl('address')"
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           [class.invalid]="
-            getControl('address').invalid &&
-            getControl('address').touched
-          "
+              (getControl('address').invalid &&
+              getControl('address').touched) || isSubmitted
+            "
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 1)"
+          required
         />
       </Field>
       <div class="grid grid-cols-2 gap-2">
         <!-- ContactNo -->
-      <Field label="contactNo">
+      <Field label="contact No.">
         <input
           #inputRef
           type="text"
           [formControl]="getControl('contactNo')"
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           [class.invalid]="
-            getControl('contactNo').invalid &&
-            getControl('contactNo').touched
-          "
+              (getControl('contactNo').invalid &&
+              getControl('contactNo').touched) || isSubmitted
+            "
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 2)"
+          required
         />
       </Field>
         <!-- DrFee -->
-      <Field label="drFee">
+      <Field label="doctor Fee">
         <input
           #inputRef
           type="number"
           [formControl]="getControl('drFee')"
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          [class.invalid]="
-            getControl('drFee').invalid &&
-            getControl('drFee').touched
-          "
+          
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 3)"
         />
@@ -84,7 +84,7 @@
             (keydown.enter)="handleEnterKey($event, 4)"
             class="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           >
-            @for(option of optionsD; track $index){
+            @for(option of takeComOptions; track $index){
             <option [value]="option.id" class="capitalize">
               {{ option.name }}
             </option>
@@ -92,7 +92,7 @@
           </select>
          </Field>
         <!-- IsChamberDoctor -->
-        <Field label="isChamberDoctor" [isInvalid]="false">
+        <Field label="is Chamber Doctor" [isInvalid]="false">
           <select
             #inputRef
             name="isChamberDoctor"
@@ -101,7 +101,7 @@
             (keydown.enter)="handleEnterKey($event, 5)"
             class="block py-2.5 px-2 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
           >
-            @for(option of optionsD; track $index){
+            @for(option of isChamberOptions; track $index){
             <option [value]="option.id" class="capitalize">
               {{ option.name }}
             </option>
@@ -194,26 +194,60 @@
     </h1>
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-2">
-      <div class="pb-4 bg-white dark:bg-gray-900 ml-2">
-        <label for="table-search" class="sr-only">Search</label>
-        <div class="relative mt-1">
-          <div
-            class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
-          >
-            <app-search></app-search>
+
+      <div class="flex items-end gap-2 flex-col md:flex-row px-2">
+
+        <div class="bg-white dark:bg-gray-900 w-full max-w-lg">
+          <label for="table-search" class="sr-only">Search</label>
+          <div class="relative mt-1">
+            <div
+              class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
+            >
+              <app-search></app-search>
+            </div>
+            <input
+              #searchInput
+              type="text"
+              id="table-search"
+              autocomplete="off"
+              class="block ps-10 text-xs text-gray-900 border border-gray-300 rounded bg-gray-50 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500 w-full"
+              placeholder="Search"
+              (input)="onSearchDoctor($event)"
+              (keydown)="handleSearchKeyDown($event)"
+            />
           </div>
-          <input
-            #searchInput
-            type="text"
-            id="table-search"
-            autocomplete="off"
-            class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
-            placeholder="Search for doctors"
-            (input)="onSearchDoctor($event)"
-            (keydown)="handleSearchKeyDown($event)"
-          />
         </div>
+
+        <div class="w-full max-w-lg">
+            <label for="isChamber" class="block text-sm font-medium text-gray-900 dark:text-white">Is Chamber Doctor</label>
+            <select id="isChamber"
+            name="isChamber"
+            [(ngModel)]="isChamber"
+            (change)="onLoadDoctors()" 
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-teal-500 focus:border-teal-500 block w-full px-2 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
+            @for (item of isChamberOptions; track item.id) {
+            <option [value]="item.id">{{ item.name }}</option>
+            }
+            </select>
+          </div>
+
+        <div class="w-full max-w-lg">
+            <label for="takeCom" class="block text-sm font-medium text-gray-900 dark:text-white">Select Doctor</label>
+            <select id="takeCom"
+            name="takeCom"
+            [(ngModel)]="takeCom"
+            (change)="onLoadDoctors()" 
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-teal-500 focus:border-teal-500 block w-full px-2 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
+            @for (item of takeComOptions; track item.id) {
+            <option [value]="item.id">{{ item.name }}</option>
+            }
+            </select>
+          </div>
+          
       </div>
+
+
+      
       @if (isLoading$ | async) {
         <p class="text-3xl font-bold text-center p-10 text-teal-600">Loading ...</p>
         } @else if (hasError$ | async) {

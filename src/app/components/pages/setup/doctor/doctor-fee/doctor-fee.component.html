@@ -13,17 +13,18 @@
 
       <!-- patientRegId -->
       <div class="gap-2 relative">
-        <Field label="patientRegId">
+        <Field label="patient">
           <input
             #inputRef
             type="text"
             [value]="displayPatient(getControl('patientRegId').value)"
             [formControl]="getControl('patientRegId')"
             [disabled]="selectedPatient"
+            required
             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
             [class.invalid]="
-              getControl('patientRegId').invalid &&
-              getControl('patientRegId').touched
+              (getControl('patientRegId').invalid &&
+              getControl('patientRegId').touched) || isSubmitted
             "
             placeholder=""
             (keydown.enter)="handleEnterKey($event, 0)"
@@ -36,10 +37,10 @@
         </Field>
         
 
-        <!-- Dropdown for sticker names -->
+        <!-- Dropdown for patientRegId -->
         <div
-          *ngIf="isPatientDropdownOpen && patientOptions.length > 0 && isPatientEnable"
-          class="absolute bg-white border border-gray-300 -mt-2 w-full z-50 rounded shadow-lg"
+          *ngIf="isPatientDropdownOpen && patientOptions.length > 0 && isPatientEnable && getControl('patientRegId').value"
+          class="absolute bg-white border border-gray-300 -mt-2 w-full z-50 rounded shadow-lg max-h-96 overflow-scroll"
         >
           <ul>
             <li
@@ -74,7 +75,7 @@
 
        <!-- doctorId -->
       <div class="gap-2 relative">
-        <Field label="doctorId">
+        <Field label="doctor">
           <input
           #inputRef
             type="text"
@@ -83,13 +84,15 @@
             [disabled]="selectedDoctor"
             class="block py-2.5 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
             [class.invalid]="
-              getControl('doctorId').invalid &&
-              getControl('doctorId').touched
+              (getControl('doctorId').invalid &&
+              getControl('doctorId').touched) || isSubmitted
             "
+            required
             placeholder=""
             (keydown.enter)="handleEnterKey($event, 2)"
             (keydown)="handleDoctorKeyDown($event)"
             (input)="onDoctorSearchChange($event)"
+            required
           />
           @if (getControl('doctorId').value) {
             <button (click)="onClearDoctor($event)" class="px-1 bg-red-300 rounded-sm text-white absolute top-2 right-0">X</button>
@@ -99,8 +102,8 @@
 
         <!-- Dropdown for doctor -->
         <div
-          *ngIf="isDoctorDropdownOpen && doctorOptions.length > 0 && isDoctorEnable"
-          class="absolute bg-white border border-gray-300 -mt-2 w-full z-50 rounded shadow-lg"
+          *ngIf="isDoctorDropdownOpen && doctorOptions.length > 0 && isDoctorEnable && getControl('doctorId').value"
+          class="absolute bg-white border border-gray-300 -mt-2 w-full z-50 rounded shadow-lg max-h-96 overflow-scroll"
         >
           <ul>
             <li
@@ -122,10 +125,7 @@
           type="text"
           [formControl]="getControl('amount')"
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          [class.invalid]="
-            getControl('amount').invalid &&
-            getControl('amount').touched
-          "
+          
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 3)"
         />
@@ -138,10 +138,7 @@
           type="text"
           [formControl]="getControl('discount')"
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          [class.invalid]="
-            getControl('discount').invalid &&
-            getControl('discount').touched
-          "
+          
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 4)"
         />
@@ -154,10 +151,7 @@
           type="date"
           [formControl]="getControl('nextFlowDate')"
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          [class.invalid]="
-            getControl('nextFlowDate').invalid &&
-            getControl('nextFlowDate').touched
-          "
+          
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 5)"
         />
@@ -170,10 +164,7 @@
           type="text"
           [formControl]="getControl('remarks')"
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          [class.invalid]="
-            getControl('remarks').invalid &&
-            getControl('remarks').touched
-          "
+          
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 6)"
         />
@@ -225,7 +216,7 @@
                 id="table-search"
                 autocomplete="off"
                 class="block ps-10 text-xs text-gray-900 border border-gray-300 rounded bg-gray-50 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
-                placeholder="Search for Fee"
+                placeholder="Search"
                 (input)="onSearchDoctorFee($event)"
                 (keydown)="handleSearchKeyDown($event)"
               />

@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, QueryList, signal, ViewChild, ViewChildren } from '@angular/core';
-import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { SearchComponent } from '../../../../shared/svg/search/search.component';
 import { ToastSuccessComponent } from '../../../../shared/toast/toast-success/toast-success.component';
@@ -11,7 +11,7 @@ import { FieldComponent } from "../../../../shared/field/field.component";
 @Component({
   selector: 'app-doctor-entry',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SearchComponent, ToastSuccessComponent, FieldComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, SearchComponent, ToastSuccessComponent, FieldComponent],
   templateUrl: './doctor-entry.component.html',
   styleUrl: './doctor-entry.component.css'
 })
@@ -21,12 +21,15 @@ export class DoctorEntryComponent {
   dataFetchService = inject(DataFetchService);
   filteredDoctorList = signal<any[]>([]);
 
-  options: any[] = [{ id: 1, name: 'Yes' }, { id: 0, name: 'No' }];
-  optionsD: any[] = [{ id: 0, name: 'No' }, { id: 1, name: 'Yes' }];
+  isChamberOptions: any[] = [{ id: -1, name: 'No' }, { id: 1, name: 'Yes' }];
+  takeComOptions: any[] = [{ id: 0, name: 'No' }, { id: 1, name: 'Yes' }];
   selectedDoctor: any;
   newMpo: string = '';
   highlightedTr: number = -1;
   success = signal<any>("");
+
+  isChamber: any = -1;
+  takeCom: any = 0;
 
   private searchQuery$ = new BehaviorSubject<string>('');
   today = new Date();
@@ -40,7 +43,7 @@ export class DoctorEntryComponent {
     address: ['', [Validators.required]],
     contactNo: ['', [Validators.required]],
     takeCom: [0],
-    isChamberDoctor: [0],
+    isChamberDoctor: [-1],
     mpoId: [0],
     userName: ['superSoft', [Validators.required]],
     valid: [0],
@@ -69,7 +72,7 @@ export class DoctorEntryComponent {
   }
 
   onLoadDoctors() {
-    const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.doctorService.getAllDoctors());
+    const { data$, isLoading$, hasError$ } = this.dataFetchService.fetchData(this.doctorService.getFilterDoctors(this.isChamber, this.takeCom));
     data$.subscribe(data => {
       this.filteredDoctorList.set(data.sort((a: any, b: any) => {
         const dateA = new Date(a.entryDate).getTime();
@@ -147,9 +150,12 @@ export class DoctorEntryComponent {
     }
   }
 
+  onSelectInputChange(): void {
+    console.log(this.isChamber)
+  }
+
   onSubmit(e: Event) {
     this.isSubmitted = true;
-    console.log(this.form.value);
     if (this.form.valid) {
       this.form.value.drFee ?? this.form.patchValue({drFee: 0});
       // console.log(this.form.value);
@@ -195,7 +201,7 @@ export class DoctorEntryComponent {
           });
       }
     } else {
-      console.log('Form is invalid');
+      alert('Form is invalid! Please Fill Name, Address and Contact No.');
     }
   }
 
@@ -223,7 +229,6 @@ export class DoctorEntryComponent {
   }
 
   onDelete(id: any) {
-    console.log(id)
     if(confirm("Are you sure you want to delete?")) {
       this.doctorService.deleteDoctor(id).subscribe(data => {
         if (data.id) {
@@ -246,7 +251,7 @@ export class DoctorEntryComponent {
       address: '',
       contactNo: '',
       takeCom: 0,
-      isChamberDoctor: 0,
+      isChamberDoctor: -1,
       mpoId: 0,
       userName: 'superSoft',
       valid: 0,
@@ -254,6 +259,7 @@ export class DoctorEntryComponent {
       reportUserName: 'superSoft',
       drFee: 0,
     });
+    this.isSubmitted = false;
     this.selectedDoctor = null;
   }
 

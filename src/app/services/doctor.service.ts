@@ -18,6 +18,10 @@ export class DoctorService {
     return this.http.post<any[]>(this.rootUrl + '/SearchDoctor', {});
   }
 
+  getFilterDoctors(isChamberDoctor: any, takeCom: any): Observable<any[]> {
+    return this.http.post<any[]>(this.rootUrl + `/SearchDoctor?isChamberDoctor=${isChamberDoctor !== undefined ? isChamberDoctor : ""}&takeCom=${takeCom !== undefined ? takeCom : ""}`, {});
+  }
+
   getDoctor(id: any): Observable<any> {
     return this.http.get<any>(`${this.rootUrl}/${id}`);
   }
