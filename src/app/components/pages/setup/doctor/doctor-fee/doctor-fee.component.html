@@ -360,7 +360,6 @@
       >
     <Field label="nextFlowDate">
       <input
-      #inputRef
         type="date"
         [formControl]="getControl('nextFlowDate')"
         class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
@@ -369,7 +368,16 @@
           getControl('nextFlowDate').touched
         "
         placeholder=""
-        (keydown.enter)="handleEnterKey($event, 5)"
+      />
+    </Field>
+    <!-- remarks -->
+    <Field label="remarks">
+      <input
+        type="text"
+        [formControl]="getControl('remarks')"
+        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+        
+        placeholder=""
       />
     </Field>
     <!-- Save -->

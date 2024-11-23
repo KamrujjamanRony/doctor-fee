@@ -10,6 +10,8 @@ import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { DoctorFeeFeeService } from '../../../../../services/doctor-fee.service';
 import { FieldComponent } from "../../../../shared/field/field.component";
 import { ModalWrapperComponent } from "../../../../shared/modal-wrapper/modal-wrapper.component";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 
 @Component({
@@ -149,11 +151,13 @@ export class DoctorFeeComponent {
         this.doctorFeeService.addDoctorFee(this.form.value)
           .subscribe({
             next: (response) => {
+              console.log(response);
               if (response !== null && response !== undefined) {
                 this.success.set("Patient successfully added!");
                 this.filteredDoctorFeeList.set([response, ...this.filteredDoctorFeeList()])
                 this.formReset(e);
                 this.isSubmitted = false;
+                this.generatePDF(response);
                 setTimeout(() => {
                   this.success.set("");
                 }, 3000);
@@ -521,4 +525,167 @@ export class DoctorFeeComponent {
     this.highlightedTr = -1;
   }
   // Modals End --------------------------------------------------------------------------
+
+  generatePDF(entry: any) {
+    // Initialize jsPDF with A7 size
+    const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: [74, 105] });
+  
+    // Set initial margins and page dimensions
+    let marginTop = 8;
+    const pageWidth = doc.internal.pageSize.width;
+    const marginLeft = 10; // Consistent left margin
+    const contentWidth = pageWidth - 2 * marginLeft; // Width for text wrapping
+  
+    // Header: Main Report Title
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Doctor Fee Entry', pageWidth / 2, marginTop, { align: 'center' });
+  
+    // Doctor Name with Text Wrapping
+      marginTop += 6;
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      const doctorName = `Doctor: ${entry?.doctorName}`;
+      const wrappedDoctorName = doc.splitTextToSize(doctorName, contentWidth);
+      doc.text(wrappedDoctorName, marginLeft, marginTop);
+      marginTop += wrappedDoctorName.length * 4;
+  
+    // Follow-up Dates
+    if (this.nextFollowDate) {
+      const followDate = `Next Follow Date: ${this.transform(this.nextFollowDate)}`;
+      marginTop += 4;
+      doc.text(followDate, marginLeft, marginTop);
+    } else if (this.fromDate) {
+      const dateRange = `From: ${this.transform(this.fromDate)} To: ${
+        this.toDate ? this.transform(this.toDate) : this.transform(this.fromDate)
+      }`;
+      marginTop += 4;
+      doc.text(dateRange, marginLeft, marginTop);
+    }
+  
+    // Patient and Fee Details
+    if (entry) {
+      marginTop += 6;
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Patient Details:', marginLeft, marginTop);
+  
+      doc.setFont('helvetica', 'normal');
+      marginTop += 4;
+      const details = [
+        `Patient Name: ${entry.patientName}`,
+        `Doctor Name: ${entry.doctorName}`,
+        `Reg No: ${entry.regNo}`,
+        `Contact No: ${entry.contactNo}`,
+        `Patient Type: ${entry.patientType}`,
+        `Amount: ${entry.amount?.toFixed(0) || 'N/A'} Tk`,
+        `Discount: ${entry.discount?.toFixed(0) || 'N/A'} Tk`,
+        `Next Follow Date: ${
+          entry.nextFlowDate
+            ? this.transform(entry.nextFlowDate, 'dd/MM/yyyy')
+            : 'N/A'
+        }`,
+        `Remarks: ${entry.remarks || 'N/A'}`,
+      ];
+  
+      details.forEach((detail) => {
+        const wrappedDetail = doc.splitTextToSize(detail, contentWidth);
+        doc.text(wrappedDetail, marginLeft, marginTop);
+        marginTop += wrappedDetail.length * 4; // Adjust for wrapped lines
+      });
+    }
+  
+    doc.save(`${entry.regNo}-FeeToken.pdf`);
+    // doc.output('dataurlnewwindow');
+  }
+  
+
+  // generatePDF(entry: any) {
+  //   const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: [74, 105] });
+  //   let marginTop = 10;
+  //   const pageWidth = doc.internal.pageSize.width;
+  
+  //   doc.setFontSize(12);
+  //   doc.setFont('monaco', 'bold');
+  //   doc.text('Doctor Fee Entry', pageWidth / 2, marginTop, { align: 'center' });
+    
+  //   if (this.selectedDoctor) {
+  //     marginTop += 8;
+  //     doc.setFontSize(10);
+  //     doc.setFont('monaco', 'normal');
+  //     doc.text(
+  //       `Doctor: ${this.getDoctorName(this.selectedDoctor)}`,
+  //       10,
+  //       marginTop
+  //     );
+  //   }
+  
+  //   if (this.nextFollowDate) {
+  //     marginTop += 6;
+  //     doc.text(
+  //       `Next Follow Date: ${this.transform(this.nextFollowDate)}`,
+  //       10,
+  //       marginTop
+  //     );
+  //   } else if (this.fromDate) {
+  //     marginTop += 6;
+  //     doc.text(
+  //       `From: ${this.transform(this.fromDate)} To: ${
+  //         this.toDate ? this.transform(this.toDate) : this.transform(this.fromDate)
+  //       }`,
+  //       10,
+  //       marginTop
+  //     );
+  //   }
+
+  //   if (entry) {
+  //     marginTop += 8;
+  //     doc.setFontSize(11);
+  //     doc.setFont('helvetica', 'bold');
+  //     doc.text('Patient Details:', 10, marginTop);
+  
+  //     marginTop += 6;
+  //     doc.setFontSize(10);
+  //     doc.setFont('helvetica', 'normal');
+  //     doc.text(`Patient Name: ${entry.patientName}`, 10, marginTop);
+  
+  //     marginTop += 6;
+  //     doc.text(`Doctor Name: ${entry.doctorName}`, 10, marginTop);
+  
+  //     marginTop += 6;
+  //     doc.text(`Reg No: ${entry.regNo}`, 10, marginTop);
+  
+  //     marginTop += 6;
+  //     doc.text(`Contact No: ${entry.contactNo}`, 10, marginTop);
+  
+  //     marginTop += 6;
+  //     doc.text(`Patient Type: ${entry.patientType}`, 10, marginTop);
+  
+  //     marginTop += 6;
+  //     if (entry.amount) {
+  //       doc.text(`Amount: ${entry.amount.toFixed(0)} Tk`, 10, marginTop);
+  //     }
+  
+  //     marginTop += 6;
+  //     if (entry.discount) {
+  //       doc.text(`Discount: ${entry.discount.toFixed(0)} Tk`, 10, marginTop);
+  //     }
+  
+  //     marginTop += 6;
+  //     if (entry.nextFlowDate) {
+  //       doc.text(
+  //         `Next Follow Date: ${this.transform(entry.nextFlowDate, "dd/MM/yyyy")}`,
+  //         10,
+  //         marginTop
+  //       );
+  //     }
+  
+  //     marginTop += 6;
+  //     doc.text(`Remarks: ${entry.remarks || 'N/A'}`, 10, marginTop);
+  //   }
+  
+  //   doc.output('dataurlnewwindow');
+  // }
+  
+  
 }
