@@ -177,7 +177,6 @@ export class DoctorFeeComponent {
                 const rest = this.filteredDoctorFeeList().filter(d => d.gid !== response.gid);
                 this.filteredDoctorFeeList.set([response, ...rest]);
                 this.isSubmitted = false;
-                this.generatePDF(response);
                 this.selected = null;
                 this.formReset(e);
                 setTimeout(() => {
@@ -530,11 +529,11 @@ export class DoctorFeeComponent {
   generatePDF(entry: any) {
   
     // Set initial margins and page dimensions
-    const pageSizeWidth = 74;
-    const pageSizeHeight = 105;
+    const pageSizeWidth = 80;
+    const pageSizeHeight = 80;
     const marginLeft = 10; // Left margin
-    const marginTopStart = 8; // Starting top margin
-    const marginBottom = 10; // Bottom margin
+    const marginTopStart = 15; // Starting top margin
+    const marginBottom = -10; // Bottom margin
     const marginRight = 10; // Right margin
   
     // Initialize jsPDF with A7 size
@@ -561,18 +560,6 @@ export class DoctorFeeComponent {
     const wrappedDoctorName = doc.splitTextToSize(doctorName, contentWidth);
     doc.text(wrappedDoctorName, marginLeft, marginTop);
     marginTop += wrappedDoctorName.length * 4;
-  
-    // Follow-up Dates
-    if (this.nextFollowDate) {
-      const followDate = `Next Follow Date: ${this.transform(this.nextFollowDate)}`;
-      marginTop += 4;
-      doc.text(followDate, marginLeft, marginTop);
-    } else if (this.fromDate) {
-      const dateRange = `From: ${this.transform(this.fromDate)} To: ${this.toDate ? this.transform(this.toDate) : this.transform(this.fromDate)
-        }`;
-      marginTop += 4;
-      doc.text(dateRange, marginLeft, marginTop);
-    }
   
     // Patient and Fee Details
     if (entry) {
@@ -613,7 +600,8 @@ export class DoctorFeeComponent {
       });
     }
   
-    doc.save(`${entry.regNo}-FeeToken.pdf`);
+    doc.output('dataurlnewwindow');
+    // doc.save(`${entry.regNo}-FeeToken.pdf`);
   }
   
 

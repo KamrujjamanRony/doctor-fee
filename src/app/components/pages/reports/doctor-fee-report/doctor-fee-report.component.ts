@@ -377,8 +377,8 @@ generatePDF() {
     data?.regNo || '',
     data?.contactNo || '',
     data?.patientType || '',
-    data?.amount.toFixed(0),
-    data?.discount.toFixed(0),
+    data?.amount.toFixed(0) || 0,
+    data?.discount.toFixed(0) || 0,
     this.transform(data?.nextFlowDate, 'dd/MM/yyyy') || '',
     data?.remarks || '',
   ]);
@@ -424,10 +424,10 @@ generatePDF() {
     },
     margin: { top: marginTop, left: marginLeft, right: marginRight },
     didDrawPage: (data: any) => {
-      // Add Footer with Page Number
+      // Add Footer with Margin Bottom
       const pageNumber = doc.internal.pages.length -1;
       doc.setFontSize(8);
-      doc.text(`Page ${pageNumber}`, pageSizeWidth - marginRight - 10, pageSizeHeight - marginBottom, {
+      doc.text(``, pageSizeWidth - marginRight - 10, pageSizeHeight - marginBottom, {
         align: 'right',
       });
     },

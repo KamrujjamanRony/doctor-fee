@@ -40,8 +40,8 @@ export class DoctorEntryComponent {
   isSubmitted = false;
   form = this.fb.group({
     name: ['', [Validators.required]],
-    address: ['', [Validators.required]],
-    contactNo: ['', [Validators.required]],
+    address: [''],
+    contactNo: [''],
     takeCom: [0],
     isChamberDoctor: [-1],
     mpoId: [0],
@@ -201,7 +201,7 @@ export class DoctorEntryComponent {
           });
       }
     } else {
-      alert('Form is invalid! Please Fill Name, Address and Contact No.');
+      alert('Form is invalid! Please Fill Name Field.');
     }
   }
 
