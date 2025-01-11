@@ -10,7 +10,6 @@
       (ngSubmit)="onSubmit($event)"
       class="max-w-md mx-auto"
     >
-
       <!-- patientRegId -->
       <div class="gap-2 relative">
         <Field label="patient">
@@ -24,7 +23,8 @@
             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
             [class.invalid]="
               (getControl('patientRegId').invalid &&
-              getControl('patientRegId').touched) || isSubmitted
+                getControl('patientRegId').touched) ||
+              isSubmitted
             "
             placeholder=""
             (keydown.enter)="handleEnterKey($event, 0)"
@@ -32,14 +32,23 @@
             (input)="onPatientSearchChange($event)"
           />
           @if (getControl('patientRegId').value) {
-            <button (click)="onClearPatient($event)" class="px-1 bg-red-300 rounded-sm text-white absolute top-2 right-0">X</button>
+          <button
+            (click)="onClearPatient($event)"
+            class="px-1 bg-red-300 rounded-sm text-white absolute top-2 right-0"
+          >
+            X
+          </button>
           }
         </Field>
-        
 
         <!-- Dropdown for patientRegId -->
         <div
-          *ngIf="isPatientDropdownOpen && patientOptions.length > 0 && isPatientEnable && getControl('patientRegId').value"
+          *ngIf="
+            isPatientDropdownOpen &&
+            patientOptions.length > 0 &&
+            isPatientEnable &&
+            getControl('patientRegId').value
+          "
           class="absolute bg-white border border-gray-300 -mt-2 w-full z-50 rounded shadow-lg max-h-96 overflow-scroll"
         >
           <ul>
@@ -56,7 +65,7 @@
       </div>
 
       <!-- patientType -->
-       <Field label="Patient Type" [isInvalid]="false">
+      <Field label="Patient Type" [isInvalid]="false">
         <select
           #inputRef
           name="patientType"
@@ -71,13 +80,13 @@
           </option>
           }
         </select>
-       </Field>
+      </Field>
 
-       <!-- doctorId -->
+      <!-- doctorId -->
       <div class="gap-2 relative">
         <Field label="doctor">
           <input
-          #inputRef
+            #inputRef
             type="text"
             [value]="displayDoctor(getControl('doctorId').value)"
             [formControl]="getControl('doctorId')"
@@ -85,7 +94,8 @@
             class="block py-2.5 px-0 w-full text-xs text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
             [class.invalid]="
               (getControl('doctorId').invalid &&
-              getControl('doctorId').touched) || isSubmitted
+                getControl('doctorId').touched) ||
+              isSubmitted
             "
             required
             placeholder=""
@@ -95,14 +105,23 @@
             required
           />
           @if (getControl('doctorId').value) {
-            <button (click)="onClearDoctor($event)" class="px-1 bg-red-300 rounded-sm text-white absolute top-2 right-0">X</button>
+          <button
+            (click)="onClearDoctor($event)"
+            class="px-1 bg-red-300 rounded-sm text-white absolute top-2 right-0"
+          >
+            X
+          </button>
           }
-          
         </Field>
 
         <!-- Dropdown for doctor -->
         <div
-          *ngIf="isDoctorDropdownOpen && doctorOptions.length > 0 && isDoctorEnable && getControl('doctorId').value"
+          *ngIf="
+            isDoctorDropdownOpen &&
+            doctorOptions.length > 0 &&
+            isDoctorEnable &&
+            getControl('doctorId').value
+          "
           class="absolute bg-white border border-gray-300 -mt-2 w-full z-50 rounded shadow-lg max-h-96 overflow-scroll"
         >
           <ul>
@@ -121,11 +140,10 @@
       <!-- amount -->
       <Field label="amount">
         <input
-        #inputRef
+          #inputRef
           type="text"
           [formControl]="getControl('amount')"
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 3)"
         />
@@ -134,11 +152,10 @@
       <!-- discount -->
       <Field label="discount">
         <input
-        #inputRef
+          #inputRef
           type="text"
           [formControl]="getControl('discount')"
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 4)"
         />
@@ -147,11 +164,10 @@
       <!-- nextFlowDate -->
       <Field label="nextFlowDate">
         <input
-        #inputRef
+          #inputRef
           type="date"
           [formControl]="getControl('nextFlowDate')"
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 5)"
         />
@@ -160,25 +176,35 @@
       <!-- remarks -->
       <Field label="remarks">
         <input
-        #inputRef
+          #inputRef
           type="text"
           [formControl]="getControl('remarks')"
           class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-          
           placeholder=""
           (keydown.enter)="handleEnterKey($event, 6)"
         />
       </Field>
-        
+
+      <!-- postBy -->
+      <Field label="postBy">
+        <input
+          #inputRef
+          type="text"
+          [formControl]="getControl('postBy')"
+          class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
+          placeholder=""
+          (keydown.enter)="handleEnterKey($event, 7)"
+        />
+      </Field>
 
       <div class="flex gap-2">
         <!-- Save -->
         <input
-        #inputRef
+          #inputRef
           type="submit"
           [value]="selected ? 'Update' : 'Save And Print'"
           class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-1 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10 w-full"
-          (keydown.enter)="handleEnterKey($event, 7)"
+          (keydown.enter)="handleEnterKey($event, 8)"
         />
 
         <button
@@ -191,92 +217,115 @@
     </form>
   </div>
 
+  <div class="w-full border px-3 h-[95vh] overflow-scroll">
+    <h1
+      class="text-xl md:text-3xl font-bold text-teal-500 underline text-center"
+    >
+      Fee List
+    </h1>
 
-    <div class="w-full border px-3 h-[95vh] overflow-scroll">
-      <h1
-        class="text-xl md:text-3xl font-bold text-teal-500 underline text-center"
-      >
-        Fee List
-      </h1>
-
-      <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-2 px-2">
-
-        <div class="flex gap-1 justify-between items-end">
-          <div class="bg-white dark:bg-gray-900">
-            <label for="table-search" class="sr-only">Search</label>
-            <div class="relative">
-              <div
-                class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
-              >
-                <app-search></app-search>
-              </div>
-              <input
-                #searchInput
-                type="text"
-                id="table-search"
-                autocomplete="off"
-                class="block ps-10 text-xs text-gray-900 border border-gray-300 rounded bg-gray-50 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
-                placeholder="Search"
-                (input)="onSearchDoctorFee($event)"
-                (keydown)="handleSearchKeyDown($event)"
-              />
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-2 px-2">
+      <div class="flex gap-1 justify-between items-end">
+        <div class="bg-white dark:bg-gray-900">
+          <label for="table-search" class="sr-only">Search</label>
+          <div class="relative">
+            <div
+              class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
+            >
+              <app-search></app-search>
             </div>
+            <input
+              #searchInput
+              type="text"
+              id="table-search"
+              autocomplete="off"
+              class="block ps-10 text-xs text-gray-900 border border-gray-300 rounded bg-gray-50 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500"
+              placeholder="Search"
+              (input)="onSearchDoctorFee($event)"
+              (keydown)="handleSearchKeyDown($event)"
+            />
           </div>
-
-          <div class="w-[140px]">
-            <label for="fromDate" class="block text-sm font-medium text-gray-900 dark:text-white">From Date</label>
-            <div class="relative">
-                <input 
-                id="fromDate"
-                [(ngModel)]="fromDate"
-                (change)="onFilterData()" 
-                type="date" 
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full px-2 py-1.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              </div>
         </div>
 
         <div class="w-[140px]">
-            <label for="toDate" class="block text-sm font-medium text-gray-900 dark:text-white">To Date</label>
-            <div class="relative">
-                <input 
-                id="toDate"
-                [(ngModel)]="toDate"
-                (change)="onFilterData()" 
-                type="date" 
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full px-2 py-1.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              </div>
+          <label
+            for="fromDate"
+            class="block text-sm font-medium text-gray-900 dark:text-white"
+            >From Date</label
+          >
+          <div class="relative">
+            <input
+              id="fromDate"
+              [(ngModel)]="fromDate"
+              (change)="onFilterData()"
+              type="date"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full px-2 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
         </div>
 
         <div class="w-[140px]">
-            <label for="nextFollowDate" class="block text-sm font-medium text-gray-900 dark:text-white">Next Follow Date</label>
-            <div class="relative">
-                <input 
-                id="nextFollowDate"
-                [(ngModel)]="nextFollowDate"
-                (change)="onFilterData()" 
-                type="date" 
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full px-2 py-1.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              </div>
+          <label
+            for="toDate"
+            class="block text-sm font-medium text-gray-900 dark:text-white"
+            >To Date</label
+          >
+          <div class="relative">
+            <input
+              id="toDate"
+              [(ngModel)]="toDate"
+              (change)="onFilterData()"
+              type="date"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full px-2 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
         </div>
 
-        <button type="button" (click)="handleClearFilter()" class="text-white bg-gradient-to-r from-rose-400 via-rose-500 to-rose-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 shadow-lg shadow-rose-500/50 dark:shadow-lg dark:shadow-rose-800/80 font-medium rounded text-sm px-2 text-center h-10">Clear Filters</button>
+        <div class="w-[140px]">
+          <label
+            for="nextFollowDate"
+            class="block text-sm font-medium text-gray-900 dark:text-white"
+            >Next Follow Date</label
+          >
+          <div class="relative">
+            <input
+              id="nextFollowDate"
+              [(ngModel)]="nextFollowDate"
+              (change)="onFilterData()"
+              type="date"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full px-2 py-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
         </div>
-        
-       
+
+        <button
+          type="button"
+          (click)="handleClearFilter()"
+          class="text-white bg-gradient-to-r from-rose-400 via-rose-500 to-rose-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 shadow-lg shadow-rose-500/50 dark:shadow-lg dark:shadow-rose-800/80 font-medium rounded text-sm px-2 text-center h-10"
+        >
+          Clear Filters
+        </button>
+      </div>
 
       @if (isLoading$ | async) {
-        <p class="text-3xl font-bold text-center p-10 text-teal-600">Loading ...</p>
-        } @else if (hasError$ | async) {
-        <p class="text-3xl font-bold text-center p-10 text-red-600">There was an error loading data.</p>
-        } @else if (filteredDoctorFeeList().length === 0) {
-          <p class="text-3xl font-bold text-center p-10 text-orange-600">Data is Empty.</p>
-          } @else {
-        <table
-          class="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      <p class="text-3xl font-bold text-center p-10 text-teal-600">
+        Loading ...
+      </p>
+      } @else if (hasError$ | async) {
+      <p class="text-3xl font-bold text-center p-10 text-red-600">
+        There was an error loading data.
+      </p>
+      } @else if (filteredDoctorFeeList().length === 0) {
+      <p class="text-3xl font-bold text-center p-10 text-orange-600">
+        Data is Empty.
+      </p>
+      } @else {
+      <table
+        class="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead
+          class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
         >
-          <thead
-            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-          >
           <tr>
             <th scope="col" class="px-1 py-3">sl</th>
             <th scope="col" class="px-1 py-3">Reg</th>
@@ -289,17 +338,17 @@
             <th scope="col" class="px-1 py-3">Edit</th>
             <th scope="col" class="px-1 py-3">Delete</th>
           </tr>
-          </thead>
-          <tbody>
-            @for (item of filteredDoctorFeeList().slice(0,20); track item?.gid ||
-            $index) {
-            <tr
-              id="row-{{ $index }}"
-              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
-              [ngClass]="{
-                '!bg-teal-600 text-white': $index === highlightedTr
-              }"
-            >
+        </thead>
+        <tbody>
+          @for (item of filteredDoctorFeeList().slice(0,20); track item?.gid ||
+          $index) {
+          <tr
+            id="row-{{ $index }}"
+            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-teal-600 hover:text-white dark:hover:bg-gray-600 cursor-pointer"
+            [ngClass]="{
+              '!bg-teal-600 text-white': $index === highlightedTr
+            }"
+          >
             <td class="p-1">
               {{ item?.sl }}
             </td>
@@ -307,61 +356,83 @@
               {{ item?.regNo }}
             </td>
             <th
-            scope="row"
-            class="p-1 font-medium whitespace-nowrap dark:text-white"
-          >
-            {{ getPatientName(item?.patientRegId) }}
-          </th>
-          <th
-            scope="row"
-            class="p-1 font-medium whitespace-nowrap dark:text-white"
-          >
-            {{ item?.contactNo }}
-          </th>
-          <td class="p-1">
-            {{ getDoctorName(item?.doctorId) }}
-          </td>
-          <td class="p-1">
-            @if (item?.nextFlowDate) {
-              <button (click)="onFollowUpUpdate(item)">{{ transform(item?.nextFlowDate) }}</button>
-            } @else {
-              <button class="text-yellow-400 hover:bg-white px-1 rounded" (click)="onFollowUpUpdate(item)">followUpDate</button>
-            }
-          </td>
-          <td class="p-1">
-            {{ transform(item?.entryDate) }}
-          </td>
-          <td class="p-1">
-            <button class="text-green-400 hover:bg-white px-1 rounded" (click)="generatePDF(item)">Print</button>
-          </td>
-          <td class="p-1">
-            <button class="text-yellow-400 hover:bg-white px-1 rounded" (click)="onUpdate(item)">Edit</button>
-          </td>
-          <td class="p-1">
-            <button class="text-rose-400 hover:bg-white px-1 rounded" (click)="onDelete(item.gid)">Delete</button>
-          </td>
-            </tr>
-            }
-          </tbody>
-        </table>
-        }
-      </div>
+              scope="row"
+              class="p-1 font-medium whitespace-nowrap dark:text-white"
+            >
+              {{ getPatientName(item?.patientRegId) }}
+            </th>
+            <th
+              scope="row"
+              class="p-1 font-medium whitespace-nowrap dark:text-white"
+            >
+              {{ item?.contactNo }}
+            </th>
+            <td class="p-1">
+              {{ getDoctorName(item?.doctorId) }}
+            </td>
+            <td class="p-1">
+              @if (item?.nextFlowDate) {
+              <button (click)="onFollowUpUpdate(item)">
+                {{ transform(item?.nextFlowDate) }}
+              </button>
+              } @else {
+              <button
+                class="text-yellow-400 hover:bg-white px-1 rounded"
+                (click)="onFollowUpUpdate(item)"
+              >
+                followUpDate
+              </button>
+              }
+            </td>
+            <td class="p-1">
+              {{ transform(item?.entryDate) }}
+            </td>
+            <td class="p-1">
+              <button
+                class="text-green-400 hover:bg-white px-1 rounded"
+                (click)="generatePDF(item)"
+              >
+                Print
+              </button>
+            </td>
+            <td class="p-1">
+              <button
+                class="text-yellow-400 hover:bg-white px-1 rounded"
+                (click)="onUpdate(item)"
+              >
+                Edit
+              </button>
+            </td>
+            <td class="p-1">
+              <button
+                class="text-rose-400 hover:bg-white px-1 rounded"
+                (click)="onDelete(item.gid)"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+      }
     </div>
-
+  </div>
 </section>
 
 @if (success()) {
 <app-toast-success [title]="success()"></app-toast-success>
-}
-
-@if (followupModal) {
-  <ModalWrapper title="Next Followup Date" (closeModal)="closeFollowupModal()">
-    <h1 class="text-sm text-teal-600 font-semibold">{{followupModalData?.regNo}} - {{followupModalData?.patientName}} - {{followupModalData?.contactNo}}</h1>
-    <form
-        [formGroup]="form"
-        (ngSubmit)="onSubmit($event)"
-        class="max-w-md mx-auto mt-2"
-      >
+} @if (followupModal) {
+<ModalWrapper title="Next Followup Date" (closeModal)="closeFollowupModal()">
+  <h1 class="text-sm text-teal-600 font-semibold">
+    {{ followupModalData?.regNo }} - {{ followupModalData?.patientName }} -
+    {{ followupModalData?.contactNo }}
+  </h1>
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit($event)"
+    class="max-w-md mx-auto mt-2"
+  >
     <Field label="nextFlowDate">
       <input
         type="date"
@@ -380,18 +451,17 @@
         type="text"
         [formControl]="getControl('remarks')"
         class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-teal-500 focus:outline-none focus:ring-0 focus:border-teal-600 peer"
-        
         placeholder=""
       />
     </Field>
     <!-- Save -->
     <input
-    #inputRef
+      #inputRef
       type="submit"
       [value]="selected ? 'Update' : 'Save And Print'"
       class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-1 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 h-10 w-full"
       (keydown.enter)="handleEnterKey($event, 7)"
     />
   </form>
-  </ModalWrapper>
+</ModalWrapper>
 }

@@ -54,7 +54,7 @@ export class DoctorFeeComponent {
     amount: [''],
     discount: [''],
     remarks: [''],
-    postBy: ['superSoft'],
+    postBy: [''],
     nextFlowDate: [null],
     entryDate: [this.today, [Validators.required]],
   });
@@ -260,7 +260,7 @@ export class DoctorFeeComponent {
       amount: '',
       discount: '',
       remarks: '',
-      postBy: 'superSoft',
+      postBy: '',
       nextFlowDate: null,
       entryDate: this.today
     });
@@ -527,32 +527,32 @@ export class DoctorFeeComponent {
   // Modals End --------------------------------------------------------------------------
 
   generatePDF(entry: any) {
-  
+
     // Set initial margins and page dimensions
     const pageSizeWidth = 80;
     const pageSizeHeight = 80;
     const marginLeft = 10; // Left margin
-    const marginTopStart = 15; // Starting top margin
-    const marginBottom = -10; // Bottom margin
+    const marginTopStart = 5; // Starting top margin
+    const marginBottom = 0;
     const marginRight = 10; // Right margin
-  
+
     // Initialize jsPDF with A7 size
     const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: [pageSizeWidth, pageSizeHeight] });
     const pageWidth = doc.internal.pageSize.width; // Page width
     const pageHeight = doc.internal.pageSize.height; // Page height
     const contentWidth = pageWidth - marginLeft - marginRight; // Usable content width
     const usableHeight = pageHeight - marginTopStart - marginBottom; // Usable content height
-  
+
     let marginTop = marginTopStart; // Dynamic marginTop for tracking position
-  
+
     // Header: Main Report Title
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text('Doctor Fee Entry', pageWidth / 2, marginTop, { align: 'center' });
-  
+
     // Adjust marginTop for the next section
     marginTop += 6;
-  
+
     // Doctor Name with Text Wrapping
     doc.setFontSize(8);
     doc.setFont('helvetica', 'bold');
@@ -560,14 +560,14 @@ export class DoctorFeeComponent {
     const wrappedDoctorName = doc.splitTextToSize(doctorName, contentWidth);
     doc.text(wrappedDoctorName, marginLeft, marginTop);
     marginTop += wrappedDoctorName.length * 4;
-  
+
     // Patient and Fee Details
     if (entry) {
       marginTop += 6;
       doc.setFontSize(8);
       doc.setFont('helvetica', 'bold');
       doc.text('Patient Details:', marginLeft, marginTop);
-  
+
       doc.setFont('helvetica', 'normal');
       marginTop += 4;
       const details = [
@@ -578,32 +578,34 @@ export class DoctorFeeComponent {
         `Patient Type: ${entry.patientType}`,
         `Amount: ${entry.amount?.toFixed(0) || 'N/A'} Tk`,
         `Discount: ${entry.discount?.toFixed(0) || 'N/A'} Tk`,
+        `Entry Date: ${this.transform(entry.entryDate, 'dd/MM/yyyy')}`,
         `Next Follow Date: ${entry.nextFlowDate
           ? this.transform(entry.nextFlowDate, 'dd/MM/yyyy')
           : 'N/A'
         }`,
         `Remarks: ${entry.remarks || 'N/A'}`,
+        `Post By: ${entry.postBy || 'N/A'}`,
       ];
-  
+
       details.forEach((detail) => {
         const wrappedDetail = doc.splitTextToSize(detail, contentWidth);
-  
+
         // Check if adding the next line exceeds usable height
         const requiredHeight = wrappedDetail.length * 4;
         if (marginTop + requiredHeight > usableHeight) {
           doc.addPage(); // Add a new page
           marginTop = marginTopStart; // Reset marginTop for the new page
         }
-  
+
         doc.text(wrappedDetail, marginLeft, marginTop);
         marginTop += requiredHeight; // Adjust for wrapped lines
       });
     }
-  
+
     doc.output('dataurlnewwindow');
     // doc.save(`${entry.regNo}-FeeToken.pdf`);
   }
-  
+
 
 
   // generatePDF(entry: any) {

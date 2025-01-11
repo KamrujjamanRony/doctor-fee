@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class DoctorFeeFeeService {
 
   http = inject(HttpClient);
-  rootUrl = 'http://192.168.0.85/hms/api/DoctorFee'
+  rootUrl = 'http://192.168.0.138/hms/api/DoctorFee'
 
   addDoctorFee(model: any | FormData): Observable<void> {
     return this.http.post<void>(this.rootUrl, model)
@@ -29,7 +29,8 @@ export class DoctorFeeFeeService {
   }
 
   updateDoctorFee(id: any, updateDoctorFeeRequest: any | FormData): Observable<any> {
-    return this.http.put<any>(`${this.rootUrl}/EditDoctorFee/${id}`, updateDoctorFeeRequest);
+    const requestBody = { ...updateDoctorFeeRequest, nextFlowDate: updateDoctorFeeRequest.nextFlowDate || null }
+    return this.http.put<any>(`${this.rootUrl}/EditDoctorFee/${id}`, requestBody);
   }
 
   deleteDoctorFee(id: any): Observable<any> {

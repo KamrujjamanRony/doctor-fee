@@ -332,7 +332,7 @@ generatePDF() {
   const pageSizeHeight = 297;
   const marginLeft = 10;
   const marginRight = 10;
-  let marginTop = this.marginTop + 10; // Customizable top margin
+  let marginTop = this.marginTop + 10;
   const marginBottom = 10;
 
   const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'A4' });
@@ -371,8 +371,8 @@ generatePDF() {
   }
 
   // Prepare Table Data
-  const dataRows = this.filteredDoctorFeeList().map((data: any, sl: number) => [
-    sl + 1,
+  const dataRows = this.filteredDoctorFeeList().map((data: any) => [
+    data?.sl,
     this.getPatientName(data?.patientRegId),
     data?.regNo || '',
     data?.contactNo || '',
@@ -425,7 +425,6 @@ generatePDF() {
     margin: { top: marginTop, left: marginLeft, right: marginRight },
     didDrawPage: (data: any) => {
       // Add Footer with Margin Bottom
-      const pageNumber = doc.internal.pages.length -1;
       doc.setFontSize(8);
       doc.text(``, pageSizeWidth - marginRight - 10, pageSizeHeight - marginBottom, {
         align: 'right',
